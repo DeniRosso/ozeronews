@@ -85,8 +85,8 @@ public class AboutController {
         return "privacy";
     }
 
-    @GetMapping("/about/useragreement")
-    public String useragreement(Principal principal,
+    @GetMapping("/about/termsofuse")
+    public String termsofuse(Principal principal,
                                 Model model) {
         model.addAttribute("title", "Пользовательское соглашение");
         model.addAttribute("website", websiteBaseURL);
@@ -96,7 +96,7 @@ public class AboutController {
         User user = userCurrentService.getCurrentUser(principal);
         model.addAttribute("currentPage", "useragreement");
         model.addAttribute("user", user);
-        return "useragreement";
+        return "termsofuse";
     }
 
     @GetMapping("/about/contact")

@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:insert="fragments/head :: head">></head>
+<body class="news-page flex-column">
+    <header th:replace="fragments/header :: header"></header>
+    <main class="container">
+        <div class="row justify-content-center">
+            <div class="col-md" style="max-width: 768px;">
+                <div class="row" id="message">
+                    <div th:if="${message != null}" th:text="${message}"
+                         th:class="${messageType}" role="alert">
+                    </div>
+                </div>
+                <div th:if="${articles == null}" class="justify-content-center">
+                    <p class="text-center">У Вас еще нет подписок на новостные ресурсы. </p>
+                    <p class="text-center">Для добавления подписок в ленту перейдите в
+                        <a th:href="@{/subscriptions}">Мои подписки</a>
+                        .
+                    </p>
+                </div>
+                <div id="articles">
+                    <!--
+                    <div th:each="article : ${articles}" class="card p-sm-2 card-article">
+                        <div class="row g-0">
+                            <div class="col me-1 me-sm-2 d-flex align-items-start flex-column">
+                                <div class="card-body p-0 mb-auto w-100 d-flex align-items-start flex-column">
+                                    <span th:text="${article.id}" hidden class="article-id" style="color: #FFF"></span>
+                                    <a th:href="${article.getLink()}" target="_blank" class="text-decoration-none">
+                                        <h5 th:text="${article.getTitle()}" class="card-title card-article-ttl">Article Title</h5>
+                                    </a>
+                                    <div class="row d-inline-flex g-1 p-0 m-0 my-auto w-100 align-items-center justify-content-end"
+                                         style="max-height: 28px; overflow-x: auto;">
+                                        <div th:each="articleRubric : ${article.getArticleRubric}" class="col-auto p-0 my-1 ">
+
+                                            <a th:if="${articleRubric.getRubricId() == null}"
+                                               href="#"
+                                               class="text-decoration-none disabled">
+                                                <p class="card-article-rubrics-inactive-txt">Rubric Name</p>
+                                            </a>
+
+                                            <a th:if="${articleRubric.getRubricId().getRubricKey() == null}"
+                                               href="#"
+                                               class="text-decoration-none disabled">
+                                                <p th:text="${articleRubric.getRubricId().getAliasName()}"
+                                                   class="card-article-rubrics-inactive-txt">Rubric Name
+                                                </p>
+                                            </a>
+                                            <a th:if="${articleRubric.getRubricId().getRubricKey() != null}"
+                                               th:href="@{/news/rubrics/{name}
+                                            (section=#{'rubrics'},name=${articleRubric.getRubricId().getRubricKey()})}"
+                                               class="text-decoration-none">
+                                                <p th:text="${articleRubric.getRubricId().getAliasName()}"
+                                                   class="card-article-rubrics-active-txt">Rubric Name
+                                                </p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-article-footer">
+                                    <div class="d-flex align-self-center justify-content-start">
+
+                                    <span th:text="${article.getPeriodPublication()}"
+                                          class="badge bg-secondary text-white card-article-footer-txt">Time</span>
+
+                                        <p th:text="${#temporals.format(article.getDatePublication(), 'dd MMMM')}"
+                                           class="m-0 my-auto me-auto mx-1 card-article-footer-txt"></p>
+
+                                        <a th:href="@{/news/resources/{resourceKey}(resourceKey=${article.getResourceId().getResourceKey()})}"
+                                           class="my-auto text-decoration-none">
+                                            <p th:text="${article.getResourceId().getFullName()}"
+                                               class="m-0 text-right card-article-footer-txt">
+                                            </p>
+                                        </a>
+
+                                        <div class="card-article-footer-border"></div>
+
+                                        <p th:text="${#temporals.format(article.getDatePublication(), 'dd.MM.yyyy HH:mm')}"
+                                           class="m-0 my-auto card-article-footer-txt">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto d-flex align-items-start justify-content-center">
+                                <div class="card-article-img"
+                                     th:style="${article.getImage() == null || article.getImage() == ''} ?
+                                 'background:url(' + @{/static/images/{imageResource}(imageResource = ${article.resourceId.resourceKey} + '.png')} + '); background-position: center; background-size: cover; opacity: 0.9;' :
+                                 'background:url(' + @{${article.getImage()}} + '); background-position: center; background-size: cover;'">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                </div>
+
+                <div th:if="${articles != null}" class="row my-2 mx-auto d-flex align-self-end justify-content-between">
+                    <div class="col">
+                    </div>
+                    <div class="col-auto text-center">
+                        <a href="#" class="btn-main article-load-btn" id="btnLoadArticles">Загрузить еще</a>
+                    </div>
+                    <div class="col">
+                        <ul class="pagination-box">
+                            <li>
+                                <a href="#" th:text="${10}" id="btnSizePage10"
+                                   th:class="${10 == pageable.getPageSize()} ? 'pagination-btn pagination-btn-left active' : 'pagination-btn pagination-btn-left' ">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" th:text="${30}" id="btnSizePage30"
+                                   th:class="${30 == pageable.getPageSize()} ? 'pagination-btn active' : 'pagination-btn' ">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" th:text="${50}" id="btnSizePage50"
+                                   th:class="${50 == pageable.getPageSize()} ? 'pagination-btn active' : 'pagination-btn' ">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" th:text="${100}" id="btnSizePage100"
+                                   th:class="${100 == pageable.getPageSize()} ? 'pagination-btn pagination-btn-right active' : 'pagination-btn pagination-btn-right' ">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-auto">
+                <div class="menu-news-rubrics">
+                    <button class="menu-news-btn" type="button" data-bs-toggle="modal" data-bs-target="#modalRubrics">
+                        Рубрики
+                        <i class="fas fa-angle-right"></i>
+                    </button>
+                    <ol class="menu-news-list text-left">
+                        <li th:each="rubric : ${topRubrics}" class="my-1">
+                            <a th:href="@{/news/rubrics/{name}
+                                (section=#{'rubrics'},name=${rubric.getRubricKey()})}"
+                               th:text="${rubric.getName()}" class="menu-news-lnk">RubricName
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+                <div class="menu-news-resources">
+                    <button class="menu-news-btn" type="button" data-bs-toggle="modal" data-bs-target="#modalNewsResources">
+                        Источники
+                        <i class="fas fa-angle-right"></i>
+                    </button>
+                    <ol  class="menu-news-list text-left">
+                        <li th:each="newsResource : ${topNewsResources}" class="my-1">
+                            <a th:href="@{/news/resources/{name}
+                                (section=#{'resources'},name=${newsResource.getResourceKey()})}"
+                               th:text="${newsResource.getShortName()}" class="menu-news-lnk">NameResource
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="row" style="display: none;">
+            <div class="p-4 mb-3 bg-light rounded">
+                <h4 class="fst-italic">About</h4>
+                <p class="mb-0">Saw you downtown singing the Blues. Watch you circle the drain. Why don't you let me stop by? Heavy is the head that <em>wears the crown</em>. Yes, we make angels cry, raining down on earth from up above.</p>
+            </div>
+        </div>
+        -->
+        <div class="share-background" id="shareBackground"></div>
+        <div class="share" id="shareArticle">
+            <div class="share-btns">
+                <a class="telegram" id="btnTelegram"
+                   rel="nofollow"
+                   href="javascript: void(0)"
+                   onClick="shareTelegram()"
+                   title="Поделиться в Телеграм">
+                </a>
+                <a class="whatsapp" id="btnWhatsapp"
+                   rel="nofollow"
+                   href="javascript: void(0)"
+                   onClick="shareWhatsapp()"
+                   title="Поделиться в What'sApp">
+                </a>
+                <a class="facebook" id="btnFacebook"
+                   rel="nofollow"
+                   href="javascript: void(0)"
+                   onClick="shareFacebook()"
+                   title="Поделиться в Facebook">
+                </a>
+                <a class="twitter" id="btnTwitter"
+                   rel="nofollow"
+                   href="javascript: void(0)"
+                   onClick="shareTwitter()"
+                   title="Твитнуть">
+                </a>
+                <a class="vkontakte" id="btnVKontakte"
+                    rel="nofollow"
+                    href="javascript: void(0)"
+                   onClick="shareVKontakte()"
+                    title="Поделиться Вконтакте">
+                </a>
+                <a class="ok" id="btnOK" style="display: none;"
+                    rel="nofollow"
+                    href="javascript: void(0)"
+                   onClick="shareOK()"
+                    title="Поделиться в Одноклассниках">
+                </a>
+                <a class="mail" id="btnMail"
+                   rel="nofollow"
+                   href="javascript: void(0)"
+                   onClick="shareMail()"
+                   title="Поделиться в @Мой мир">
+                </a>
+                <a class="pinterest" id="btnPinterest"
+                    rel="nofollow"
+                    href="javascript: void(0)"
+                   onClick="sharePinterest()"
+                    data-media="АДРЕС_ИЗОБРАЖЕНИЯ"
+                    title="Запинить">
+                </a>
+                <a class="linkedin" id="btnLinkedin"
+                    rel="nofollow noopener noreferrer"
+                    href="javascript:void(0);"
+                   onClick="shareLinkedin()"
+                    title="Поделиться в Linkedin"
+                ></a>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalRubrics" tabindex="-1" aria-labelledby="modalRubricsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content modal-screen">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalRubricsLabel">Все рубрики</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2 justify-content-start">
+                            <div th:each="rubric : ${allRubrics}" class="col d-flex justify-content-center">
+                                <a th:href="@{/news/rubrics/{name}(section=#{'rubrics'},name=${rubric.getRubricKey()})}"
+                                   class="btn-main">
+                                    <span th:text="${rubric.getName()}"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalNewsResources" tabindex="-1" aria-labelledby="modalNewsResourcesLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content modal-screen">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalNewsResourcesLabel">Все источники</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2 justify-content-start">
+                            <div th:each="newsResource : ${allNewsResources}" class="col d-flex justify-content-center">
+                                <a th:href="@{/news/resources/{name}(section=#{'resources'},name=${newsResource.getResourceKey()})}"
+                                   class="btn-main">
+                                    <span th:text="${newsResource.getFullName()}"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-up-btn d-flex">
+            <i class="fas fa-chevron-up fa-2x m-auto"></i>
+            <span id="showScroll"> </span>
+        </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

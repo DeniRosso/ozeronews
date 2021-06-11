@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="administration-page flex-column">
+<header th:replace="fragments/header :: header"></header>
+<main class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <div th:replace="fragments/menu-admin :: menu-admin"></div>
+        </div>
+        <div class="col" style="max-width: 768px;">
+            <div class="main-block">
+                <div class="row justify-content-center">
+                    <h1 class="ttl-3">Настройка ресурсов</h1>
+                    <div class="col-auto menu-admin-list-box">
+                        <ul class="menu-admin-list">
+                            <li th:each="newsResource : ${newsResources}"  class="my-1">
+                                <a th:href="@{/administration/news-resources/{id}(id=${newsResource.getId()})}"
+                                   th:class="${newsResource.id == newsResourceSelect.id} ? 'menu-admin-list-lnk active' : 'menu-admin-list-lnk'">
+                                    <div th:if="${newsResource.fullName != null}"
+                                         class="d-flex w-100 align-items-center justify-content-between">
+                                        <h6 th:text="${newsResource.fullName}" class="my-0" >Name resource</h6>
+                                        <div th:if="${newsResource.active}" class="" style="background: #248A3D; border-radius: 50%; width: 0.5rem; height: 0.5rem;"></div>
+                                        <div th:if="${!newsResource.active}" class="" style="background: #D70015; border-radius: 50%; width: 0.5rem; height: 0.5rem;"></div>
+                                    </div>
+                                    <div th:if="${newsResource.fullName == null}" class="d-flex w-100 justify-content-between">
+                                        <h6 class="text-light my-0">Name not set</h6>
+                                    </div>
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <p class="my-0" style="font-size: 0.9rem">Key:</p>
+                                        <p th:text="${newsResource.getResourceKey()}" class="my-0" style="font-size: 0.9rem">News resource</p>
+                                        <!--<small th:text="${newsResource.getActive()}">Active</small>-->
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col mx-auto text-left">
+                        <form th:method="POST" th:action="@{/administration/news-resources/{id}(id=${newsResourceSelect.id})}" th:object="${newsResourceSelect}" class="">
+                            <div class="row g-3">
+                                <div class="my-1">
+                                    <input th:field="*{id}" type="hidden" class="form-control form-control-sm" name="id" id="id" placeholder="id">
+                                </div>
+                                <div class="my-1">
+                                    <label class="lbl-3 mb-1" for="resourceKey">Resource Key</label>
+                                    <input th:field="*{resourceKey}" type="text" name="resourceKey" id="resourceKey"
+                                           class="form-control form-control-sm" placeholder="Resource key" readonly>
+                                </div>
+                                <div class="my-1">
+                                    <label class="lbl-3 mb-1" for="fullName">Full name<sup>*</sup></label>
+                                    <input th:field="*{fullName}" type="text" name="fullName" id="fullName"
+                                           class="form-control form-control-sm"  placeholder="Full name">
+                                </div>
+                                <div class="my-1">
+                                    <label class="lbl-3 mb-1" for="shortName">Short name</label>
+                                    <input th:field="*{shortName}" type="text" name="shortName" id="shortName"
+                                           class="form-control form-control-sm" placeholder="Short Name">
+                                </div>
+                                <div class="my-1">
+                                    <label class="lbl-3 mb-1" for="resourceLink">Resource link</label>
+                                    <input th:field="*{resourceLink}" type="text" name="resourceLink" id="resourceLink"
+                                           class="form-control form-control-sm" placeholder="Resource link">
+                                </div>
+                                <div class="my-1">
+                                    <label class="lbl-3 mb-1" for="newsLink">News link</label>
+                                    <input th:field="*{newsLink}" type="text" name="newsLink" id="newsLink"
+                                           class="form-control form-control-sm" placeholder="News link">
+                                </div>
+                                <div class="my-0">
+                                    <div class="form-check">
+                                        <input th:field="*{active}" type="checkbox" name="active" id="active"
+                                               class="form-check-input" placeholder="Active">
+                                        <label class="lbl-3 mb-1" for="active">Active</label>
+                                    </div>
+                                </div>
+                                <div class="my-0">
+                                    <label class="lbl-3 mb-1">Date:</label>
+                                    <label th:text="${#temporals.format(newsResourceSelect.dateStamp, 'dd.MM.yyyy HH:mm:ss')}"
+                                           class="lbl-3 mb-1"></label>
+                                </div> <!--${#temporals.format(newsResource.getDateStamp(), 'dd.MM.yyyy HH:mm:ss')}-->
+                                <div class="my-1 text-center">
+                                    <button class="btn btn-primary w-50 btn-sm" type="submit">Сохранить</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

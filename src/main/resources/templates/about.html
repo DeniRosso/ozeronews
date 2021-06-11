@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="about-page flex-column">
+<header th:replace="fragments/header :: header"></header>
+<main class="container">
+    <div class="row justify-content-center" style="">
+        <div class="col-auto">
+            <div th:replace="fragments/menu-about :: menu-about"></div>
+        </div>
+        <div class="col mb-3" style="max-width: 768px;">
+            <div class="content-about">
+                <div class="">
+                    <h1 class="about-title">О нас</h1>
+                    <ul class="about-subtitle">
+                        <li class="text-center">
+                            Будьте в курсе актуальных новостей в стране и мире.
+                        </li>
+                    </ul>
+                    <ul class="about-subtitle">
+                        <li>
+                            Веб-сайт <a th:href="@{website}" th:text="${websiteName}"></a> позволяет получать
+                            актуальную информацию в ленте новостей.
+                        </li>
+                        <li>
+                            Мы не создаем новости и не хранит оригинальные статьи других источников.
+                        </li>
+                    </ul>
+                    <ul class="about-subtitle  border-top">
+                        <li class="text-right">
+                            С Уважением, Администация "<span th:text="${websiteName}"></span>".
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

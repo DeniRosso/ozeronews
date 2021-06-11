@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="administration-page flex-column">
+<header th:replace="fragments/header :: header"></header>
+<main class="container">
+    <div class="row">
+        <div class="col-auto">
+            <div th:replace="fragments/menu-admin :: menu-admin"></div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

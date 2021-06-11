@@ -1,0 +1,73 @@
+<div th:fragment="menu-profile" class="menu-profile-box">
+    <a href="#" class="menu-profile-btn-burger">
+        <div class="row d-flex w-100 h-100 m-0 p-0 justify-content-center align-items-center">
+            <div class="col">
+                <span class="menu-profile-btn-burger-line"></span>
+            </div>
+        </div>
+    </a>
+    <ul class="menu-profile">
+        <li class="my-1">
+            <a th:href="@{/users}"
+               th:class="${currentPage == 'userProfile'} ? 'menu-profile-lnk active' : 'menu-profile-lnk'">
+                <h6 th:text="${user.getUsername()}" class="my-0">Аккаунт</h6>
+                <p class="my-0" style="font-size: 0.9rem">Данных пользователя</p>
+            </a>
+        </li>
+        <li th:if="${currentPage == 'userEdit'}" class="my-1">
+            <a
+               th:href="@{/users/edit}"
+               th:class="${currentPage == 'userEdit'} ? 'menu-profile-lnk active' : 'menu-profile-lnk'">
+                <h6 class="my-0">Пользователь</h6>
+                <p class="my-0" style="font-size: 0.9rem">Редактирование пользователя</p>
+            </a>
+        </li>
+        <li th:if="${currentPage != 'userEdit'}" class="my-1">
+            <a
+               th:href="@{/users/edit}"
+               th:class="${user.activationCode != null || provider != null} ? 'menu-profile-lnk disable' : 'menu-profile-lnk'">
+                <h6 class="my-0">Пользователь</h6>
+                <p class="my-0" style="font-size: 0.9rem">Редактирование пользователя</p>
+            </a>
+        </li>
+        <li th:if="${currentPage == 'userChangePassword'}" class="my-1">
+            <a
+               th:href="@{/users/changepassword}"
+               th:class="${currentPage == 'userChangePassword'} ? 'menu-profile-lnk active' : 'menu-profile-lnk'">
+                <h6 class="my-0">Пароль</h6>
+                <p class="my-0" style="font-size: 0.9rem">Изменение пароля</p>
+            </a>
+        </li>
+        <li th:if="${currentPage != 'userChangePassword'}" class="my-1">
+            <a
+               th:href="@{/users/changepassword}"
+               th:class="${user.activationCode != null || provider != null} ? 'menu-profile-lnk disable' : 'menu-profile-lnk'">
+                <h6 class="my-0">Пароль</h6>
+                <p class="my-0" style="font-size: 0.9rem">Изменение пароля</p>
+            </a>
+        </li>
+        <li class="my-1">
+            <a th:href="@{/users/delete}"
+               th:class="${currentPage == 'userDelete'} ? 'menu-profile-lnk active' : 'menu-profile-lnk'">
+                <h6 class="my-0">Удаление</h6>
+                <p class="my-0" style="font-size: 0.9rem">Удаление пользователя</p>
+            </a>
+        </li>
+        <li th:if="${currentPage == 'userSubscriptions'}" class="my-1">
+            <a
+               th:href="@{/users/subscriptions}"
+               th:class="${currentPage == 'userSubscriptions'} ? 'menu-profile-lnk active' : 'menu-profile-lnk'">
+                <h6 class="my-0">Мои подписки</h6>
+                <p class="my-0" style="font-size: 0.9rem">Управление подписками</p>
+            </a>
+        </li>
+        <li th:if="${currentPage != 'userSubscriptions'}" class="my-1">
+            <a
+               th:href="@{/users/subscriptions}"
+               th:class="${user.activationCode != null} ? 'menu-profile-lnk disable' : 'menu-profile-lnk'">
+                <h6 class="my-0">Мои подписки</h6>
+                <p class="my-0" style="font-size: 0.9rem">Управление подписками</p>
+            </a>
+        </li>
+    </ul>
+</div>

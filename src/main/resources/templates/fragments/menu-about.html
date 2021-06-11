@@ -1,0 +1,35 @@
+<div th:fragment="menu-about" class="menu-about-box">
+    <a href="#" class="menu-about-btn-burger text-center" style="justify-content: center; align-items: center;">
+        <div class="row d-flex w-100 h-100 m-0 p-0 justify-content-center align-items-center">
+            <div class="col">
+                <span class="menu-about-btn-burger-line"></span>
+            </div>
+        </div>
+    </a>
+    <ul class="menu-about">
+        <li>
+            <a href="/about"
+               th:class="${currentPage == 'about'} ? 'menu-about-lnk active' : 'menu-about-lnk'">
+                О нас
+            </a>
+        </li>
+        <li>
+            <a href="/about/contact"
+               th:class="${currentPage == 'contact'} ? 'menu-about-lnk active' : 'menu-about-lnk'">
+                Контакты
+            </a>
+        </li>
+        <li>
+            <a href="/about/privacy"
+               th:class="${currentPage == 'privacy'} ? 'menu-about-lnk active' : 'menu-about-lnk'">
+                Конфиденциальность
+            </a>
+        </li>
+        <li>
+            <a href="/about/useragreement"
+               th:class="${currentPage == 'useragreement'} ? 'menu-about-lnk active' : 'menu-about-lnk'">
+                Соглашение
+            </a>
+        </li>
+    </ul>
+</div>

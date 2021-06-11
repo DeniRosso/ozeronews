@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="d-flex flex-column h-100 bg-light bg-gradient" style="">
+<header th:replace="fragments/header :: header"></header>
+<main class="container" style="">
+  <div class="row m-auto align-items-center justify-content-center" style="height: 300px;">
+    <div class="col-12 col-sm-12 col-md-10 col-lg-8 text-center">
+      <h1 class="ttl-2">Регистрация пользователя прошла успешно</h1>
+      <p class="lbl-1 text-center">Вам осталось активировать учетную запись.
+        Для завершения регистрации подтвердите код активации, который мы отправили Вам на электронный адрес
+        указаный при регистрации.</p>
+      <a th:href="@{/login}" class="d-block text-center my-4">Вход
+        <i class="fas fa-angle-right mx-2" style="color: #007bff; font-size: 1.2rem; font-style: normal !important; font-weight: 100 !important; text-decoration: none !important;"></i>
+      </a>
+    </div>
+  </div>
+</main>
+<footer th:replace="fragments/footer :: footer" class="container footer mt-auto py-2 border-top" style=""></footer>
+</body>
+</html>

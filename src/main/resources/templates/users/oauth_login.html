@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head">></head>
+<body class="d-flex flex-column h-100 bg-light bg-gradient" style="">
+    <header th:replace="fragments/header :: header" class="fixed-top"></header>
+    <main class="container">
+        <div class="row">
+        <h3>Login with:</h3>
+        <p th:each="url : ${urls}">
+            <a th:text="${url.key}" th:href="${url.value}">Client</a>
+        </p>
+        </div>
+        <div class="row">
+            <!--<a href="https://accounts.google.com/signin/oauth/error?authError=ChVyZWRpcmVjdF91cmlfbWlzbWF0Y2gS2QJUaGUgcmVkaXJlY3QgVVJJIGluIHRoZSByZXF1ZXN0LCBodHRwOi8vbG9jYWxob3N0OjgwODAvbG9naW4vb2F1dGgyL2NvZGUvZ29vZ2xlLCBkb2VzIG5vdCBtYXRjaCB0aGUgb25lcyBhdXRob3JpemVkIGZvciB0aGUgT0F1dGggY2xpZW50LiBUbyB1cGRhdGUgdGhlIGF1dGhvcml6ZWQgcmVkaXJlY3QgVVJJcywgdmlzaXQ6IGh0dHBzOi8vY29uc29sZS5kZXZlbG9wZXJzLmdvb2dsZS5jb20vYXBpcy9jcmVkZW50aWFscy9vYXV0aGNsaWVudC84NzQ0NjA1MjAyODgtOThnMms4MHY0ZW81azhlZW5yMWNuN2E5NTNmMDh2b3YuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20_cHJvamVjdD04NzQ0NjA1MjAyODgaRWh0dHA6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vYWNjb3VudHMvZG9jcy9PQXV0aDJMb2dpbiNzZXRyZWRpcmVjdHVyaSCQAw%3D%3D&client_id=874460520288-98g2k80v4eo5k8eenr1cn7a953f08vov.apps.googleusercontent.com" class="social-lnk">-->
+            <a href="http://localhost:8080/login/oauth2/code/google" class="social-lnk">
+                <img src="/static/images/icon_google.png" class="social-img" alt="">
+            </a>
+            <a href="http://localhost:8080/login/oauth2/code/facebook" class="social-lnk">
+                <img src="/static/images/icon_facebook.png" class="social-img" alt="">
+            </a>
+            <a href="http://localhost:8081/login/oauth2/code/facebook" class="social-lnk">
+                <img src="/static/images/icon_vk.png" class="social-img" alt="">
+            </a>
+        </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer"></footer>
+    </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head">></head>
+<body class="user-page flex-column">
+<header th:replace="fragments/header :: header" class="fixed-top"></header>
+<main class="container d-flex" style="min-height: calc(100vh - 80px - 120px);">
+  <div class="row m-auto align-items-center justify-content-center">
+    <h1 class="ttl-3">Возникли проблемы при входе в учетную запись?</h1>
+    <div th:if="${message != null}" th:text="${message}"
+         th:class="${messageType}" role="alert">
+    </div>
+    <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4 text-center">
+      <form method="POST" th:action="@{/recovery}" th:object="${user}" class="text-center">
+        <div class="mb-3 text-left">
+          <label for="email" class="lbl-2 mb-1">Введите адрес электронной почты</label>
+          <input th:field="*{email}" type="text" name="email" id="email"
+                 th:class="${#fields.hasErrors('email')} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                 onKeyup="checkFormRecovery()" placeholder="Введите Ваш email" autofocus="true">
+          <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">Text error</span>
+        </div>
+        <div th:if="${captchaError != null}" th:text="${captchaError}"
+             class="alert alert-danger my-2" role="alert">
+        </div>
+        <div class="row my-2 justify-content-center">
+          <div class="col-auto">
+            <div class="g-recaptcha"
+                 data-sitekey="6Le5nKUaAAAAAK4GARJJziNGBN_qIt-DOcwE7UFV"
+                 data-callback="onSubmit">
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-md btn-primary w-auto my-3" type="submit" id="btnRecovery">Продолжить</button>
+      </form>
+    </div>
+  </div>
+</main>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

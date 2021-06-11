@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="user-page flex-column">
+    <header th:replace="fragments/header :: header"></header>
+    <main class="container" style="">
+        <div class="row m-auto align-items-center justify-content-center">
+            <h1 class="ttl-3">Регистрация</h1>
+            <div class="col-12 col-sm-12 col-md-10 col-lg-8 col-xl-6 col-xxl-5 text-center">
+                <div th:if="${message != null}" th:text="${message}"
+                     th:class="${messageType}" role="alert" style="width: auto;">
+                </div>
+                <form th:method="POST" th:action="@{/registration}" th:object="${newUser}"
+                      class="text-center" enctype="multipart/form-data">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-12 col-md-3">
+                            <div class="profile-image-box mx-auto">
+                                <img th:src="${avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${newUser.avatar})}"
+                                     class="profile-image-img mx-auto" id="registrationImage" alt="">
+                            </div>
+                            <div class="col-auto col-sm-auto col-md-12">
+                                <div class="row my-2 text-center justify-content-center">
+                                    <label class="profile-image-lbl" for="registrationFileUpload">Загрузить</label>
+                                    <input class="profile-image-inpt" type="file" accept="image/*"
+                                           name="file" id="registrationFileUpload">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md border-left">
+                            <div class="row p-0 justify-content-center">
+                                <!--
+                                <div class="row my-2">
+                                    <input th:field="*{newUser.id}" type="hidden"name="id">
+                                </div>
+                                -->
+                                <div class="row my-2 p-0 align-items-center justify-content-center">
+                                    <label class="col-12 col-sm-10 col-md-4 lbl-2"
+                                           style="font-size: 0.9rem;" for="username">Имя пользователя<sup>*</sup>:</label>
+                                    <div class="col-12 col-sm-10 col-md-8"> <!--class="form-control form-control-sm is-invalid"-->
+                                        <input th:field="*{username}" type="text" name="username" id="username"
+                                               th:class="${usernameError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                                               onKeyup="checkFormRegistration()" placeholder="Введите имя пользователя">
+                                        <span th:if="${usernameError != null}" th:text="${usernameError}" class="invalid-feedback"></span>
+                                        <!--<span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback">Text error</span>-->
+                                    </div>
+                                </div>
+                                <div class="row my-2 p-0 align-items-center justify-content-center">
+                                    <label class="col-12 col-sm-10 col-md-4 lbl-2"
+                                           style="font-size: 0.9rem;" for="email">Email<sup>*</sup>:</label>
+                                    <div class="col-12 col-sm-10 col-md-8">
+                                        <input th:field="*{email}" type="text" name="email" id="email"
+                                               th:class="${emailError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                                               onKeyup="checkFormRegistration()" placeholder="Введите адрес электронной почты">
+                                        <span th:if="${emailError != null}" th:text="${emailError}" class="invalid-feedback"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-2 p-0 align-items-center justify-content-center">
+                                    <label class="col-12 col-sm-10 col-md-4 lbl-2"
+                                           style="font-size: 0.9rem;" for="password">Пароль<sup>*</sup>:</label>
+                                    <div class="col-12 col-sm-10 col-md-8">
+                                        <input th:field="*{password}" type="password" name="password" id="password"
+                                               th:class="${passwordError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                                               onKeyup="checkFormRegistration()" placeholder="Введдите пароль" value="">
+                                        <span th:if="${passwordError != null}" th:text="${passwordError}" class="invalid-feedback"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-2 p-0 align-items-center justify-content-center">
+                                    <label class="col-12 col-sm-10 col-md-4 lbl-2"
+                                           style="font-size: 0.9rem;" for="password2">Подтверждение пароля<sup>*</sup>:</label>
+                                    <div class="col-12 col-sm-10 col-md-8">
+                                        <input th:field="*{password2}" type="password" name="password2" id="password2"
+                                               th:class="${password2Error != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                                               onKeyup="checkFormRegistration()" placeholder="Введите пароль" value="">
+                                        <span th:if="${password2Error != null}" th:text="${password2Error}" class="invalid-feedback"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-3 justify-content-center">
+                        <div class="col-auto">
+                            <div class="g-recaptcha" data-sitekey="6Le5nKUaAAAAAK4GARJJziNGBN_qIt-DOcwE7UFV" data-callback="onSubmit"></div>
+                        </div>
+                    </div>
+                    <div th:if="${captchaError != null}" th:text="${captchaError}"
+                         class="alert alert-danger my-2" role="alert" style="width: auto;">
+                    </div>
+                    <div class="row justify-content-center">
+                        <button type="submit" class="btn btn-primary w-auto btn-sm my-2" id="btnRegistration">Зарегистрироваться</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer" class="container footer mt-auto py-2 border-top" style=""></footer>
+</body>
+</html>

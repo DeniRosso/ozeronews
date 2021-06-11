@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="user-page flex-column">
+    <header th:replace="fragments/header :: header" class="fixed-top"></header>
+    <main class="container">
+        <div class="row align-items-center justify-content-center">
+            <h1 class="ttl-2">Авторизация</h1>
+            <!--
+            <div th:if="${Session && Session.SPRING_SECURITY_LAST_EXCEPTION}"
+                 class="alert alert-danger" role="alert">
+                A simple danger alert—check it out!
+            </div>
+            -->
+            <div th:if="${message != null}" th:text="${message}"
+                 th:class="${messageType}" role="alert" style="width: auto;">
+            </div>
+            <div th:if="${param.error}" th:text="${'Ошибка авторизации'}"
+                 class="alert alert-danger" role="alert" style="width: auto;">
+            </div>
+        </div>
+        <div class="row align-items-center justify-content-center">
+            <div class="col-10 col-sm-8 col-md-5 col-lg-4 col-xl-3 text-center">
+                <form method="POST" th:action="@{/login}" class="text-center my-2">
+                    <div class="mb-3 text-left">
+                        <label for="email" class="lbl-2 mb-1">Логин (email)</label>
+                        <input type="email" name="email" id="email"
+                               th:class="${emailError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                               onKeyup="checkFormLogin()" placeholder="Введите электронный адрес" autofocus="true">
+                        <span th:if="${emailError != null}" th:text="${emailError}" class="invalid-feedback"></span>
+                    </div>
+                    <div class="mb-3 text-left">
+                        <label for="password" class="lbl-2 mb-1">Пароль</label>
+                        <input type="password" name="password" id="password"
+                               th:class="${passwordError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                               onKeyup="checkFormLogin()" placeholder="Введите пароль">
+                        <span th:if="${passwordError != null}" th:text="${passwordError}" class="invalid-feedback"></span>
+                    </div>
+                    <div class="row align-items-center justify-content-between" style="font-size: 0.9rem;">
+                        <label class="col-auto d-flex lbl-2 m-0 align-items-center ">
+                            <input type="checkbox" name="remember-me" class="me-2 m-auto">
+                            Запомнить меня
+                        </label> <!--value="remember-me"-->
+                        <a th:href="@{/recovery}" class="col-auto lbl-2">Забыли пароль?</a>
+                    </div>
+                    <button class="btn btn-sm btn-primary w-50 my-3" type="submit" id="btnLogin">Войти</button>
+                </form>
+                <div class="row py-2 justify-content-center border-top border-bottom">
+                    <p class="lbl-2 mb-2">Войти через соцсети</p>
+                    <!--<a href="https://accounts.google.com/signin/oauth/error?authError=ChVyZWRpcmVjdF91cmlfbWlzbWF0Y2gS2QJUaGUgcmVkaXJlY3QgVVJJIGluIHRoZSByZXF1ZXN0LCBodHRwOi8vbG9jYWxob3N0OjgwODAvbG9naW4vb2F1dGgyL2NvZGUvZ29vZ2xlLCBkb2VzIG5vdCBtYXRjaCB0aGUgb25lcyBhdXRob3JpemVkIGZvciB0aGUgT0F1dGggY2xpZW50LiBUbyB1cGRhdGUgdGhlIGF1dGhvcml6ZWQgcmVkaXJlY3QgVVJJcywgdmlzaXQ6IGh0dHBzOi8vY29uc29sZS5kZXZlbG9wZXJzLmdvb2dsZS5jb20vYXBpcy9jcmVkZW50aWFscy9vYXV0aGNsaWVudC84NzQ0NjA1MjAyODgtOThnMms4MHY0ZW81azhlZW5yMWNuN2E5NTNmMDh2b3YuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20_cHJvamVjdD04NzQ0NjA1MjAyODgaRWh0dHA6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vYWNjb3VudHMvZG9jcy9PQXV0aDJMb2dpbiNzZXRyZWRpcmVjdHVyaSCQAw%3D%3D&client_id=874460520288-98g2k80v4eo5k8eenr1cn7a953f08vov.apps.googleusercontent.com" class="social-lnk">-->
+                    <a th:href="@{/oauth2/authorization/google}" class="social-lnk" title="Вход через Google">
+                        <img src="/static/images/icon_google.png" class="social-img" alt="" >
+                    </a>
+                    <a th:href="@{/oauth2/authorization/facebook}" class="social-lnk" title="Вход через Facebook">
+                        <img src="/static/images/icon_facebook.png" class="social-img" alt="">
+                    </a>
+                </div>
+                <div class="row my-2 justify-content-center">
+                    <a href="/registration" class="btn btn-sm btn-warning w-auto my-3 px-4">Регистрация
+                        <i class="fas fa-angle-right mx-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

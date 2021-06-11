@@ -1,0 +1,32 @@
+<div th:fragment="menu-admin" class="menu-admin-box">
+  <a href="#" class="menu-admin-btn-burger">
+    <div class="row d-flex w-100 h-100 m-0 p-0 justify-content-center align-items-center">
+      <div class="col">
+        <span class="menu-admin-btn-burger-line"></span>
+      </div>
+    </div>
+  </a>
+  <ul class="menu-admin">
+    <li class="my-1">
+      <a th:href="@{/administration/users}"
+         th:class="${currentPage == 'adminUsers'} ? 'menu-admin-lnk active' : 'menu-admin-lnk'">
+      <h6 class="my-0">Пользователи</h6>
+      <p class="my-0" style="font-size: 0.9rem">Управление пользователями</p>
+      </a>
+    </li>
+    <li class="my-1">
+      <a th:href="@{/administration/news-resources}"
+         th:class="${currentPage == 'adminResources'} ? 'menu-admin-lnk active' : 'menu-admin-lnk'">
+        <h6 class="my-0">Новостные источники</h6>
+        <p class="my-0" style="font-size: 0.9rem">Управление источниками</p>
+      </a>
+    </li>
+    <li class="my-1">
+      <a th:href="@{/administration/rubrics}"
+         th:class="${currentPage == 'adminRubrics'} ? 'menu-admin-lnk active' : 'menu-admin-lnk'">
+        <h6 class="my-0">Рубрики</h6>
+        <p class="my-0" style="font-size: 0.9rem">Управление рубриками</p>
+      </a>
+    </li>
+  </ul>
+</div>

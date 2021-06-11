@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="user-page flex-column">
+    <header th:replace="fragments/header :: header" class="border-bottom"></header>
+    <main class="container">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <div th:replace="fragments/menu-profile :: menu-profile"></div>
+            </div>
+            <div class="col">
+                <div class="main-block">
+                    <div class="row">
+                        <h1 class="ttl-3">Новостные ресурсы</h1>
+                        <div th:each="subscription : ${subscriptions}"
+                             th:if="${subscription.resourceId.active}" class="col-auto m-2 " style="">
+                            <form th:method="POST" th:action="@{/users/subscriptions}">
+                                <input th:value="${subscription.id}" type="hidden" class="" name="id">
+                                <input th:value="${subscription.userId.id}" type="hidden" class="" name="userId.id">
+                                <input th:value="${subscription.resourceId.id}" type="hidden" class="" name="resourceId.id">
+                                <input th:value="${subscription.active}" type="hidden" class="" name="active">
+                                <button th:if="${!subscription.active}" class="btn btn-outline-light rounded-circle shadow-sm p-0 m-2" type="submit" style="width: 80px; height: 80px;">
+                                    <img th:src="@{/static/images/{imageResource}(imageResource = ${subscription.resourceId.resourceKey} + '.png')}"
+                                         th:alt="${subscription.resourceId.fullName}"
+                                         class="rounded-circle w-100 h-100 shadow-sm m-auto">
+                                </button>
+                                <button th:if="${subscription.active}" class="btn btn-outline-light rounded-circle p-0 m-2" type="submit" style="width: 80px; height: 80px; box-shadow: 0 0 0px 4px #0d6efd;">
+                                    <img th:src="@{/static/images/{imageResource}(imageResource = ${subscription.resourceId.resourceKey} + '.png')}" class="rounded-circle w-100 h-100 shadow-sm m-auto">
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="user-page flex-column">
+<header th:replace="fragments/header :: header"></header>
+<main class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <div th:replace="fragments/menu-profile :: menu-profile"></div>
+        </div>
+        <div class="col" style="max-width: 768px;">
+            <div class="main-block">
+                <div class="row justify-content-center">
+                    <h1 class="ttl-3">Удаление пользователя</h1>
+                    <p class="lbl-1 text-center">Для удаления пользователя введите пароль и нажмите кнопку
+                        "Удалить пользователя".</p>
+                    <p th:if="${provider != null}"
+                       class="lbl-1 text-center">Введите пароль
+                        <span th:text="${user.getAuthProvider().stream().findFirst().get()}"
+                        style="font-weight: 800;"></span></p>
+                    <div th:if="${message != null}" th:text="${message}"
+                         th:class="${messageType}" role="alert" style="width: auto;">
+                    </div>
+                    <form method="POST" th:action="@{/users/delete}" th:object="${user}"
+                          class="col-12 col-sm-12 col-md-10 col-lg-7 my-3 text-center">
+                        <div class="row my-2 p-0 align-items-center justify-content-center">
+                            <label class="col-12 col-sm-10 col-md-5 lbl-3" for="password">Текущий пароль<sup>*</sup>:</label>
+                            <div class="col-12 col-sm-10 col-md-7">
+                                <input type="password" name="password" id="password"
+                                       th:class="${passwordError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                                       onKeyup="checkFormDeleteUser()" placeholder="Введите новый пароль" autofocus="true">
+                                <span th:if="${passwordError != null}" th:text="${passwordError}" class="invalid-feedback"></span>
+                            </div>
+                        </div>
+                        <button class="btn btn-md btn-primary w-auto my-3" type="submit" id="btnDeleteUser">Удалить пользователя</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="administration-page flex-column">
+<header th:replace="fragments/header :: header"></header>
+<main class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <div th:replace="fragments/menu-admin :: menu-admin"></div>
+        </div>
+        <div class="col" style="max-width: 768px;">
+            <div class="main-block">
+                <div class="row justify-content-center">
+                    <h1 class="ttl-3">Настройка пользователей</h1>
+                    <div class="col-auto menu-admin-list-box">
+                        <ul class="menu-admin-list">
+                            <li th:each="user : ${users}"  class="my-1">
+                                <a th:href="@{/administration/users/edit/{id}(id=${user.id})}"
+                                   th:class="${user.id == userSelect.id} ? 'menu-admin-list-lnk active' : 'menu-admin-list-lnk'">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 th:text="${user.username}"
+                                            th:class="${user.active} ? 'my-0 mr-1' : 'text-decoration-line-through my-0 mr-1'" >Username</h6>
+                                        <span th:text="${user.authProvider.stream().findFirst().get()}" class="badge bg-secondary rounded-pill">14</span>
+                                    </div>
+                                    <div class="d-flex w-100 align-items-center justify-content-between">
+                                        <p th:text="${user.email}" class="my-0" style="font-size: 0.9rem">Email</p>
+                                        <div th:style="${user.activationCode == null} ? 'background: #248A3D; border-radius: 50%; width: 0.5rem; height: 0.5rem;' : 'background: #D70015; border-radius: 50%; width: 0.5rem; height: 0.5rem;' "></div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col mx-auto text-center">
+                        <div class="text-left">
+                            <form th:method="POST" th:action="@{/users/users/edit/{id}(id=${userSelect.id})}" th:object="${userSelect}">
+                                <div class="row g-3">
+                                    <div class="my-1">
+                                        <input th:field="*{id}" type="hidden"name="id">
+                                        <input th:field="*{password}" type="hidden" name="password">
+                                    </div>
+                                    <div class="my-1">
+                                        <label class="lbl-3 mb-1" for="username">Username</label>
+                                        <input th:field="*{username}" type="text" name="username" id="username"
+                                               class="form-control form-control-sm" placeholder="Enter username" readonly>
+                                    </div>
+                                    <div class="my-1">
+                                        <label class="lbl-3 mb-1" for="email">Email</label>
+                                        <input th:field="*{email}" type="email" name="email" id="email"
+                                               class="form-control form-control-sm" placeholder="Enter email">
+                                    </div>
+                                    <div class="my-1">
+                                        <label class="lbl-3 mb-1" for="firstname">Firstname</label>
+                                        <input th:field="*{firstname}" type="text" name="firstname" id="firstname"
+                                               class="form-control form-control-sm" placeholder="Enter Firstname">
+                                    </div>
+                                    <div class="my-1">
+                                        <label class="lbl-3 mb-1" for="lastname">Lastname</label>
+                                        <input th:field="*{lastname}" type="text" name="lastname" id="lastname"
+                                               class="form-control form-control-sm" placeholder="Enter lastname">
+                                    </div>
+                                    <div class="my-1">
+                                        <!--
+                                        <div th:text="${editUser.role}"></div>
+                                        <div th:each="role : ${roles}" th:text="${role}"></div>
+                                        -->
+                                        <label class="lbl-3 mb-1" for="role">Role</label>
+                                        <select class="form-select form-select-sm" name="role" id="role">
+                                            <option th:each="role : ${roles}" th:value=${role} th:text="${role.displayValue}"
+                                                    th:if="${userSelect.role == role} ? selected : ''"></option>
+                                        </select>
+                                    </div>
+                                    <div class="my-0">
+                                        <div class="form-check">
+                                            <input th:field="*{active}" type="checkbox" class="form-check-input"
+                                                   name="active" id="active" placeholder="Active">
+                                            <label class="lbl-3 mb-1" for="active">Active</label>
+                                        </div>
+                                    </div>
+                                    <div class="my-0">
+                                        <label class="lbl-3 mb-1">Date:</label>
+                                        <label th:text="${#temporals.format(userSelect.dateStamp, 'dd.MM.yyyy HH:mm:ss')}"
+                                               class="lbl-3 mb-1"></label>
+                                    </div> <!--${#temporals.format(newsResource.getDateStamp(), 'dd.MM.yyyy HH:mm:ss')}-->
+                                    <div class="my-1 text-center">
+                                        <button class="btn btn-primary w-50 btn-sm" type="submit">Сохранить</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="d-flex flex-column h-100" style="background: #f5f5f7;">
+<header th:replace="fragments/header :: header"></header>
+<main class="container">
+  <div class="row justify-content-center" style="">
+    <div class="col-auto">
+      <div th:replace="fragments/menu-about :: menu-about"></div>
+    </div>
+    <div class="col mb-3" style="max-width: 768px;">
+      <div class="content-about">
+        <h1 class="about-title">Контакты</h1>
+        <div th:if="${message != null}" th:text="${message}"
+             th:class="${messageType}" role="alert" style="width: auto;">
+        </div>
+        <div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-5 mx-auto">
+          <form th:method="POST" th:action="@{/about/contact}" th:object="${contact}">
+            <div class="row my-2 p-0">
+              <label for="emailContact" class="form-label mb-1">Email<sup>*</sup></label>
+              <input th:field="*{email}" type="text" name="email" id="emailContact"
+                     th:class="${#fields.hasErrors('email')} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                     onKeyup="checkform()" placeholder="Введите Ваш Email" autofocus="true" required>
+              <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">Text error</span>
+            </div>
+            <div class="row my-2 p-0">
+              <label for="subjectContact" class="form-label mb-1">Тема сообщения<sup>*</sup></label>
+              <input th:field="*{subject}" type="text" name="subject" id="subjectContact"
+                     th:class="${#fields.hasErrors('subject')} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                     onKeyup="checkform()" placeholder="Введите тему сообщения" required>
+              <span th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}" class="invalid-feedback">Text error</span>
+            </div>
+            <div class="row my-2 p-0">
+              <label for="nameContact" class="form-label mb-1">Имя<sup>*</sup></label>
+              <input th:field="*{name}" type="text" name="name" id="nameContact"
+                     th:class="${#fields.hasErrors('name')} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                     onKeyup="checkform()" placeholder="Введите Ваше имя" required>
+              <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback">Text error</span>
+            </div>
+            <div class="row my-2 p-0">
+              <label for="textContact" class="form-label mb-1">Сообщение<sup>*</sup></label>
+              <textarea th:field="*{text}" name="text" id="textContact"
+                        th:class="${#fields.hasErrors('text')} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                        onKeyup="checkform()" rows="6" placeholder="Введите сообщение" required></textarea>
+              <span th:if="${#fields.hasErrors('text')}" th:errors="*{text}" class="invalid-feedback">Text error</span>
+            </div>
+            <div th:if="${captchaError != null}" th:text="${captchaError}"
+                 class="alert alert-danger my-2" role="alert">
+            </div>
+            <div class="row my-2 justify-content-center">
+              <div class="col-auto">
+                <div class="g-recaptcha" data-sitekey="6Le5nKUaAAAAAK4GARJJziNGBN_qIt-DOcwE7UFV" data-callback="onSubmit"></div>
+              </div>
+            </div>
+            <div class="row my-3 p-0 justify-content-center">
+              <button class="btn btn-primary w-50" type="submit" id="btnContact">Отправить</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

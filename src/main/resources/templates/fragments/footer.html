@@ -1,0 +1,67 @@
+<div th:fragment="footer" class="footer-block">
+    <div class="container">
+        <div class="row footer-line ">
+            <div class="col col-md">
+                <a class="footer-ttl" th:href="@{/news/news/all}">Все новости</a>
+            </div>
+            <div class="col col-md">
+                <a class="footer-ttl" th:href="@{/subscriptions/news/all}">Моя лента</a>
+            </div>
+            <div class="col col-md">
+                <a class="footer-ttl" th:href="@{/users}">Пользователь</a>
+                <ul class="" style="list-style: none; padding: 0.0rem;">
+                    <li><a class="footer-txt" th:href="@{/users/subscriptions}">Мои подписки</a></li>
+                </ul>
+            </div>
+            <div class="col col-md">
+                <a class="footer-ttl" th:href="@{/about}">О нас</a>
+                <ul class="" style="list-style: none; padding: 0.0rem;">
+                    <li><a class="footer-txt" th:href="@{/about/contact}">Контакты</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row footer-line">
+            <div class="" style="color: #86868b; font-size: 0.9rem; font-weight: 200; line-height: inherit;">
+                Copyright © 2021 OzeroMediaLab.
+            </div>
+        </div>
+    </div>
+    <div class="row menu-footer-line">
+    </div>
+    <div class="row menu-footer">
+        <div class="col col-sm-11 col-md-10 col-lg-8 p-0 m-0 d-flex justify-content-around align-items-center">
+            <!--
+            <a href="">
+                <span class="fa-stack fa-sm">
+                  <i class="fas fa-square fa-stack-2x"></i>
+                  <i class="fas fa-redo-alt fa-stack-1x fa-inverse"></i>
+                </span>
+            </a>
+            -->
+            <a href="/" class="menu-footer-btn">
+                <i class="fas fa-redo-alt fa-2x d-block"></i>
+                <span class="menu-footer-lbl">Обновить</span>
+            </a>
+            <a th:href="@{/}" class="menu-footer-btn">
+                <i class="fas fa-home fa-2x d-block"></i>
+                <span class="menu-footer-lbl">Домой</span>
+            </a>
+            <a th:href="@{/subscriptions}" class="menu-footer-btn">
+                <i class="fas fa-pen-square fa-2x d-block"></i>
+                <span class="menu-footer-lbl">Подписки</span>
+            </a>
+            <a href="#" class="menu-footer-btn" id="btnResources">
+                <i class="fas fa-bullseye fa-2x d-block"></i>
+                <span class="menu-footer-lbl">Ресурсы</span>
+            </a>
+            <a href="#" class="menu-footer-btn" id="btnRubrics">
+                <i class="fab fa-buromobelexperte fa-2x d-block"></i>
+                <span class="menu-footer-lbl">Рубрики</span>
+            </a>
+            <a th:href="@{/about}" class="menu-footer-btn">
+                <i class="fas fa-info-circle fa-2x d-block"></i>
+                <span class="menu-footer-lbl">Инфо</span>
+            </a>
+        </div>
+    </div>
+</div>

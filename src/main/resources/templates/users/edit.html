@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="user-page flex-column">
+    <header th:replace="fragments/header :: header"></header>
+    <main class="container">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <div th:replace="fragments/menu-profile :: menu-profile"></div>
+            </div>
+            <div class="col" style="max-width: 768px;">
+                <div class="main-block">
+                    <div class="row justify-content-center">
+                        <h1 class="ttl-3">Редактирование данных</h1> <!--h3 fw-normal text-center my-3-->
+                        <div th:if="${messageError != null}" th:text="${messageError}"
+                             class="alert alert-danger" role="alert" style="width: auto;">
+                        </div>
+                        <form th:method="POST" th:action="@{/users/edit}" th:object="${user}"
+                              class="text-center" enctype="multipart/form-data">
+                            <div class="row justify-content-center">
+                                <div class="col-12 col-sm-12 col-md-3">
+                                    <div class="profile-image-box mx-auto">
+                                        <img th:src="${user.avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${user.avatar})}"
+                                             class="profile-image-img mx-auto" id="profileImg" alt="">
+                                        <!--th:src="${user.avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${user.avatar})}"-->
+                                    </div>
+                                    <div class="col-auto col-sm-auto col-md-12">
+                                        <div class="row my-2 text-center justify-content-center">
+                                            <label class="profile-image-lbl" for="profileFileUpload">Загрузить</label>
+                                            <input class="profile-image-inpt" type="file" accept="image/*"
+                                                   name="file" id="profileFileUpload">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md border-left">
+                                    <div class="row p-0 justify-content-center">
+                                        <div class="row my-2">
+                                            <input th:field="*{id}" type="hidden" name="id">
+                                        </div>
+                                        <div class="row my-2 p-0 align-items-center justify-content-center">
+                                            <label class="col-12 col-sm-10 col-md-4 lbl-3"
+                                                   for="email">Email<sup>*</sup>:</label>
+                                            <div class="col-12 col-sm-10 col-md-8">
+                                                <input th:field="*{email}" type="text" name="email" id="email"
+                                                       th:class="${emailError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                                                       placeholder="Введите адрес электронной почты" readonly>
+                                                <span th:if="${emailError != null}" th:text="${emailError}" class="invalid-feedback"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row my-2 p-0 align-items-center justify-content-center">
+                                            <label class="col-12 col-sm-10 col-md-4 lbl-3"
+                                                   style="font-size: 0.9rem;" for="username">Имя пользователя<sup>*</sup>:</label>
+                                            <div class="col-12 col-sm-10 col-md-8">
+                                                <input th:field="*{username}" type="text" name="username" id="username"
+                                                       th:class="${usernameError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                                                       onKeyup="checkFormEdit()" placeholder="Введите имя пользователя" autofocus="true">
+                                                <span th:if="${usernameError != null}" th:text="${usernameError}" class="invalid-feedback"></span>
+                                                <!--<span style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Text error</span>-->
+                                            </div>
+                                        </div>
+                                        <div class="row my-2 p-0 align-items-center justify-content-center">
+                                            <label class="col-12 col-sm-10 col-md-4 lbl-3"
+                                                   style="font-size: 0.9rem;" for="firstname">Имя:</label>
+                                            <div class="col-12 col-sm-10 col-md-8">
+                                                <input th:field="*{firstname}" type="text" name="firstname" id="firstname"
+                                                       th:class="${firstnameError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                                                       placeholder="Введите имя" value="">
+                                            </div>
+                                        </div>
+                                        <div class="row my-2 p-0 align-items-center justify-content-center">
+                                            <label class="col-12 col-sm-10 col-md-4 lbl-3"
+                                                   style="font-size: 0.9rem;" for="lastname">Фамилия:</label>
+                                            <div class="col-12 col-sm-10 col-md-8">
+                                                <input th:field="*{lastname}" type="text" name="lastname" id="lastname"
+                                                       th:class="${lastnameError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                                                       placeholder="Введите фамилию" value="">
+                                            </div>
+                                        </div>
+                                        <div class="row my-2 p-0 align-items-center justify-content-center">
+                                            <label class="col-12 col-sm-10 col-md-4 lbl-3"
+                                                   style="font-size: 0.9rem;" for="password">Пароль<sup>*</sup>:</label>
+                                            <div class="col-12 col-sm-10 col-md-8">
+                                                <input th:field="*{password}" type="password" name="password" id="password"
+                                                       th:class="${passwordError != null} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
+                                                       onKeyup="checkFormEdit()" placeholder="Введите пароль" value="">
+                                                <span th:if="${passwordError != null}" th:text="${passwordError}" class="invalid-feedback"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <button type="submit" class="btn btn-primary w-auto btn-sm my-4" id="btnEditSave">Сохранить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

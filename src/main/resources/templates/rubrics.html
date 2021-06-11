@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="administration-page flex-column">
+<header th:replace="fragments/header :: header"></header>
+<main class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <div th:replace="fragments/menu-admin :: menu-admin"></div>
+        </div>
+        <div class="col" style="max-width: 768px;">
+            <div class="main-block">
+                <div class="row justify-content-center">
+                    <h1 class="ttl-3">Настройка рубрик</h1>
+                    <div class="col-auto menu-admin-list-box">
+                        <ul class="menu-admin-list">
+                            <li th:each="rubric : ${rubrics}"  class="my-1">
+                                <a th:href="@{/administration/rubrics/{id}(id=${rubric.getId()})}"
+                                   th:class="${rubric.id == rubricSelect.id} ? 'menu-admin-list-lnk active' : 'menu-admin-list-lnk'">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 th:text="${rubric.aliasName}" class="my-0" >Name rubric</h6>
+                                        <span th:text="${rubric.range}" class="badge bg-secondary rounded-pill">14</span>
+                                    </div>
+                                    <div th:if="${rubric.rubricKey != null}" class="d-flex w-100 justify-content-between">
+                                        <p class="my-0" style="font-size: 0.9rem">Key:</p>
+                                        <p th:text="${rubric.rubricKey}" class="my-0" style="font-size: 0.9rem">Rubric</p>
+                                        <!--<small th:text="${newsResource.getActive()}">Active</small>-->
+                                    </div>
+                                    <div th:if="${rubric.rubricKey == null}" class="d-flex w-100 justify-content-between">
+                                        <p class="my-0 ml-3" style="font-size: 0.9rem">Key:</p>
+                                        <p class="my-0" style="font-size: 0.9rem">Name not set</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col mx-auto text-center">
+                        <form th:method="POST" th:action="@{/administration/rubrics/{id}(id=${rubricSelect.getId()})}" th:object="${rubricSelect}">
+                            <div class="row text-left">
+                                <div class="my-1">
+                                    <input th:field="*{id}" type="hidden" name="id" id="id" class="">
+                                </div>
+                                <div class="my-1">
+                                    <label class="lbl-3 mb-1" for="rubricKey">Ключ рубрики</label>
+                                    <input th:field="*{rubricKey}" type="text" name="rubricKey" id="rubricKey"
+                                           class="form-control form-control-sm" placeholder="Rubric key">
+                                </div>
+                                <div class="my-1">
+                                    <label class="lbl-3 mb-1" for="name">Наименование</label>
+                                    <input th:field="*{name}" type="text" name="name" id="name"
+                                           class="form-control form-control-sm" placeholder="Наименование рубрики">
+                                </div>
+                                <div class="my-1">
+                                    <label class="lbl-3 mb-1" for="aliasName">Псевдоним</label>
+                                    <input th:field="*{aliasName}" type="text" name="aliasName" id="aliasName"
+                                           class="form-control form-control-sm" placeholder="Псевдоним рубрики" readonly>
+                                </div>
+                                <div class="my-0">
+                                    <div class="form-check">
+                                        <input th:field="*{Active}" type="checkbox" name="" id="active"
+                                               class="form-check-input" placeholder="Active">
+                                        <label class="lbl-3 mb-1" for="active">Active</label>
+                                    </div>
+                                </div>
+                                <div class="my-0">
+                                    <label class="lbl-3 mb-1">Date:</label>
+                                    <label th:text="${#temporals.format(rubricSelect.dateStamp, 'dd.MM.yyyy HH:mm:ss')}"
+                                           class="lbl-3 mb-1"></label>
+                                </div> <!--${#temporals.format(newsResource.getDateStamp(), 'dd.MM.yyyy HH:mm:ss')}-->
+                                <div class="my-1 text-center">
+                                    <button class="btn btn-primary w-50 btn-sm" type="submit">Сохранить</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

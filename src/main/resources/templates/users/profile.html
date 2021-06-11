@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+
+<body class="user-page flex-column">
+    <header th:replace="fragments/header :: header" class="border-bottom"></header>
+    <main class="container">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <div th:replace="fragments/menu-profile :: menu-profile"></div>
+            </div>
+            <div class="col" style="max-width: 768px;">
+                <div class="row main-block justify-content-center">
+                    <h1 class="ttl-3">Мои данные</h1>
+                    <div th:if="${message != null}" th:text="${message}"
+                         class="col-10 alert alert-success" role="alert">
+                    </div>
+                    <div th:if="${messageError != null}" th:text="${messageError}"
+                         class="col-10 alert alert-danger" role="alert" style="width: auto;">
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-3">
+                            <div class="profile-image-box mx-auto">
+                                <img th:src="${user.avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${user.getAvatar()})}"
+                                     class="profile-image-img mx-auto" id="profileImage" alt="">
+                            </div>
+                        </div>
+                        <div class="col border-left">
+                            <div class="row my-3 align-items-center justify-content-center">
+                                <label class="col-12 col-sm-10 col-md-4 lbl-3">Email:</label>
+                                <label th:text="${user.getEmail()}" class="col-12 col-sm-10 col-md-8 lbl-1">VALUE</label>
+                            </div>
+                            <div class="row my-3 align-items-center justify-content-center">
+                                <label class="col-12 col-sm-10 col-md-4 lbl-3">Имя пользователя:</label>
+                                <label th:text="${user.getUsername()}" class="col-12 col-sm-10 col-md-8 lbl-1">VALUE</label>
+                            </div>
+                            <div class="row my-3 align-items-center justify-content-center">
+                                <label class="col-12 col-sm-10 col-md-4 lbl-3">Имя:</label>
+                                <label th:text="${user.getFirstname()}" class="col-12 col-sm-10 col-md-8 lbl-1">VALUE</label>
+                            </div>
+                            <div class="row my-3 align-items-center justify-content-center">
+                                <label class="col-12 col-sm-10 col-md-4 lbl-3">Фамилия:</label>
+                                <label th:text="${user.getLastname()}" class="col-12 col-sm-10 col-md-8 lbl-1">VALUE</label>
+                            </div>
+                            <div class="row my-3 align-items-center justify-content-center" th:if="${provider != null}">
+                                <label class="col-12 col-sm-10 col-md-4 lbl-3">Регистрация:</label>
+                                <label th:text="${provider}" class="col-12 col-sm-10 col-md-8 lbl-1">VALUE</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <a th:if="${user.activationCode != null}" th:href="@{/activate}" class="text-center my-2">Отправить код активации</a>
+                    </div>
+                </div>
+                <div class="row main-block">
+                    <div class="row">
+                        <h1 class="ttl-3">Мои подписки</h1>
+                        <div class="d-flex">
+                            <div th:if="${subscriptions == null}" class="justify-content-center">
+                                <p class="lbl-2">У Вас еще нет подписок на новостные ресурсы. </p>
+                                <p class="lbl-2">Для добавления подписок в ленту перейдите в
+                                    <a th:href="@{/users/subscriptions}"
+                                       th:style="${user.activationCode != null} ? 'color: currentColor; cursor: not-allowed; opacity: 0.8;' : ''">
+                                    Мои подписки
+                                    </a>
+                                    .
+                                </p>
+                            </div>
+                            <div th:each="subscription : ${subscriptions}" class="subscription-box">
+                                <img th:src="@{/static/images/{imageResource}(imageResource = ${subscription.resourceId.resourceKey} + '.png')}"
+                                     class="subscription-img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

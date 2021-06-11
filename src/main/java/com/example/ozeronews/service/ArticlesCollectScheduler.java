@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class ArticlesCollectSchedule {
+public class ArticlesCollectScheduler {
 
 //    https://michael-smirnov.ru/ - RSS каналы
 //    https://marketmedia.ru/rss/ - marketmedia
@@ -51,38 +51,38 @@ public class ArticlesCollectSchedule {
 //    @Value("${schedule.work}")
 //    private String scheduleTime;
 
-    public ArticlesCollectSchedule(NewsResourceRepository newsResourceRepository,
-                                   ParsingRIA parsingRIA,
-                                   ParsingTsargrad parsingTsargrad,
-                                   ParsingLentaru parsingLentaru,
-                                   ParsingMeduza parsingMeduza,
-                                   ParsingINOSMI parsingINOSMI,
-                                   ParsingXTrue parsingXTrue,
-                                   ParsingLife parsingLife,
-                                   ParsingFontanka parsingFontanka,
-                                   ParsingDniru parsingDniru,
-                                   ParsingRegnum parsingRegnum,
-                                   ParsingRBC parsingRBC,
-                                   ParsingVzglyad parsingVzglyad,
-                                   ParsingRT parsingRT,
-                                   ParsingIzvestia parsingIzvestia,
-                                   ParsingMK parsingMK,
-                                   ParsingNewsru parsingNewsru,
-                                   ParsingVedomosti parsingVedomosti,
-                                   ParsingGazetaRu parsingGazetaRu,
-                                   ParsingRG parsingRG,
-                                   ParsingForbes parsingForbes,
-                                   ParsingFinam parsingFinam,
-                                   ParsingDW parsingDW,
-                                   ParsingNewsUN parsingNewsUN,
-                                   ParsingSportExpress parsingSportExpress,
-                                   ParsingTASS parsingTASS,
-                                   ParsingInvesting parsingInvesting,
-                                   ParsingKommersant parsingKommersant,
-                                   ParsingRetailRu parsingRetailRu,
-                                   ParsingActualNews parsingActualNews,
-                                   ParsingSvoboda parsingSvoboda,
-                                   ParsingLifehacker parsingLifehacker) {
+    public ArticlesCollectScheduler(NewsResourceRepository newsResourceRepository,
+                                    ParsingRIA parsingRIA,
+                                    ParsingTsargrad parsingTsargrad,
+                                    ParsingLentaru parsingLentaru,
+                                    ParsingMeduza parsingMeduza,
+                                    ParsingINOSMI parsingINOSMI,
+                                    ParsingXTrue parsingXTrue,
+                                    ParsingLife parsingLife,
+                                    ParsingFontanka parsingFontanka,
+                                    ParsingDniru parsingDniru,
+                                    ParsingRegnum parsingRegnum,
+                                    ParsingRBC parsingRBC,
+                                    ParsingVzglyad parsingVzglyad,
+                                    ParsingRT parsingRT,
+                                    ParsingIzvestia parsingIzvestia,
+                                    ParsingMK parsingMK,
+                                    ParsingNewsru parsingNewsru,
+                                    ParsingVedomosti parsingVedomosti,
+                                    ParsingGazetaRu parsingGazetaRu,
+                                    ParsingRG parsingRG,
+                                    ParsingForbes parsingForbes,
+                                    ParsingFinam parsingFinam,
+                                    ParsingDW parsingDW,
+                                    ParsingNewsUN parsingNewsUN,
+                                    ParsingSportExpress parsingSportExpress,
+                                    ParsingTASS parsingTASS,
+                                    ParsingInvesting parsingInvesting,
+                                    ParsingKommersant parsingKommersant,
+                                    ParsingRetailRu parsingRetailRu,
+                                    ParsingActualNews parsingActualNews,
+                                    ParsingSvoboda parsingSvoboda,
+                                    ParsingLifehacker parsingLifehacker) {
 
         this.newsResourceRepository = newsResourceRepository;
         this.parsingRIA = parsingRIA;
@@ -126,42 +126,42 @@ public class ArticlesCollectSchedule {
     public void runCollectArticles() {
         System.out.println(LocalDateTime.now() + ": Start collecting articles");
 
-//        parsingRIA.getArticles();
-//        parsingTsargrad.getArticles();
-//        parsingTsargrad.getArticles();
-//        parsingLentaru.getArticles();
-//        parsingMeduza.getArticles();
-//        parsingINOSMI.getArticles();
-//        parsingXTrue.getArticles();
-//        parsingLife.getArticles();
-//        parsingFontanka.getArticles();
-//        parsingDniru.getArticles();
-//        parsingRegnum.getArticles();
-//        parsingRBC.getArticles();
-//        parsingVzglyad.getArticles();
-//        parsingRT.getArticles();
-//        parsingIzvestia.getArticles();
-//        parsingMK.getArticles();
-//        parsingNewsru.getArticles();
-//        parsingVedomosti.getArticles();
-//        parsingGazetaRu.getArticles();
-//        parsingRG.getArticles();
-//        parsingForbes.getArticles();
-//        parsingFinam.getArticles();
-//        parsingDW.getArticles();
-//        parsingNewsUN.getArticles();
-//        parsingSportExpress.getArticles();
-//        parsingTASS.getArticles();
-////        parsingInvesting.getArticles();
-//        parsingKommersant.getArticles();
-//        parsingRetailRu.getArticles();
-//        parsingActualNews.getArticles();
-//        parsingSvoboda.getArticles();
-//        parsingLifehacker.getArticles();
+        parsingRIA.getArticles();
+        parsingTsargrad.getArticles();
+        parsingTsargrad.getArticles();
+        parsingLentaru.getArticles();
+        parsingMeduza.getArticles();
+        parsingINOSMI.getArticles();
+        parsingXTrue.getArticles();
+        parsingLife.getArticles();
+        parsingFontanka.getArticles();
+        parsingDniru.getArticles();
+        parsingRegnum.getArticles();
+        parsingRBC.getArticles();
+        parsingVzglyad.getArticles();
+        parsingRT.getArticles();
+        parsingIzvestia.getArticles();
+        parsingMK.getArticles();
+        parsingNewsru.getArticles();
+        parsingVedomosti.getArticles();
+        parsingGazetaRu.getArticles();
+        parsingRG.getArticles();
+        parsingForbes.getArticles();
+        parsingFinam.getArticles();
+        parsingDW.getArticles();
+        parsingNewsUN.getArticles();
+        parsingSportExpress.getArticles();
+        parsingTASS.getArticles();
+//        parsingInvesting.getArticles();
+        parsingKommersant.getArticles();
+        parsingRetailRu.getArticles();
+        parsingActualNews.getArticles();
+        parsingSvoboda.getArticles();
+        parsingLifehacker.getArticles();
 
         Iterable<NewsResource> newsResources = newsResourceRepository.findAll();
         for (NewsResource newsResource : newsResources) {
-            if (newsResource.isActive() && true) {
+            if (newsResource.isActive() && false) {
                 switch (newsResource.getResourceKey()) {
                     case "ria":
                         parsingRIA.getArticles();

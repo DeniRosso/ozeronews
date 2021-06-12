@@ -12,10 +12,17 @@ handlers:
 
 manual_scaling:
   instances: 1
+
 resources:
   cpu: 1
   memory_gb: 4
   disk_size_gb: 10
+
+health_check:
+  enable_health_check: False
+
+#env_variables:
+#  ENCRYPT_KEY: your_encryption_key_here
 
 beta_settings:
   cloud_sql_instances: ozeronews:europe-north1:ozerodb

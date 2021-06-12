@@ -178,6 +178,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -191,6 +194,11 @@
 					<deploy.stopPreviousVersion>true</deploy.stopPreviousVersion>
 
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.4.40.v20210413</version>
 			</plugin>
 		</plugins>
 	</build>

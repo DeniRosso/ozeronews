@@ -1,5 +1,7 @@
-runtime: java8
+runtime: java
 env: flex
+
+service: ozeronews
 
 runtime_config:
   jdk: openjdk8

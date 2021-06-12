@@ -176,7 +176,9 @@
 				<configuration>
 					<deploy.projectId>ozeronews</deploy.projectId>
 					<deploy.version>20210610t183813</deploy.version>
+
 					<deploy.stopPreviousVersion>true</deploy.stopPreviousVersion>
+
 				</configuration>
 			</plugin>
 		</plugins>

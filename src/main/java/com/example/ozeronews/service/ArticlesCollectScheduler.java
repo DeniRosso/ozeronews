@@ -126,42 +126,41 @@ public class ArticlesCollectScheduler {
     public void runCollectArticles() {
         System.out.println(LocalDateTime.now() + ": Start collecting articles");
 
-        parsingRIA.getArticles();
-        parsingTsargrad.getArticles();
-        parsingTsargrad.getArticles();
-        parsingLentaru.getArticles();
-        parsingMeduza.getArticles();
-        parsingINOSMI.getArticles();
-        parsingXTrue.getArticles();
-        parsingLife.getArticles();
-        parsingFontanka.getArticles();
-        parsingDniru.getArticles();
-        parsingRegnum.getArticles();
-        parsingRBC.getArticles();
-        parsingVzglyad.getArticles();
-        parsingRT.getArticles();
-        parsingIzvestia.getArticles();
-        parsingMK.getArticles();
-        parsingNewsru.getArticles();
-        parsingVedomosti.getArticles();
-        parsingGazetaRu.getArticles();
-        parsingRG.getArticles();
-        parsingForbes.getArticles();
-        parsingFinam.getArticles();
-        parsingDW.getArticles();
-        parsingNewsUN.getArticles();
-        parsingSportExpress.getArticles();
-        parsingTASS.getArticles();
-//        parsingInvesting.getArticles();
-        parsingKommersant.getArticles();
-        parsingRetailRu.getArticles();
-        parsingActualNews.getArticles();
-        parsingSvoboda.getArticles();
-        parsingLifehacker.getArticles();
+//        parsingRIA.getArticles();
+//        parsingTsargrad.getArticles();
+//        parsingLentaru.getArticles();
+//        parsingMeduza.getArticles();
+//        parsingINOSMI.getArticles();
+//        parsingXTrue.getArticles();
+//        parsingLife.getArticles();
+//        parsingFontanka.getArticles();
+//        parsingDniru.getArticles();
+//        parsingRegnum.getArticles();
+//        parsingRBC.getArticles();
+//        parsingVzglyad.getArticles();
+//        parsingRT.getArticles();
+//        parsingIzvestia.getArticles();
+//        parsingMK.getArticles();
+//        parsingNewsru.getArticles();
+//        parsingVedomosti.getArticles();
+//        parsingGazetaRu.getArticles();
+//        parsingRG.getArticles();
+//        parsingForbes.getArticles();
+//        parsingFinam.getArticles();
+//        parsingDW.getArticles();
+//        parsingNewsUN.getArticles();
+//        parsingSportExpress.getArticles();
+//        parsingTASS.getArticles();
+////        parsingInvesting.getArticles();
+//        parsingKommersant.getArticles();
+//        parsingRetailRu.getArticles();
+//        parsingActualNews.getArticles();
+//        parsingSvoboda.getArticles();
+//        parsingLifehacker.getArticles();
 
         Iterable<NewsResource> newsResources = newsResourceRepository.findAll();
         for (NewsResource newsResource : newsResources) {
-            if (newsResource.isActive() && false) {
+            if (newsResource.isActive() && true) {
                 switch (newsResource.getResourceKey()) {
                     case "ria":
                         parsingRIA.getArticles();

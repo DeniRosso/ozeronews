@@ -11,7 +11,7 @@ handlers:
     script: this field is required, but ignored
 
 manual_scaling:
-  instances: 1
+  instances: 2
 
 resources:
   cpu: 1

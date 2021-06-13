@@ -19,7 +19,7 @@ resources:
   disk_size_gb: 10
 
 health_check:
-  enable_health_check: False
+  enable_health_check: True
 
 #env_variables:
 #  ENCRYPT_KEY: your_encryption_key_here

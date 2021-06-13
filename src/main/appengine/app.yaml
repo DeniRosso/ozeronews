@@ -11,15 +11,15 @@ handlers:
     script: this field is required, but ignored
 
 manual_scaling:
-  instances: 2
+  instances: 1
 
 resources:
   cpu: 1
   memory_gb: 4
   disk_size_gb: 10
 
-#health_check:
-#  enable_health_check: False
+health_check:
+  enable_health_check: False
 
 #env_variables:
 #  ENCRYPT_KEY: your_encryption_key_here

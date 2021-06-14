@@ -88,6 +88,8 @@ public class ParsingActualNews {
 //                            Instant.parse(articleDescription.select("meta[itemprop=datePublished]").first().attr("content")),
 //                            ZoneId.of("UTC"));
 
+//                    <meta itemprop="datePublished" content="2021-06-14T9:28:44+0330">
+
                     String pubDate = articleDescription.select("meta[itemprop=datePublished]").first().attr("content");
 
                     String date;
@@ -98,7 +100,7 @@ public class ParsingActualNews {
                     } else {
                         date = pubDate.substring(0, pubDate.indexOf("T"));
                     }
-                    if (pubDate.length() - pubDate.indexOf("T") == 7) {
+                    if (pubDate.indexOf("+") - pubDate.indexOf("T") - 1 == 7) {
                         time = "0" + pubDate.substring(pubDate.indexOf("T") + 1);
                     } else {
                         time = pubDate.substring(pubDate.indexOf("T") + 1);

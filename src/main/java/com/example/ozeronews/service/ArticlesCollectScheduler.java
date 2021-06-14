@@ -246,6 +246,10 @@ public class ArticlesCollectScheduler {
                         parsingFinam.getArticles();
                         System.out.println(LocalDateTime.now() + ": Collection articles Finam completed");
                         break;
+                    case "dw":
+                        parsingDW.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection articles dw completed");
+                        break;
                     case "newsun":
                         parsingNewsUN.getArticles();
                         System.out.println(LocalDateTime.now() + ": Collection articles NewsUN completed");

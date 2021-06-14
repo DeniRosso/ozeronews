@@ -140,12 +140,14 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
+			<!--
 			<exclusions>
 				<exclusion>
 					<groupId>org.hibernate</groupId>
 					<artifactId>hibernate-validator</artifactId>
 				</exclusion>
 			</exclusions>
+			-->
 		</dependency>
 		<!--
 		<dependency>
@@ -174,13 +176,14 @@
 			<version>2.3.0</version>
 		</dependency>
 
-		<!--
+
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud</artifactId>
 			<version>0.8.0</version>
 		</dependency>
-		-->
+		<!--
+
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>spring-cloud-gcp-core</artifactId>
@@ -196,6 +199,7 @@
 			<artifactId>spring-cloud-gcp-starter</artifactId>
 			<version>2.0.2</version>
 		</dependency>
+		-->
 		<!--
 		<dependency>
 			<groupId>com.google.cloud</groupId>
@@ -203,6 +207,7 @@
 			<version>2.0.2</version>
 		</dependency>
 		-->
+		<!--
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
@@ -213,7 +218,7 @@
 			<artifactId>spring-security-oauth2-resource-server</artifactId>
 			<version>5.5.0</version>
 		</dependency>
-
+		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-maven-plugin</artifactId>

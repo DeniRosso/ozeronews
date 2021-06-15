@@ -189,16 +189,16 @@ public class ArticlesCollectScheduler {
 //        parsingActualNews.getArticles();
 //        parsingSvoboda.getArticles();
 //        parsingLifehacker.getArticles();
-        parsingFAN.getArticles();
-        parsingTopnewsru.getArticles();
-        parsingNewsinfo.getArticles();
-        parsingM24.getArticles();
-        parsingMatchTV.getArticles();
-        parsingInterfax.getArticles();
-        parsingZaRulem.getArticles();
-        parsingTVRain.getArticles();
-        parsingBagnet.getArticles();
-        parsingABNews.getArticles();
+//        parsingFAN.getArticles();
+//        parsingTopnewsru.getArticles();
+//        parsingNewsinfo.getArticles();
+//        parsingM24.getArticles();
+//        parsingMatchTV.getArticles();
+//        parsingInterfax.getArticles();
+//        parsingZaRulem.getArticles();
+//        parsingTVRain.getArticles();
+//        parsingBagnet.getArticles();
+//        parsingABNews.getArticles();
 
         Iterable<NewsResource> newsResources = newsResourceRepository.findAll();
         for (NewsResource newsResource : newsResources) {

@@ -35,7 +35,8 @@ public class ParsingSportExpress {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "sportexpress";
         String newsResourceLink = "https://www.sport-express.ru/";
         String newsLink = "https://www.sport-express.ru/services/materials/news/se/";
@@ -118,9 +119,11 @@ public class ParsingSportExpress {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

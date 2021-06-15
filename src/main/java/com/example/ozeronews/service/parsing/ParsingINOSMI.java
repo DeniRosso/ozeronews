@@ -30,8 +30,9 @@ public class ParsingINOSMI {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
         Document doc;
+        int articleCount = 0;
         String newsResourceKey = "inosmi";
         String newsResourceLink = "https://inosmi.ru";
         String newsLink = "https://inosmi.ru/today";
@@ -108,10 +109,11 @@ public class ParsingINOSMI {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-//                System.out.println("article (Inosmi) = " + article);
+                articleCount++;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

@@ -38,7 +38,8 @@ public class ParsingRBC {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "rbc";
         String newsResourceLink = "https://www.rbc.ru";
         String newsLink = "http://static.feed.rbc.ru/rbc/logical/footer/news.rss";
@@ -135,9 +136,11 @@ public class ParsingRBC {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

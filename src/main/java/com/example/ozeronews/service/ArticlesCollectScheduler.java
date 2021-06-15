@@ -15,6 +15,8 @@ public class ArticlesCollectScheduler {
 //    https://marketmedia.ru/rss/ - marketmedia
 //    https://novayagazeta.ru/news - novayagazeta
 
+    int articleCount;
+
     private NewsResourceRepository newsResourceRepository;
     private ParsingRIA parsingRIA;
     private ParsingTsargrad parsingTsargrad;
@@ -47,6 +49,16 @@ public class ArticlesCollectScheduler {
     private ParsingActualNews parsingActualNews;
     private ParsingSvoboda parsingSvoboda;
     private ParsingLifehacker parsingLifehacker;
+    private ParsingFAN parsingFAN;
+    private ParsingTopnewsru parsingTopnewsru;
+    private ParsingNewsinfo parsingNewsinfo;
+    private ParsingM24 parsingM24;
+    private ParsingMatchTV parsingMatchTV;
+    private ParsingInterfax parsingInterfax;
+    private ParsingZaRulem parsingZaRulem;
+    private ParsingTVRain parsingTVRain;
+    private ParsingBagnet parsingBagnet;
+    private ParsingABNews parsingABNews;
 
 //    @Value("${schedule.work}")
 //    private String scheduleTime;
@@ -82,7 +94,17 @@ public class ArticlesCollectScheduler {
                                     ParsingRetailRu parsingRetailRu,
                                     ParsingActualNews parsingActualNews,
                                     ParsingSvoboda parsingSvoboda,
-                                    ParsingLifehacker parsingLifehacker) {
+                                    ParsingLifehacker parsingLifehacker,
+                                    ParsingFAN parsingFAN,
+                                    ParsingTopnewsru parsingTopnewsru,
+                                    ParsingNewsinfo parsingNewsinfo,
+                                    ParsingM24 parsingM24,
+                                    ParsingMatchTV parsingMatchTV,
+                                    ParsingInterfax parsingInterfax,
+                                    ParsingZaRulem parsingZaRulem,
+                                    ParsingTVRain parsingTVRain,
+                                    ParsingBagnet parsingBagnet,
+                                    ParsingABNews parsingABNews) {
 
         this.newsResourceRepository = newsResourceRepository;
         this.parsingRIA = parsingRIA;
@@ -116,6 +138,16 @@ public class ArticlesCollectScheduler {
         this.parsingActualNews = parsingActualNews;
         this.parsingSvoboda = parsingSvoboda;
         this.parsingLifehacker = parsingLifehacker;
+        this.parsingFAN = parsingFAN;
+        this.parsingTopnewsru = parsingTopnewsru;
+        this.parsingNewsinfo = parsingNewsinfo;
+        this.parsingM24 = parsingM24;
+        this.parsingMatchTV = parsingMatchTV;
+        this.parsingInterfax = parsingInterfax;
+        this.parsingZaRulem = parsingZaRulem;
+        this.parsingTVRain = parsingTVRain;
+        this.parsingBagnet = parsingBagnet;
+        this.parsingABNews = parsingABNews;
     }
 
     @Scheduled(initialDelay = 10000, fixedRateString = "${article.collection.schedule}")
@@ -157,134 +189,184 @@ public class ArticlesCollectScheduler {
 //        parsingActualNews.getArticles();
 //        parsingSvoboda.getArticles();
 //        parsingLifehacker.getArticles();
+//        parsingFAN.getArticles();
+//        parsingTopnewsru.getArticles();
+//        parsingNewsinfo.getArticles();
+//        parsingM24.getArticles();
+//        parsingMatchTV.getArticles();
+//        parsingInterfax.getArticles();
+//        parsingZaRulem.getArticles();
+//        parsingTVRain.getArticles();
+//        parsingBagnet.getArticles();
+//        parsingABNews.getArticles();
 
         Iterable<NewsResource> newsResources = newsResourceRepository.findAll();
         for (NewsResource newsResource : newsResources) {
             if (newsResource.isActive() && true) {
                 switch (newsResource.getResourceKey()) {
                     case "ria":
-                        parsingRIA.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles RIA completed");
+                        articleCount = parsingRIA.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles RIA completed");
                         break;
                     case "tsargrad":
-                        parsingTsargrad.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Tsargrad completed");
+                        articleCount = parsingTsargrad.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Tsargrad completed");
                         break;
                     case "lentaru":
-                        parsingLentaru.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles LentaRu completed");
+                        articleCount = parsingLentaru.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles LentaRu completed");
                         break;
                     case "meduza":
-                        parsingMeduza.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Meduza completed");
+                        articleCount = parsingMeduza.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Meduza completed");
                         break;
                     case "inosmi":
-                        parsingINOSMI.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Inosmi completed");
+                        articleCount = parsingINOSMI.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Inosmi completed");
                         break;
                     case "xtrue":
-                        parsingXTrue.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles X-True completed");
+                        articleCount = parsingXTrue.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles X-True completed");
                         break;
                     case "life":
-                        parsingLife.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Life completed");
+                        articleCount = parsingLife.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Life completed");
                         break;
                     case "fontanka":
-                        parsingFontanka.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Fontanka completed");
+                        articleCount = parsingFontanka.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Fontanka completed");
                         break;
                     case "dniru":
-                        parsingDniru.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles DniRu completed");
+                        articleCount = parsingDniru.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles DniRu completed");
                         break;
                     case "regnum":
-                        parsingRegnum.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Regnum completed");
+                        articleCount = parsingRegnum.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Regnum completed");
                         break;
                     case "rbc":
-                        parsingRBC.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles RBC completed");
+                        articleCount = parsingRBC.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles RBC completed");
                         break;
                     case "rt":
-                        parsingRT.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles RT completed");
+                        articleCount = parsingRT.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles RT completed");
                         break;
                     case "izvestia":
-                        parsingIzvestia.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Izvestia completed");
+                        articleCount = parsingIzvestia.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Izvestia completed");
                         break;
                     case "vzglyad":
-                        parsingVzglyad.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Vzglyad completed");
+                        articleCount = parsingVzglyad.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Vzglyad completed");
                         break;
                     case "newsru":
-                        parsingNewsru.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles NewsRu completed");
+                        articleCount = parsingNewsru.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles NewsRu completed");
                         break;
                     case "vedomosti":
-                        parsingVedomosti.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Vedomosti completed");
+                        articleCount = parsingVedomosti.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Vedomosti completed");
                         break;
                     case "mk":
-                        parsingMK.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles MK completed");
+                        articleCount = parsingMK.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles MK completed");
                         break;
                     case "gazetaru":
-                        parsingGazetaRu.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles GazetaRu completed");
+                        articleCount = parsingGazetaRu.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles GazetaRu completed");
                         break;
                     case "rg":
-                        parsingRG.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles RG completed");
+                        articleCount = parsingRG.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles RG completed");
                         break;
                     case "forbes":
-                        parsingForbes.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Forbes completed");
+                        articleCount = parsingForbes.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Forbes completed");
                         break;
                     case "finam":
-                        parsingFinam.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Finam completed");
+                        articleCount = parsingFinam.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Finam completed");
                         break;
                     case "dw":
-                        parsingDW.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles dw completed");
+                        articleCount = parsingDW.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles dw completed");
                         break;
                     case "newsun":
-                        parsingNewsUN.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles NewsUN completed");
+                        articleCount = parsingNewsUN.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles NewsUN completed");
                         break;
                     case "sportexpress":
-                        parsingSportExpress.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles SportExpress completed");
+                        articleCount = parsingSportExpress.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles SportExpress completed");
                         break;
                     case "tass":
-                        parsingTASS.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles TASS completed");
+                        articleCount = parsingTASS.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles TASS completed");
                         break;
                     case "investing-":
-                        parsingInvesting.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Investing completed");
+                        articleCount = parsingInvesting.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Investing completed");
                         break;
                     case "kommersant":
-                        parsingKommersant.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Kommersant completed");
+                        articleCount = parsingKommersant.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Kommersant completed");
                         break;
                     case "retailru":
-                        parsingRetailRu.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles RetailRu completed");
+                        articleCount = parsingRetailRu.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles RetailRu completed");
                         break;
                     case "actualnews":
-                        parsingActualNews.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles ActualNews completed");
+                        articleCount = parsingActualNews.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles ActualNews completed");
                         break;
                     case "svoboda":
-                        parsingSvoboda.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Svoboda completed");
+                        articleCount = parsingSvoboda.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Svoboda completed");
                         break;
                     case "lifehacker":
-                        parsingLifehacker.getArticles();
-                        System.out.println(LocalDateTime.now() + ": Collection articles Lifehacker completed");
+                        articleCount = parsingLifehacker.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Lifehacker completed");
+                        break;
+                    case "fan":
+                        articleCount = parsingFAN.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles FAN completed");
+                        break;
+                    case "topnewsru":
+                        articleCount = parsingTopnewsru.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles TopNewsru completed");
+                        break;
+                    case "newsinfo":
+                        articleCount = parsingNewsinfo.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles newsinfo completed");
+                        break;
+                    case "m24":
+                        articleCount = parsingM24.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles M24 completed");
+                        break;
+                    case "matchtv":
+                        articleCount = parsingMatchTV.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles MatchTV completed");
+                        break;
+                    case "interfax":
+                        articleCount = parsingInterfax.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Interfax completed");
+                        break;
+                    case "zarulem":
+                        articleCount = parsingZaRulem.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles ZaRulem completed");
+                        break;
+                    case "tvrain":
+                        articleCount = parsingTVRain.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles TVRain completed");
+                        break;
+                    case "bagnet":
+                        articleCount = parsingBagnet.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles Bagnet completed");
+                        break;
+                    case "abnews":
+                        articleCount = parsingABNews.getArticles();
+                        System.out.println(LocalDateTime.now() + ": Collection " + articleCount + " articles ABNews completed");
                         break;
                 }
             }

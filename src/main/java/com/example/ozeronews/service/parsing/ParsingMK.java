@@ -39,7 +39,8 @@ public class ParsingMK {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "mk";
         String newsResourceLink = "https://www.mk.ru/";
         String newsLink = "https://www.mk.ru/rss/news/index.xml";
@@ -129,6 +130,7 @@ public class ParsingMK {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
+                articleCount++;
 
 //                System.out.println("*************************");
 ////                System.out.println("article (RIA) = " + article);
@@ -144,5 +146,6 @@ public class ParsingMK {
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

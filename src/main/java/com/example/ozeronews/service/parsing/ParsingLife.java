@@ -35,7 +35,8 @@ public class ParsingLife {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "life";
         String newsResourceLink = "https://life.ru";
         String newsLink = "https://life.ru/rss";
@@ -115,9 +116,11 @@ public class ParsingLife {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

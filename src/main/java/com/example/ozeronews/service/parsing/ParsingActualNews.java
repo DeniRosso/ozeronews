@@ -33,7 +33,8 @@ public class ParsingActualNews {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "actualnews";
         String newsResourceLink = "https://actualnews.org/";
         String newsLink = "https://actualnews.org/";
@@ -145,10 +146,12 @@ public class ParsingActualNews {
                     article.setDateStamp(dateStamp);
 
                     articleSaveService.saveArticle(article);
+                    articleCount++;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

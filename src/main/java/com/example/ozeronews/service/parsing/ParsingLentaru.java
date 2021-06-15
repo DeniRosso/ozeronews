@@ -35,7 +35,8 @@ public class ParsingLentaru {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "lentaru";
         String newsResourceLink = "https://lenta.ru";
         String newsLink = "https://lenta.ru/rss/news";
@@ -114,10 +115,11 @@ public class ParsingLentaru {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-//                System.out.println("article (Lenta) = " + article);
+                articleCount++;
             }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

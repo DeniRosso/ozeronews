@@ -35,7 +35,8 @@ public class ParsingForbes {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "forbes";
         String newsResourceLink = "https://www.forbes.ru/";
         String newsLink = "https://www.forbes.ru/newrss.xml";
@@ -116,9 +117,11 @@ public class ParsingForbes {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

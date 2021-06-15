@@ -38,7 +38,8 @@ public class ParsingIzvestia {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "izvestia";
         String newsResourceLink = "https://iz.ru/";
         String newsLink = "https://iz.ru/xml/rss/all.xml";
@@ -130,9 +131,11 @@ public class ParsingIzvestia {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

@@ -37,8 +37,8 @@ public class ParsingRIA {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
-        Document doc;
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "ria";
         String newsResourceLink = "https://ria.ru";
         String newsLink = "https://ria.ru/export/rss2/archive/index.xml";
@@ -135,9 +135,11 @@ public class ParsingRIA {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

@@ -36,8 +36,8 @@ public class ParsingVedomosti {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
-        Document doc;
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "vedomosti";
         String newsResourceLink = "https://www.vedomosti.ru/";
         String newsLink = "https://www.vedomosti.ru/rss/news";
@@ -114,9 +114,11 @@ public class ParsingVedomosti {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

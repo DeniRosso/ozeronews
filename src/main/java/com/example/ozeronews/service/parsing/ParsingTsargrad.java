@@ -33,7 +33,8 @@ public class ParsingTsargrad {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "tsargrad";
         String newsResourceLink = "https://tsargrad.tv";
         String newsLink = "https://tsargrad.tv/news";
@@ -120,5 +121,6 @@ public class ParsingTsargrad {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

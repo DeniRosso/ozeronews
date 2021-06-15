@@ -34,7 +34,8 @@ public class ParsingXTrue {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "xtrue";
         String newsResourceLink = "https://x-true.info";
         String newsLink = "https://x-true.info/rss.xml";
@@ -113,9 +114,11 @@ public class ParsingXTrue {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

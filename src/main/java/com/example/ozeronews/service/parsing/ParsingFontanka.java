@@ -35,7 +35,8 @@ public class ParsingFontanka {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "fontanka";
         String newsResourceLink = "https://www.fontanka.ru";
         String newsLink = "https://www.fontanka.ru/fontanka.rss";
@@ -112,9 +113,11 @@ public class ParsingFontanka {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

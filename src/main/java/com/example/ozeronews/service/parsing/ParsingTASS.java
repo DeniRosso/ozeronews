@@ -35,7 +35,8 @@ public class ParsingTASS {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "tass";
         String newsResourceLink = "https://tass.ru/";
         String newsLink = "http://tass.ru/rss/v2.xml";
@@ -118,9 +119,11 @@ public class ParsingTASS {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

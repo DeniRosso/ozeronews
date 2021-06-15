@@ -35,7 +35,8 @@ public class ParsingRG {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "rg";
         String newsResourceLink = "https://rg.ru/";
         String newsLink = "https://rg.ru/xml/index.xml";
@@ -114,9 +115,11 @@ public class ParsingRG {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

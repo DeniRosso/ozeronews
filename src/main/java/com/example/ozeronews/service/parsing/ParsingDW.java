@@ -38,7 +38,8 @@ public class ParsingDW {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "dw";
         String newsResourceLink = "https://www.dw.com/";
         String newsLink = "https://rss.dw.com/xml/rss-ru-all";
@@ -132,9 +133,11 @@ public class ParsingDW {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

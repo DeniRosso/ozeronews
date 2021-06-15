@@ -35,7 +35,8 @@ public class ParsingGazetaRu {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "gazetaru";
         String newsResourceLink = "https://www.gazeta.ru/";
         String newsLink = "https://www.gazeta.ru/export/rss/lenta.xml";
@@ -118,9 +119,11 @@ public class ParsingGazetaRu {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

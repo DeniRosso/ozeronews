@@ -39,7 +39,8 @@ public class ParsingNewsUN {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "newsun";
         String newsResourceLink = "https://news.un.org/ru/";
         String newsLink = "https://news.un.org/feed/subscribe/ru/news/all/rss.xml";
@@ -132,9 +133,11 @@ public class ParsingNewsUN {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

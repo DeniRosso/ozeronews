@@ -37,7 +37,8 @@ public class ParsingMeduza {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "meduza";
         String newsResourceLink = "https://meduza.io";
         String newsLink = "https://meduza.io/rss2/all";
@@ -125,10 +126,11 @@ public class ParsingMeduza {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-//                System.out.println("article (Meduza) = " + article);
+                articleCount++;
             }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

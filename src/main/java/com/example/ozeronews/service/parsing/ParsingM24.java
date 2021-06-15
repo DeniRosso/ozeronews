@@ -6,10 +6,13 @@ import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.ArticleRepository;
 import com.example.ozeronews.service.ArticleSaveService;
 import com.rometools.rome.feed.synd.SyndCategory;
+import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingFinam {
+public class ParsingM24 {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -36,13 +39,13 @@ public class ParsingFinam {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "finam";
-        String newsResourceLink = "https://www.finam.ru/";
-        String newsLink = "https://www.finam.ru/analysis/conews/rsspoint";
+        String newsResourceKey = "m24";
+        String newsResourceLink = "https://www.m24.ru/";
+        String newsLink = "https://www.m24.ru/yandex.xml";
         String articleTitle;
         String articleLink;
         String articleNumber;
-        String articleImage = null;
+        String articleImage;
         String rubricAliasName;
         ZonedDateTime articleDatePublication;
         ZonedDateTime dateStamp;
@@ -64,17 +67,17 @@ public class ParsingFinam {
 
                 articleTitle = feed.getEntries().get(i).getTitle();
                 articleLink = feed.getEntries().get(i).getLink();
-
-                articleNumber = newsResourceKey + "_" + articleLink.substring(
-                        articleLink.lastIndexOf("-") + 1, articleLink.lastIndexOf("/"));
+                articleNumber = newsResourceKey + "_" + articleLink.substring(articleLink.lastIndexOf("/") + 1);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
-                if (feed.getEntries().get(i).getDescription().toString().indexOf("src=\"") > 0) {
-                    articleImage = feed.getEntries().get(i).getDescription().toString().substring(
-                            feed.getEntries().get(i).getDescription().toString().indexOf("src=\"") + 5
-                    );
-                    articleImage = articleImage.substring(0, articleImage.indexOf("\""));
+                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
+                if(enclosures!=null) {
+                    for(SyndEnclosure enclosure : enclosures) {
+                        if(enclosure.getType()!=null && enclosure.getType().equals("image/jpeg")){
+                            articleImage = enclosure.getUrl();
+                        }
+                    }
                 }
 
                 articleDatePublication = ZonedDateTime.ofInstant(
@@ -88,10 +91,8 @@ public class ParsingFinam {
                 List<SyndCategory> categories = feed.getEntries().get(i).getCategories();
                 if(categories!=null) {
                     for(SyndCategory category : categories) {
-                        rubricAliasName = category.getName();
-
+                        rubricAliasName = category.getName().substring(0, 1).toUpperCase() + category.getName().substring(1);
                         if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
-
                         articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                     }
                 }
@@ -114,8 +115,8 @@ public class ParsingFinam {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-                    articleCount++;
-                }
+                articleCount++;
+            }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }

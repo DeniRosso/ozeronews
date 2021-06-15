@@ -36,8 +36,8 @@ public class ParsingRegnum {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
-        Document doc;
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "regnum";
         String newsResourceLink = "https://regnum.ru";
         String newsLink = "https://regnum.ru/rss/news.html";
@@ -115,9 +115,11 @@ public class ParsingRegnum {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

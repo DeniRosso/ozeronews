@@ -36,8 +36,9 @@ public class ParsingInvesting {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
-        String newsResourceKey = "tass";
+    public int getArticles() {
+        int articleCount = 0;
+        String newsResourceKey = "investing";
         String newsResourceLink = "https://ru.investing.com/";
         String newsLink = "https://ru.investing.com/rss/news.rss";
         String articleTitle;
@@ -84,13 +85,27 @@ public class ParsingInvesting {
 //                        Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
 //                        ZoneId.of("UTC"));
 
-//                System.out.println("getPublishedDate() = " + feed.getEntries().get(i).getPublishedDate().toString());
+//                System.out.println("getPublishedDate() = " + feed.getEntries().get(i).getPublishedDate());
                 System.out.println("getPublishedDate() = " + feed.getEntries().get(i).toString());
 
-                articleDatePublication = ZonedDateTime.of(
-                        LocalDateTime.parse(feed.getEntries().get(i).getPublishedDate().toString(),
+//                articleDatePublication = ZonedDateTime.of(
+//                        LocalDateTime.parse(feed.getEntries().get(i).getPublishedDate().toString(),
+//                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+//                        ZoneId.of("Europe/Moscow")
+//                ).withZoneSameInstant(ZoneId.of("UTC"));
+
+//                2021-06-15 08:44:03
+
+                String pubDate = feed.getEntries().get(i).getPublishedDate().toString();
+                String date = pubDate.substring(0, 10);
+                String time = pubDate.substring(12, 19);
+
+                System.out.println("date time = " + date + " " + time);
+
+                articleDatePublication = ZonedDateTime.of(LocalDateTime.parse(
+                        (date + " " + time),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                        ZoneId.of("Europe/Moscow")
+                        ZoneId.of("Europe/Tallinn")
                 ).withZoneSameInstant(ZoneId.of("UTC"));
 
                 dateStamp = ZonedDateTime.now(ZoneId.of("UTC"));
@@ -129,6 +144,7 @@ public class ParsingInvesting {
                 article.setDateStamp(dateStamp);
 
 //                articleSaveService.saveArticle(article);
+                articleCount++;
 
                 System.out.println("*************************");
 //                System.out.println("article = " + article);
@@ -144,5 +160,6 @@ public class ParsingInvesting {
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

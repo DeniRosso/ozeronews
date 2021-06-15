@@ -6,6 +6,7 @@ import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.ArticleRepository;
 import com.example.ozeronews.service.ArticleSaveService;
 import com.rometools.rome.feed.synd.SyndCategory;
+import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
@@ -34,7 +35,8 @@ public class ParsingRT {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "rt";
         String newsResourceLink = "https://russian.rt.com/";
         String newsLink = "https://russian.rt.com/rss";
@@ -68,12 +70,20 @@ public class ParsingRT {
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
-                if (feed.getEntries().get(i).getDescription().getValue().indexOf("src=\"") > 0) {
-                    articleImage = feed.getEntries().get(i).getDescription().getValue();
-                    articleImage = articleImage.substring(articleImage.indexOf("src=\"") + 5);
-                    articleImage = articleImage.substring(0, articleImage.indexOf("\""));
-                }
+//                if (feed.getEntries().get(i).getDescription().getValue().indexOf("src=\"") > 0) {
+//                    articleImage = feed.getEntries().get(i).getDescription().getValue();
+//                    articleImage = articleImage.substring(articleImage.indexOf("src=\"") + 5);
+//                    articleImage = articleImage.substring(0, articleImage.indexOf("\""));
+//                }
 
+                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
+                if(enclosures!=null) {
+                    for(SyndEnclosure enclosure : enclosures) {
+                        if(enclosure.getType()!=null && enclosure.getType().equals("image/jpeg")){
+                            articleImage = enclosure.getUrl();
+                        }
+                    }
+                }
 
                 articleDatePublication = ZonedDateTime.ofInstant(
                         Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
@@ -109,17 +119,11 @@ public class ParsingRT {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-//                System.out.println("article (Lenta) = " + article);
-//                System.out.println("articleTitle = " + articleTitle);
-//                System.out.println("articleLink = " + articleLink);
-//                System.out.println("articleNumber = " + articleNumber);
-//                System.out.println("articleImage = " + articleImage);
-//                System.out.println("articleRubricList = " + articleRubricList);
-//                System.out.println("articleDatePublication = " + articleDatePublication);
-//                System.out.println("dateStamp = " + dateStamp);
+                articleCount++;
             }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

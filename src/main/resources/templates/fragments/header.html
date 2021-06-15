@@ -39,47 +39,50 @@
                 </nav>
 
                 <div class="d-flex align-items-center">
-                    <label class="switch">
-                        <input type="checkbox" id="btnToggleTheme" onchange="toggleTheme()">
-                        <span class="slider round"></span>
-                    </label>
-                <div th:if="${user.getEmail() != null}"  class="main-menu-dropdown">
-                    <a class="main-menu-btn-dropdown">
-                        <img th:src="${user.avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${user.getAvatar()})}"
-                             class="main-menu-user-img" alt="">
-                    </a>
-                    <ul class="main-menu-dropdown-content">
-                        <li class="py-2 border-bottom">
-                            <a th:href="@{/users}" class="main-menu-dropdown-link">
-                                <div class="d-inline-flex">
-                                    <div class="">
-                                        <div class="profile-image-box m-0" style="width: 3.0rem; height: 3.0rem;">
-                                            <img th:src="${user.avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${user.getAvatar()})}"
-                                                 class="profile-image-img mx-auto" id="profileImage" alt="">
+                    <div class="main-menu-btn-toggle-theme">
+                        <a href="#" class="main-menu-btn-toggle-theme-lnk" id="btnToggleTheme">
+                            <img src="/static/images/theme_light.png"
+                                 class="main-menu-btn-toggle-theme-img" id="imgToggleTheme" alt="">
+                        </a>
+                    </div>
+
+                    <div th:if="${user.getEmail() != null}"  class="main-menu-dropdown">
+                        <a class="main-menu-btn-dropdown">
+                            <img th:src="${user.avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${user.getAvatar()})}"
+                                 class="main-menu-user-img" alt="">
+                        </a>
+                        <ul class="main-menu-dropdown-content">
+                            <li class="py-2 border-bottom">
+                                <a th:href="@{/users}" class="main-menu-dropdown-link">
+                                    <div class="d-inline-flex">
+                                        <div class="">
+                                            <div class="profile-image-box m-0" style="width: 3.0rem; height: 3.0rem;">
+                                                <img th:src="${user.avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${user.getAvatar()})}"
+                                                     class="profile-image-img mx-auto" id="profileImage" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p th:text="${user.username}" class="m-0" style="white-space: nowrap; font-weight: 600;">Nickname</p>
+                                            <p class="m-0" style="white-space: nowrap;">Мой профиль</p>
                                         </div>
                                     </div>
-                                    <div class="ml-3">
-                                        <p th:text="${user.username}" class="m-0" style="white-space: nowrap; font-weight: 600;">Nickname</p>
-                                        <p class="m-0" style="white-space: nowrap;">Мой профиль</p>
-                                    </div>
-                                </div>
 
-                            </a>
-                        </li>
-                        <li class="py-2 border-bottom">
-                            <a th:href="@{/users/subscriptions}" class="main-menu-dropdown-link">Мои подписки</a>
-                        </li>
-                        <li class="py-2">
-                            <form method="POST" th:action="@{/logout}" class="w-auto">
-                                <input class="main-menu-dropdown-link" type="submit" value="Выйти">
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+                                </a>
+                            </li>
+                            <li class="py-2 border-bottom">
+                                <a th:href="@{/users/subscriptions}" class="main-menu-dropdown-link">Мои подписки</a>
+                            </li>
+                            <li class="py-2">
+                                <form method="POST" th:action="@{/logout}" class="w-auto">
+                                    <input class="main-menu-dropdown-link" type="submit" value="Выйти">
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
 
-                <div th:if="${user.getEmail() == null}" class="main-menu-user-control">
-                    <a th:if="${user.getEmail() == null}" th:href="@{/login}" class="btn-main main-menu-login-btn">Вход</a>
-                </div>
+                    <div th:if="${user.getEmail() == null}" class="main-menu-user-control">
+                        <a th:if="${user.getEmail() == null}" th:href="@{/login}" class="btn-main main-menu-login-btn">Вход</a>
+                    </div>
 
                 </div>
             </div>

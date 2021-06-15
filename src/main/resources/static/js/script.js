@@ -6,52 +6,31 @@
 // Choice theme
 window.addEventListener('load', function () {
     if (!localStorage.theme) {
-        document.documentElement.setAttribute('theme', 'light');
-        localStorage.setItem('theme', 'light');
+        document.documentElement.setAttribute('theme', 'dark');
+        localStorage.setItem('theme', 'dark');
     }
-    if (localStorage.theme == 'light') {
-        btnToggleTheme.checked = false;
-        document.documentElement.setAttribute('theme', 'light');
-    } else {
+    if (localStorage.theme == 'dark') {
         btnToggleTheme.checked = true;
         document.documentElement.setAttribute('theme', 'dark');
-    }
-//    if (!localStorage.theme) localStorage.theme = 'light';
-//    document.body.className = localStorage.theme;
-//
-//    btnToggleTheme.onclick = () => {
-//        console.log(btnToggleTheme.checked);
-////        document.body.classList.toggle('dark');
-//
-//    }
-})
-
-function toggleTheme() {
-    let btnToggleTheme = document.getElementById('btnToggleTheme');
-    if (btnToggleTheme.checked) {
-        btnToggleTheme.checked = false;
     } else {
-        btnToggleTheme.checked = true;
+        btnToggleTheme.checked = false;
+        document.documentElement.setAttribute('theme', 'light');
     }
-}
-
-function choiceTheme() {
-    let btnToggleTheme = document.getElementById('btnToggleTheme');
-
-    btnToggleTheme.addEventListener('click', () => {
+})
+if (document.getElementById('btnToggleTheme') !== null) {
+    document.getElementById('btnToggleTheme').onclick = function(e) {
+    var imgToggleTheme = document.getElementById('imgToggleTheme');
         if (localStorage.theme == 'light') {
-            btnToggleTheme.checked = false;
             document.documentElement.setAttribute('theme', 'dark');
             localStorage.setItem('theme', 'dark');
+            imgToggleTheme.src = "/static/images/theme_light.png";
         } else {
-            btnToggleTheme.checked = true;
             document.documentElement.setAttribute('theme', 'light');
             localStorage.setItem('theme', 'light');
+            imgToggleTheme.src = "/static/images/theme_dark.png";
         }
-    })
+    }
 }
-
-choiceTheme();
 
 // Main menu
 if (document.querySelector('.main-menu-btn') !== null) {

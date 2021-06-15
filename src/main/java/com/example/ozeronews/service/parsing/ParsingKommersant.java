@@ -35,7 +35,8 @@ public class ParsingKommersant {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "kommersant";
         String newsResourceLink = "https://www.kommersant.ru/";
         String newsLink = "https://www.kommersant.ru/RSS/news.xml";
@@ -114,9 +115,11 @@ public class ParsingKommersant {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

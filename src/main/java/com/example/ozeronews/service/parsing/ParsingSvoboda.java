@@ -35,7 +35,8 @@ public class ParsingSvoboda {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "svoboda";
         String newsResourceLink = "https://www.svoboda.org/";
         String newsLink = "https://www.svoboda.org/api/z-pqpiev-qpp";
@@ -118,9 +119,11 @@ public class ParsingSvoboda {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-            }
+                    articleCount++;
+                }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

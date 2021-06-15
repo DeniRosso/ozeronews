@@ -35,7 +35,8 @@ public class ParsingRetailRu {
     @Value("${article.collection.count}")
     private int articleCollectionCount;
 
-    public void getArticles() {
+    public int getArticles() {
+        int articleCount = 0;
         String newsResourceKey = "retailru";
         String newsResourceLink = "https://www.retail.ru/";
         String newsLink = "https://www.retail.ru/rss/news/";
@@ -114,20 +115,11 @@ public class ParsingRetailRu {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-
-//                System.out.println("*************************");
-////                System.out.println("article = " + article);
-//                System.out.println("articleTitle = " + articleTitle);
-//                System.out.println("articleLink = " + articleLink);
-//                System.out.println("articleNumber = " + articleNumber);
-//                System.out.println("articleImage = " + articleImage);
-//                System.out.println("articleRubricList = " + articleRubricList);
-//                System.out.println("articleDatePublication = " + articleDatePublication);
-//                System.out.println("dateStamp = " + dateStamp);
-//                System.out.println("*************************");
+                articleCount++;
             }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
+        return articleCount;
     }
 }

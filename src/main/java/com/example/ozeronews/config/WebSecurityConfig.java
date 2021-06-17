@@ -104,10 +104,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .requiresSecure()
 //                .and()
         http
-            .requiresChannel()
-                .antMatchers("/**")
-                .requiresSecure()
-                .and()
+//            .requiresChannel()
+//                .antMatchers("/**")
+//                .requiresSecure()
+//                .and()
             .authorizeRequests()
                 .antMatchers(
                         "/static/**",

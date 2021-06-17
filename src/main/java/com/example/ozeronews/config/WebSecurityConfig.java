@@ -92,10 +92,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // For redirect to https:// !!!Need to testing https://www.baeldung.com/spring-channel-security-https
-        http
-            .requiresChannel()
-                .antMatchers("/**")
-                .requiresSecure();
+//        http
+//            .requiresChannel()
+//                .antMatchers("/**")
+//                .requiresSecure();
 //                .and()
 
             // For Heroku
@@ -104,6 +104,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .requiresSecure()
 //                .and()
         http
+            .requiresChannel()
+                .antMatchers("/**")
+                .requiresSecure()
+                .and()
             .authorizeRequests()
                 .antMatchers(
                         "/static/**",

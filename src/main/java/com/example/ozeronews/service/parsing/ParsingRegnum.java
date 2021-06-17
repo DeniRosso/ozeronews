@@ -115,8 +115,8 @@ public class ParsingRegnum {
                 article.setDateStamp(dateStamp);
 
                 articleSaveService.saveArticle(article);
-                    articleCount++;
-                }
+                articleCount++;
+            }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }

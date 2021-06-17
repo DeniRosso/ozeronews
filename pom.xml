@@ -26,6 +26,25 @@
 		<!--<exec.mainClass>io.happycoding.ServerMain</exec.mainClass>-->
 		<googleCloudProjectId>ozeronews</googleCloudProjectId>
 	</properties>
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<activatedProperties>dev</activatedProperties>
+			</properties>
+			<!--
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			-->
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<activatedProperties></activatedProperties>
+			</properties>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
@@ -108,6 +127,11 @@
 		<dependency>
 			<groupId>com.rometools</groupId>
 			<artifactId>rome-fetcher</artifactId>
+			<version>1.15.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.rometools</groupId>
+			<artifactId>rome-modules</artifactId>
 			<version>1.15.0</version>
 		</dependency>
 		<!-- ********** -->

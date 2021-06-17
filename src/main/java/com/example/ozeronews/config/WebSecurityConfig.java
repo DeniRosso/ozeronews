@@ -7,13 +7,16 @@ import com.example.ozeronews.security.oauth2.CustomOidcUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
 @EnableWebSecurity
@@ -60,6 +63,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        return new BCryptPasswordEncoder(10);
 //    }
 
+    // Redirect to HTTPS
+//    @Bean
+//    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+//        http
+//                // ...
+//                .redirectToHttps()
+//                .httpsRedirectWhen(e -> e.getRequest().getHeaders().containsKey("X-Forwarded-Proto"));
+//        return http.build();
+//    }
+
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -78,12 +91,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        // For redirect to https:// !!!Need to testing https://www.baeldung.com/spring-channel-security-https
+//        http
+//            .requiresChannel()
+//                .antMatchers("/**")
+//                .requiresSecure();
+//                .and()
+
             // For Heroku
 //            .requiresChannel()
 //                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
 //                .requiresSecure()
 //                .and()
+        http
             .authorizeRequests()
                 .antMatchers(
                         "/static/**",

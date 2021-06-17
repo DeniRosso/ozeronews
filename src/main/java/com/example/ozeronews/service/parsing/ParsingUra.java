@@ -5,24 +5,28 @@ import com.example.ozeronews.models.ArticleRubric;
 import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.ArticleRepository;
 import com.example.ozeronews.service.ArticleSaveService;
+import com.rometools.rome.feed.synd.SyndCategory;
+import com.rometools.rome.feed.synd.SyndEnclosure;
+import com.rometools.rome.feed.synd.SyndFeed;
+import com.rometools.rome.io.FeedException;
+import com.rometools.rome.io.SyndFeedInput;
+import com.rometools.rome.io.XmlReader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.net.URL;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingTsargrad {
+public class ParsingUra {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -35,9 +39,9 @@ public class ParsingTsargrad {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "tsargrad";
-        String newsResourceLink = "https://tsargrad.tv";
-        String newsLink = "https://tsargrad.tv/news";
+        String newsResourceKey = "ura";
+        String newsResourceLink = "https://ura.news/";
+        String newsLink = "https://ura.news/rss";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -47,16 +51,10 @@ public class ParsingTsargrad {
         ZonedDateTime dateStamp;
 
         try {
-        // Полечение web страницы
-            Document doc = Jsoup.connect(newsLink)
-                    .userAgent("Safari") //userAgent("Chrome/4.0.249.0 Safari/532.5")
-                    .referrer("http://www.google.com")
-                    .get();
+            URL feedSource = new URL(newsLink);
+            SyndFeedInput input = new SyndFeedInput();
+            SyndFeed feed = input.build(new XmlReader(feedSource));
 
-        // Получение нужных статей
-            Elements articles = doc.getElementsByTag("article");
-
-        // Получение элементов по каждой статье
             for (int i = 0; i < articleCollectionCount; i++) {
 
                 articleTitle = null;
@@ -67,37 +65,51 @@ public class ParsingTsargrad {
                 articleDatePublication = null;
                 dateStamp = null;
 
-                articleTitle = articles.get(i).select("a").first().text();
-                articleLink = newsResourceLink + articles.get(i).select("a").first().attr("href");
-                articleNumber = newsResourceKey + "_" + articleLink.substring(articleLink.length()-6);
+                articleTitle = feed.getEntries().get(i).getTitle();
+                articleLink = feed.getEntries().get(i).getLink();
+
+                articleNumber = newsResourceKey + "_" + articleLink.substring(articleLink.lastIndexOf("/") + 1);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
-                articleDatePublication = ZonedDateTime.of(LocalDateTime.parse(
-                        (LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd ")) +
-                                articles.get(i).select("time").text() + ":01"),
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                        ZoneId.of("Europe/Moscow")
-                ).withZoneSameInstant(ZoneId.of("UTC"));
+                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
+                if(enclosures != null) {
+                    for(SyndEnclosure enclosure : enclosures) {
+                        if(enclosure.getType() != null && enclosure.getType().equals("image/jpeg")){
+                            articleImage = enclosure.getUrl();
+                        }
+                    }
+                }
+
+                articleDatePublication = ZonedDateTime.ofInstant(
+                        Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
+                        ZoneId.of("UTC"));
 
                 dateStamp = ZonedDateTime.now(ZoneId.of("UTC"));
 
-        // Получение дополнительной информаций по статье
+                int k = 0;
+                List<ArticleRubric> articleRubricList = new ArrayList<>();
+                List<SyndCategory> categories = feed.getEntries().get(i).getCategories();
+                if(categories!=null) {
+                    for(SyndCategory category : categories) {
+                        rubricAliasName = category.getName();
+                        if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
+                        articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
+                    }
+                }
+
+                // Получение дополнительной информаций по статье
                 Document docArticleDescription = Jsoup.connect(articleLink)
                         .userAgent("Safari")
                         .get();
 
-                Element articleDescription = docArticleDescription.getElementsByTag("article").first();
-
-                articleImage = articleDescription.select("img").attr("src");
-
-                int k = 0;
-                List<ArticleRubric> articleRubricList = new ArrayList<>();
-                for (int j = 0; j < articleDescription.select("a[class=news-item__category-name]").size(); j++) {
-                    rubricAliasName = articleDescription.select("a[class=news-item__category-name]").get(j).text();
-                    if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
-                    articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
+                if (!docArticleDescription.select("img[itemprop=contentUrl]").isEmpty() &&
+                        docArticleDescription.select("img[itemprop=contentUrl]").first()
+                                .attr("src").length() <= 255) {
+                    articleImage = docArticleDescription.select("img[itemprop=contentUrl]").first()
+                            .attr("src");
                 }
+
                 NewsResource newsResource = new NewsResource();
                 newsResource.setResourceKey(newsResourceKey);
                 newsResource.setResourceLink(newsResourceLink);
@@ -118,7 +130,7 @@ public class ParsingTsargrad {
                 articleSaveService.saveArticle(article);
                 articleCount++;
             }
-        } catch (IOException e) {
+        } catch (IOException | FeedException e) {
             e.printStackTrace();
         }
         return articleCount;

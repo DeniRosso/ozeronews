@@ -6,12 +6,11 @@ import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.ArticleRepository;
 import com.example.ozeronews.service.ArticleSaveService;
 import com.rometools.rome.feed.synd.SyndCategory;
+import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingABNews {
+public class ParsingRepublic {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -38,9 +37,9 @@ public class ParsingABNews {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "abnews";
-        String newsResourceLink = "https://abnews.ru/";
-        String newsLink = "https://abnews.ru/feed/";
+        String newsResourceKey = "republic";
+        String newsResourceLink = "https://republic.ru/";
+        String newsLink = "https://republic.ru/export/all.xml";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -64,22 +63,23 @@ public class ParsingABNews {
                 articleDatePublication = null;
                 dateStamp = null;
 
-                articleTitle = feed.getEntries().get(i).getTitle();
+                articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
 
                 articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri()
-                        .substring(feed.getEntries().get(i).getUri().indexOf("p=") + 2);
+                        .substring(feed.getEntries().get(i).getUri().lastIndexOf("/") + 1);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
-//                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
-//                if(enclosures!=null) {
-//                    for(SyndEnclosure enclosure : enclosures) {
-//                        if(enclosure.getType()!=null && enclosure.getType().equals("image/jpeg")){
-//                            articleImage = enclosure.getUrl();
-//                        }
-//                    }
-//                }
+                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
+                if(enclosures != null) {
+                    for(SyndEnclosure enclosure : enclosures) {
+                        if(enclosure.getType() != null &&
+                                (enclosure.getType().equals("image/jpeg") || enclosure.getType().equals("image/gif"))) {
+                            articleImage = enclosure.getUrl();
+                        }
+                    }
+                }
 
                 articleDatePublication = ZonedDateTime.ofInstant(
                         Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
@@ -97,15 +97,6 @@ public class ParsingABNews {
                         articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                     }
                 }
-
-                // Получение дополнительной информаций по статье
-                Document docArticleDescription = Jsoup.connect(articleLink)
-                        .userAgent("Safari")
-                        .get();
-
-                articleImage = docArticleDescription.getElementsByTag("main").first()
-                        .select("div[class=singlePicture]").first()
-                        .select("img").first().attr("src");
 
                 NewsResource newsResource = new NewsResource();
                 newsResource.setResourceKey(newsResourceKey);

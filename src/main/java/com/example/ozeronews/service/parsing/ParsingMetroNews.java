@@ -5,13 +5,15 @@ import com.example.ozeronews.models.ArticleRubric;
 import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.ArticleRepository;
 import com.example.ozeronews.service.ArticleSaveService;
-import com.rometools.rome.feed.synd.SyndCategory;
+import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingABNews {
+public class ParsingMetroNews {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -38,9 +40,9 @@ public class ParsingABNews {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "abnews";
-        String newsResourceLink = "https://abnews.ru/";
-        String newsLink = "https://abnews.ru/feed/";
+        String newsResourceKey = "metronews";
+        String newsResourceLink = "https://www.metronews.ru/";
+        String newsLink = "https://www.metronews.ru/services/materials/press/yandex/";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -64,22 +66,22 @@ public class ParsingABNews {
                 articleDatePublication = null;
                 dateStamp = null;
 
-                articleTitle = feed.getEntries().get(i).getTitle();
+                articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
-
-                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri()
-                        .substring(feed.getEntries().get(i).getUri().indexOf("p=") + 2);
+                articleNumber = newsResourceKey + "_" + articleLink
+                        .substring(articleLink.lastIndexOf("-") + 1, articleLink.lastIndexOf("/"));
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
-//                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
-//                if(enclosures!=null) {
-//                    for(SyndEnclosure enclosure : enclosures) {
-//                        if(enclosure.getType()!=null && enclosure.getType().equals("image/jpeg")){
-//                            articleImage = enclosure.getUrl();
-//                        }
-//                    }
-//                }
+                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
+                if(enclosures != null) {
+                    for(SyndEnclosure enclosure : enclosures) {
+                        if(enclosure.getType() != null &&
+                                (enclosure.getType().equals("image/jpeg") || enclosure.getType().equals("image/gif"))) {
+                            articleImage = enclosure.getUrl();
+                        }
+                    }
+                }
 
                 articleDatePublication = ZonedDateTime.ofInstant(
                         Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
@@ -87,25 +89,44 @@ public class ParsingABNews {
 
                 dateStamp = ZonedDateTime.now(ZoneId.of("UTC"));
 
-                int k = 0;
-                List<ArticleRubric> articleRubricList = new ArrayList<>();
-                List<SyndCategory> categories = feed.getEntries().get(i).getCategories();
-                if(categories!=null) {
-                    for(SyndCategory category : categories) {
-                        rubricAliasName = category.getName();
-                        if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
-                        articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
-                    }
-                }
+//                int k = 0;
+//                List<ArticleRubric> articleRubricList = new ArrayList<>();
+//                List<SyndCategory> categories = feed.getEntries().get(i).getCategories();
+//                if(categories!=null) {
+//                    for(SyndCategory category : categories) {
+//                        rubricAliasName = category.getName();
+//                        if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
+//                        articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
+//                    }
+//                }
 
                 // Получение дополнительной информаций по статье
                 Document docArticleDescription = Jsoup.connect(articleLink)
                         .userAgent("Safari")
                         .get();
 
-                articleImage = docArticleDescription.getElementsByTag("main").first()
-                        .select("div[class=singlePicture]").first()
-                        .select("img").first().attr("src");
+                if (!docArticleDescription.select("div[class=article-main-area]").first()
+                        .select("img[id=slideshow_1_is_main]").isEmpty()) {
+                    articleImage = docArticleDescription.select("div[class=article-main-area]").first()
+                            .select("img[id=slideshow_1_is_main]").first().attr("src");
+                }
+
+                int k = 0;
+                List<ArticleRubric> articleRubricList = new ArrayList<>();
+                if (!docArticleDescription.select("div[class=article-main-area]").first()
+                        .select("div[id=date-fullwidth]").first().select("a").isEmpty()) {
+                    Elements categories = docArticleDescription.select("div[class=article-main-area]").first()
+                            .select("div[id=date-fullwidth]").first().select("a");
+                    for(Element category : categories) {
+                        if (category.text().indexOf(" —") > 0) {
+                            continue;
+                        } else {
+                            rubricAliasName = category.text();
+                        }
+                        if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
+                        articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
+                    }
+                }
 
                 NewsResource newsResource = new NewsResource();
                 newsResource.setResourceKey(newsResourceKey);

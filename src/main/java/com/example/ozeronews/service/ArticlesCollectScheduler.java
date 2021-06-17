@@ -240,24 +240,24 @@ public class ArticlesCollectScheduler {
 //        parsingTVRain.getArticles();
 //        parsingBagnet.getArticles();
 //        parsingABNews.getArticles();
-        parsingMarketMedia.getArticles();
-        parsingPrime.getArticles();
-        parsingRussian7.getArticles();
-//        parsingVersia.getArticles();
-        parsingUra.getArticles();
-        parsingRepublic.getArticles();
-        parsingPravdaRu.getArticles();
-        parsingJPGazeta.getArticles();
-        parsingNewsLab.getArticles();
-        parsing5TV.getArticles();
-        parsingBBCRussian.getArticles();
-        parsingMetroNews.getArticles();
-        parsingYtro.getArticles();
-        parsingAIF.getArticles();
+//        parsingMarketMedia.getArticles();
+//        parsingPrime.getArticles();
+//        parsingRussian7.getArticles();
+////        parsingVersia.getArticles();
+//        parsingUra.getArticles();
+//        parsingRepublic.getArticles();
+//        parsingPravdaRu.getArticles();
+//        parsingJPGazeta.getArticles();
+//        parsingNewsLab.getArticles();
+//        parsing5TV.getArticles();
+//        parsingBBCRussian.getArticles();
+//        parsingMetroNews.getArticles();
+//        parsingYtro.getArticles();
+//        parsingAIF.getArticles();
 
         Iterable<NewsResource> newsResources = newsResourceRepository.findAll();
         for (NewsResource newsResource : newsResources) {
-            if (newsResource.isActive() && false) {
+            if (newsResource.isActive() && true) {
                 switch (newsResource.getResourceKey()) {
                     case "ria":
                         System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");

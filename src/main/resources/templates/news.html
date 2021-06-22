@@ -14,8 +14,8 @@
                     </div>
                 </div>
                 <div th:if="${articles == null}" class="justify-content-center">
-                    <p class="text-center">У Вас еще нет подписок на новостные ресурсы. </p>
-                    <p class="text-center">Для добавления подписок в ленту перейдите в
+                    <p class="lbl-1 text-center">У Вас еще нет подписок на новостные ресурсы. </p>
+                    <p class="lbl-1 text-center">Для добавления подписок в ленту перейдите в
                         <a th:href="@{/subscriptions}">Мои подписки</a>
                         .
                     </p>
@@ -129,7 +129,8 @@
 
             <div class="col-md-auto">
                 <div class="menu-news-rubrics">
-                    <button class="menu-news-btn" type="button" data-bs-toggle="modal" data-bs-target="#modalRubrics">
+                    <button class="menu-news-btn" type="button"
+                            data-bs-toggle="modal" data-bs-target="#modalRubrics">
                         Рубрики
                         <i class="fas fa-angle-right"></i>
                     </button>
@@ -143,7 +144,8 @@
                     </ol>
                 </div>
                 <div class="menu-news-resources">
-                    <button class="menu-news-btn" type="button" data-bs-toggle="modal" data-bs-target="#modalNewsResources">
+                    <button class="menu-news-btn" type="button" onclick="openModalResource()"
+                            data-bs-toggle="modal" data-bs-target="#modalNewsResources">
                         Источники
                         <i class="fas fa-angle-right"></i>
                     </button>
@@ -258,12 +260,29 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2 justify-content-start">
-                            <div th:each="newsResource : ${allNewsResources}" class="col d-flex justify-content-center">
-                                <a th:href="@{/news/resources/{name}(section=#{'resources'},name=${newsResource.getResourceKey()})}"
-                                   class="btn-main">
-                                    <span th:text="${newsResource.getFullName()}"></span>
-                                </a>
+                        <div class="row">
+                            <div class="col-auto">
+                                <ul class="menu-admin-list">
+                                    <li th:each="categoryResource : ${categoriesResources}"  class="my-1">
+                                        <a href="#" class="menu-admin-list-lnk category-resource" th:id="btnCategoryResource_ + ${categoryResource.id}"
+                                           onclick="categoryResourceModal(this.id)">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 th:text="${categoryResource.name}" class="my-0" >Name rubric</h6>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col" style="max-height: calc(100vh - 180px); overflow-y: auto;">
+                                <div class="row justify-content-start" id="resources">
+                                    <div th:each="resource : ${resources}" class="resource-box">
+                                        <a th:if="${resource.active}"
+                                           th:href="@{/news/resources/{resourceKey}(resourceKey=${resource.getResourceKey()})}" class="resource">
+                                            <img th:src="@{/static/images/{imageResource}(imageResource = ${resource.resourceKey} + '.png')}"
+                                                 class="resource-img">
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

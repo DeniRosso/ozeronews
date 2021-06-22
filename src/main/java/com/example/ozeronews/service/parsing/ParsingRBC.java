@@ -114,7 +114,7 @@ public class ParsingRBC {
                     Elements tags = articleDescription.get(j).getElementsByClass("article__tags__item");
                     for (int t = 0; t < tags.size(); t++) {
                         rubricAliasName = tags.get(t).text().substring(0, 1).toUpperCase() + tags.get(t).text().substring(1);
-
+                        if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
                         articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                     }
                 }

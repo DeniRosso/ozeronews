@@ -1,9 +1,11 @@
 package com.example.ozeronews.controllers;
 
 import com.example.ozeronews.models.Article;
+import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.*;
 import com.example.ozeronews.service.ArticleFindService;
+import com.example.ozeronews.service.CategoryResourceService;
 import com.example.ozeronews.service.UserCurrentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,8 @@ public class NewsController {
     private SubscriptionRepository subscriptionRepository;
     private RubricRepository rubricRepository;
     private NewsResourceRepository newsResourceRepository;
+    private CategoryResourceRepository categoryResourceRepository;
+    private CategoryResourceService categoryResourceService;
     private UserRepository userRepository;
     private UserCurrentService userCurrentService;
 
@@ -33,6 +37,8 @@ public class NewsController {
                           SubscriptionRepository subscriptionRepository,
                           RubricRepository rubricRepository,
                           NewsResourceRepository newsResourceRepository,
+                          CategoryResourceRepository categoryResourceRepository,
+                          CategoryResourceService categoryResourceService,
                           UserRepository userRepository,
                           UserCurrentService userCurrentService) {
         this.articleFindService = articleFindService;
@@ -40,6 +46,8 @@ public class NewsController {
         this.subscriptionRepository = subscriptionRepository;
         this.rubricRepository = rubricRepository;
         this.newsResourceRepository = newsResourceRepository;
+        this.categoryResourceRepository = categoryResourceRepository;
+        this.categoryResourceService = categoryResourceService;
         this.userRepository = userRepository;
         this.userCurrentService = userCurrentService;
     }
@@ -49,7 +57,6 @@ public class NewsController {
 //        <span>[[${#request.userPrincipal.principal.name}]]</span>
 //        <span>[[${#request.userPrincipal.principal.email}]]</span>
 //    </div>
-
 
     // Загрузка дополнительных статей
     @GetMapping("/news")
@@ -190,7 +197,8 @@ public class NewsController {
         model.addAttribute("topRubrics", rubricRepository.findTopRubrics(countRubrics));
         model.addAttribute("allRubrics", rubricRepository.findAllRubrics());
         model.addAttribute("topNewsResources", newsResourceRepository.findTopResources(countResources));
-        model.addAttribute("allNewsResources", newsResourceRepository.findAllResources());
+        model.addAttribute("resources", newsResourceRepository.findAllResources());
+        model.addAttribute("categoriesResources", categoryResourceRepository.findByActive(true));
         model.addAttribute("search", null);
 
         model.addAttribute("user", user);
@@ -220,11 +228,24 @@ public class NewsController {
         model.addAttribute("topRubrics", rubricRepository.findTopRubrics(countRubrics));
         model.addAttribute("allRubrics", rubricRepository.findAllRubrics());
         model.addAttribute("topNewsResources", newsResourceRepository.findTopResources(countResources));
-        model.addAttribute("allNewsResources", newsResourceRepository.findAllResources());
+        model.addAttribute("resources", newsResourceRepository.findAllResources());
+        model.addAttribute("categoriesResources", categoryResourceRepository.findByActive(true));
         model.addAttribute("search", null);
 
         model.addAttribute("user", user);
         return "news";
+    }
+
+    @GetMapping("/news/categoriesresources/{id}")
+    @ResponseBody
+    public Iterable<NewsResource> choiceCategoryResource(
+                                    @PathVariable("id") Long id,
+                                    @RequestParam(value="categoryResourceId") Long categoryResourceId) {
+
+        Iterable<NewsResource> resources =
+                categoryResourceService.filterCategoryResourceById(
+                        categoryResourceRepository.findById(categoryResourceId));
+        return resources;
     }
 
 //    @PostMapping("/{section}/{name}/search")

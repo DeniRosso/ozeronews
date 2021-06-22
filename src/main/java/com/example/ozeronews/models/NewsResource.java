@@ -24,6 +24,9 @@ public class NewsResource {
     @OneToMany(mappedBy = "resourceId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Subscription> subscription = new ArrayList<>();
 
+    @OneToMany(mappedBy = "resourceId", fetch = FetchType.LAZY)
+    private List<ResourceToCategory> resourceToCategories = new ArrayList<>();
+
     @Column(unique = true, length = 45)
     private String resourceKey;
 
@@ -50,6 +53,7 @@ public class NewsResource {
                 "id=" + id +
                 ", article=" + article +
                 ", subscription=" + subscription +
+                ", resourceToCategories=" + resourceToCategories +
                 ", resourceKey='" + resourceKey + '\'' +
                 ", shortName='" + shortName + '\'' +
                 ", fullName='" + fullName + '\'' +

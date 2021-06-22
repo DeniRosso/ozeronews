@@ -100,20 +100,24 @@ public class ParsingBBCRussian {
                 }
 
                 // Получение дополнительной информаций по статье
-                Document docArticleDescription = Jsoup.connect(articleLink)
-                        .userAgent("Safari")
-                        .get();
+                try {
+                    Document docArticleDescription = Jsoup.connect(articleLink)
+                            .userAgent("Safari")
+                            .get();
 
-                if (!docArticleDescription.getElementsByTag("main").first()
-                        .getElementsByTag("figure").first()
-                        .select("img").first()
-                        .attr("srcset").isEmpty()) {
-                    articleImage = docArticleDescription.getElementsByTag("main").first()
+                    if (!docArticleDescription.getElementsByTag("main").first()
                             .getElementsByTag("figure").first()
-                            .select("img").first().attr("srcset").
-                                    substring(0, docArticleDescription.getElementsByTag("main").first()
-                                        .getElementsByTag("figure").first()
-                                        .select("img").first().attr("srcset").indexOf(" "));
+                            .select("img").first()
+                            .attr("srcset").isEmpty()) {
+                        articleImage = docArticleDescription.getElementsByTag("main").first()
+                                .getElementsByTag("figure").first()
+                                .select("img").first().attr("srcset").
+                                        substring(0, docArticleDescription.getElementsByTag("main").first()
+                                                .getElementsByTag("figure").first()
+                                                .select("img").first().attr("srcset").indexOf(" "));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
                 NewsResource newsResource = new NewsResource();

@@ -48,7 +48,7 @@ html, body {
     --box-shadow-menu-btn: 0.1rem 0 0.25rem #AEAEB2;
 
     --text-color-primary: #F2F2F7;
-    --text-color-secondary: #AEAEB2;
+    --text-color-secondary: #C7C7CC; /*#C7C7CC 199.199.204   #AEAEB2; 174.174.178*/
     --text-color-negative: #2C2C2E;
 }
 
@@ -387,7 +387,7 @@ main {
     background: url("/static/images/icon_social_share.png") no-repeat -672px top;
 }
 .share-btns a.whatsapp {
-    background: url("/static/images/icon_social_share.png") no-repeat -672px top;
+    background: url("/static/images/icon_social_share.png") no-repeat -714px top;
 }
 .share-btns a.facebook {
     background: url("/static/images/icon_social_share.png") no-repeat left top;
@@ -1044,6 +1044,7 @@ main {
 .menu-admin-list-box {
     min-width: 320px;
     max-width: 320px;
+    min-height: calc(100vh - 300px);
     max-height: calc(100vh - 300px);
     border-right: 1px solid var(--border-color-secondary);
     padding: 0.0rem 0.25rem 0.0rem 0.25rem;
@@ -1191,6 +1192,37 @@ main {
     }
 }
 /* ==Menu Administration== */
+
+/* --Category Resource-- */
+
+.resource-box {
+    display: flex;
+    flex: 0 0 5.0rem;
+    width: 5.0rem;
+    height: 5.0rem;
+    margin: 0.5rem;
+    padding: 0.0rem;
+}
+.resource {
+    background-color: transparent;
+    border-radius: 50%;
+}
+.resource:hover {
+    box-shadow: 0 0 0.0rem 0.25rem #0d6efd;
+}
+.resource.active {
+    background-color: transparent;
+    border-radius: 50%;
+    box-shadow: 0 0 0.0rem 0.25rem #0d6efd;
+}
+.resource-img {
+    display: block;
+    max-width: 100%;
+    border-radius: 50%;
+}
+
+
+/* ==Category Resource== */
 
 /* ==Administration page== */
 

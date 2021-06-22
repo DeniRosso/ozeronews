@@ -205,7 +205,7 @@ public class ArticlesCollectScheduler {
 //        parsingMeduza.getArticles();
 //        parsingINOSMI.getArticles();
 //        parsingXTrue.getArticles();
-//        parsingLife.getArticles();
+////        parsingLife.getArticles();
 //        parsingFontanka.getArticles();
 //        parsingDniru.getArticles();
 //        parsingRegnum.getArticles();

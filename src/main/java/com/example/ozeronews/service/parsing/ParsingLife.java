@@ -18,8 +18,10 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,8 +80,28 @@ public class ParsingLife {
                     }
                 }
 
-                articleDatePublication = ZonedDateTime.ofInstant(
-                        Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
+//                articleDatePublication = ZonedDateTime.ofInstant(
+//                        Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
+//                        ZoneId.of("UTC"));
+
+//                String pubDate = feed.getEntries().get(i).getPublishedDate().toInstant().toString();
+//
+//                String date;
+//                String time;
+//
+//                date = pubDate.substring(0, pubDate.indexOf("T"));
+//                time = pubDate.substring(pubDate.indexOf("T") + 1);
+//
+//                articleDatePublication = ZonedDateTime.of(LocalDateTime.parse(
+//                        (date + " " + time).substring(0, 19),
+//                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+//                        ZoneId.of("UTC");
+
+                System.out.println("articleDatePublication = " + feed.getEntries().get(i).getUri());
+
+                articleDatePublication = ZonedDateTime.of(LocalDateTime.parse(
+                        (feed.getEntries().get(i).getPublishedDate().toInstant().toString()).substring(0, 19),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                         ZoneId.of("UTC"));
 
                 dateStamp = ZonedDateTime.now(ZoneId.of("UTC"));
@@ -115,7 +137,7 @@ public class ParsingLife {
                 article.setDatePublication(articleDatePublication);
                 article.setDateStamp(dateStamp);
 
-                articleSaveService.saveArticle(article);
+//                articleSaveService.saveArticle(article);
                     articleCount++;
                 }
         } catch (IOException | FeedException e) {

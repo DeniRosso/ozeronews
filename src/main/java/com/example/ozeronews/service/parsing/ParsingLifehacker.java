@@ -65,8 +65,12 @@ public class ParsingLifehacker {
                 articleTitle = feed.getEntries().get(i).getTitle();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
-                        feed.getEntries().get(i).getUri().lastIndexOf("=") + 1);
+//                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
+//                        feed.getEntries().get(i).getUri().lastIndexOf("=") + 1);
+
+                articleNumber = newsResourceKey + "_" + articleLink.substring(
+                        "https://lifehacker.ru/".length(), articleLink.lastIndexOf("/"));
+                if (articleNumber.length() > 45) articleNumber = articleNumber.substring(0, 45);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 

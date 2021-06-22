@@ -91,10 +91,20 @@ public class NewsResourceRepositoryJDBC implements NewsResourceRepository {
     }
 
     @Override
+    public Iterable<NewsResource> findByCategories(String resourceListIds) {
+        String query = "SELECT * FROM news_resources " +
+                " WHERE id IN (" + resourceListIds + ") AND active = 1 " +
+                " ORDER BY full_name;";
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("resourceListIds", resourceListIds);
+        return namedParameterJdbcTemplate.query(query, parameterSource, this::mapRowToResource);
+    }
+
+    @Override
     public NewsResource findById(Long id) {
         String query = "SELECT * FROM news_resources WHERE id = :id";
-        SqlParameterSource resource = new MapSqlParameterSource().addValue("id", id);
-        return namedParameterJdbcTemplate.queryForObject(query, resource, this::mapRowToResource);
+        SqlParameterSource parameterSource = new MapSqlParameterSource().addValue("id", id);
+        return namedParameterJdbcTemplate.queryForObject(query, parameterSource, this::mapRowToResource);
     }
 
     @Override

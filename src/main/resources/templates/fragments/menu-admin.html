@@ -22,6 +22,13 @@
       </a>
     </li>
     <li class="my-1">
+      <a th:href="@{/administration/categoriesresources}"
+         th:class="${currentPage == 'adminCategoriesResources'} ? 'menu-admin-lnk active' : 'menu-admin-lnk'">
+        <h6 class="my-0">Категории источников</h6>
+        <p class="my-0" style="font-size: 0.9rem">Управление категориями</p>
+      </a>
+    </li>
+    <li class="my-1">
       <a th:href="@{/administration/rubrics}"
          th:class="${currentPage == 'adminRubrics'} ? 'menu-admin-lnk active' : 'menu-admin-lnk'">
         <h6 class="my-0">Рубрики</h6>

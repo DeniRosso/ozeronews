@@ -182,7 +182,7 @@ window.addEventListener('load', function () {
     }
 })
 
-// Добавление статуей на страницу news
+// Добавление статей на страницу news
 function loadArticles(id, search, numberPage, sizePage) {
 //    var currentURL = window.location.href;
     var baseURL = window.location.protocol + '//' + window.location.host;
@@ -439,15 +439,192 @@ window.addEventListener('load', function () {
 //    window.open('https://telegram.me/share/url?url=' + baseURL + '','sharer','status=0,toolbar=0,width=650,height=500');
 //}
 
-
-
 function shareArticle() {
     var shareScreen = document.getElementById('btnShare_');
 
     document.querySelector('.share').classList.toggle('active');
-
 }
 
+// Load Administration Category Resource Page
+//window.addEventListener('load', function () {
+//
+//    var pathURLArray = window.location.pathname.split('/');
+//    var currentPage = pathURLArray[1];
+//    var sectionPage = pathURLArray[2];
+//    var namePage = pathURLArray[3];
+//
+////    if (currentPage == 'administration' || sectionPage == 'categoriesresources') {
+////        document.getElementById('resources').innerHTML = "";
+////        loadResource();
+////    }
+//
+//
+//})
+
+// Choice Category Resource
+function categoryResource(clicked_id) {
+    console.log(clicked_id.slice(20));
+
+    var baseUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    var url = baseUrl + '?categoryResourceId=' + clicked_id.slice(20);
+    history.pushState(null, null, url);
+
+    var btnCategoryResource = document.querySelectorAll('.category-resource');
+    for (let i = 0; i < btnCategoryResource.length; i++) {
+        btnCategoryResource[i].classList.remove('active');
+    }
+    document.getElementById('btnCategoryResource_' + clicked_id.slice(20)).classList.add('active');
+
+    loadCategoryResource(clicked_id.slice(20));
+    loadResource(clicked_id.slice(20));
+}
+
+// Choice Resource
+function resource(clicked_id) {
+    console.log(clicked_id);
+    console.log(clicked_id.slice(9));
+    choiceResource(clicked_id.slice(9));
+}
+
+function loadCategoryResource(categoryResourceId) {
+    var baseURL = window.location.protocol + '//' + window.location.host;
+    var pathURLArray = window.location.pathname.split('/');
+    var currentPage = pathURLArray[1];
+    var section = pathURLArray[2];
+
+    // Load Category Resource
+    var xhr = new XMLHttpRequest();
+    var url = baseURL + '/' + currentPage + '/' + section + '/category/' + categoryResourceId;
+    xhr.open('GET', url);
+    xhr.send();
+//        xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function(e) {
+        var jsonRequest = JSON.parse(xhr.responseText);
+
+        document.getElementById('id').value = jsonRequest.id;
+        document.getElementById('categoryResourceKey').value = jsonRequest.categoryResourceKey;
+        document.getElementById('name').value = jsonRequest.name;
+        document.getElementById('number').value = jsonRequest.number;
+        document.getElementById('active').checked = jsonRequest.active;
+        document.getElementById('dateStamp').textContent = jsonRequest.dateStamp;
+    }
+}
+
+// Load Administration Category Resource Page add Category-Resource
+function loadResource(categoryResourceId) {
+//    var currentURL = window.location.href;
+    var baseURL = window.location.protocol + '//' + window.location.host;
+    var pathURLArray = window.location.pathname.split('/');
+    var currentPage = pathURLArray[1];
+    var section = pathURLArray[2];
+
+    // Load Category Resource
+    var xhr = new XMLHttpRequest();
+    var url = baseURL + '/' + currentPage + '/' + section + '/' + categoryResourceId +
+                '?categoryResourceId=' + categoryResourceId;
+    xhr.open('GET', url);
+    xhr.send();
+//        xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function(e) {
+        document.getElementById('resources').innerHTML = "";
+        var jsonRequest = JSON.parse(xhr.responseText);
+        for (var i = 0; i < jsonRequest.length; i++) {
+            var resourceId = 'resource_' + jsonRequest[i].id;
+            var link = '/administration/categoriesresources/' + jsonRequest[i].id + '/create';
+            var image = '/static/images/' + jsonRequest[i].resourceKey + '.png';
+            var newResource = document.createElement('DIV');
+            newResource.classList.add('resource-box');
+            if (jsonRequest[i].resourceToCategories.length == 0) {
+                newResource.innerHTML =
+                    ' <a href="#" class="resource" id="' + resourceId + '" onclick="resource(this.id)"> ' +
+                        ' <img src=" ' + image + ' " class="resource-img"> ' +
+                    ' </a> ';
+            } else {
+                newResource.innerHTML =
+                    ' <a href="#" class="resource active" id="' + resourceId + '" onclick="resource(this.id)"> ' +
+                        ' <img src=" ' + image + ' " class="resource-img"> ' +
+                    ' </a> ';
+            }
+            document.getElementById('resources').appendChild(newResource);
+        }
+    }
+}
+
+function choiceResource(resourceId) {
+    var baseURL = window.location.protocol + '//' + window.location.host;
+    var pathURLArray = window.location.pathname.split('/');
+    var currentPage = pathURLArray[1];
+    var section = pathURLArray[2];
+    var categoryResourceId = window.location.search.match(new RegExp('categoryResourceId' + '=([^&=]+)'));
+    var search = window.location.search;
+
+    // Set Category for Resource
+    var xhr = new XMLHttpRequest();
+    var url = baseURL + '/' + currentPage + '/' + section + '/resource' + search + '&resourceId=' + resourceId;
+    xhr.open('GET', url);
+    xhr.send();
+//    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    // Update style for resource button
+    document.getElementById('resource_' + resourceId).classList.toggle('active');
+}
+
+
+// Modal Resources
+function openModalResource() {
+    console.log('openModalResource()');
+}
+
+// Choice Category Resource
+function categoryResourceModal(clicked_id) {
+    console.log(clicked_id.slice(20));
+
+    var baseUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    var url = baseUrl + '?categoryResourceId=' + clicked_id.slice(20);
+    history.pushState(null, null, url);
+
+    var btnCategoryResource = document.querySelectorAll('.category-resource');
+    for (let i = 0; i < btnCategoryResource.length; i++) {
+        btnCategoryResource[i].classList.remove('active');
+    }
+    document.getElementById('btnCategoryResource_' + clicked_id.slice(20)).classList.add('active');
+
+    loadResourceModal(clicked_id.slice(20));
+}
+
+function loadResourceModal(categoryResourceId) {
+//    var currentURL = window.location.href;
+    var baseURL = window.location.protocol + '//' + window.location.host;
+    var pathURLArray = window.location.pathname.split('/');
+    var currentPage = pathURLArray[1];
+    var section = pathURLArray[2];
+
+    // Load Category Resource
+    var xhr = new XMLHttpRequest();
+//    var url = baseURL + '/' + currentPage + '/' + section + '/' + categoryResourceId +
+//                '?categoryResourceId=' + categoryResourceId;
+    var url = baseURL + '/news/categoriesresources/' + categoryResourceId +
+                    '?categoryResourceId=' + categoryResourceId;
+    xhr.open('GET', url);
+    xhr.send();
+//        xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function(e) {
+        document.getElementById('resources').innerHTML = "";
+        var jsonRequest = JSON.parse(xhr.responseText);
+        for (var i = 0; i < jsonRequest.length; i++) {
+            var resourceId = 'resource_' + jsonRequest[i].id;
+            var link = '/news/resources/' + jsonRequest[i].resourceKey;
+            var image = '/static/images/' + jsonRequest[i].resourceKey + '.png';
+            var newResource = document.createElement('DIV');
+            newResource.classList.add('resource-box');
+            newResource.innerHTML =
+                ' <a href="' + link + '" class="resource" id="' + resourceId + '" onclick="resource(this.id)"> ' +
+                    ' <img src=" ' + image + ' " class="resource-img"> ' +
+                ' </a> ';
+            document.getElementById('resources').appendChild(newResource);
+        }
+    }
+}
 
 // Button scroll up
 if (document.querySelector('.scroll-up-btn') !== null) {

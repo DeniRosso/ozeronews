@@ -16,6 +16,8 @@ public interface NewsResourceRepository {
 
     NewsResource findByResourceKey(String resourceKey);
 
+    Iterable<NewsResource> findByCategories(String resourceListIds);
+
     boolean checkByResourceKey(String resourceKey);
 
     int[] updateResource(NewsResource newsResource);

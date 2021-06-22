@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html class="h-100" data-lt-installed="true" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head :: head"></head>
+<body class="user-page flex-column">
+<header th:replace="fragments/header :: header" class="border-bottom"></header>
+<main class="container">
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <div th:replace="fragments/menu-admin :: menu-admin"></div>
+    </div>
+    <div class="col" style="max-width: 768px;">
+      <div class="main-block">
+        <div class="row justify-content-center">
+          <h1 class="ttl-3">Категории ресурсов</h1>
+          <div class="col-auto menu-admin-list-box">
+            <ul class="menu-admin-list">
+              <li th:each="categoryResource : ${categoriesResources}"  class="my-1">
+                <a href="#" class="menu-admin-list-lnk category-resource" th:id="btnCategoryResource_ + ${categoryResource.id}"
+                   onclick="categoryResource(this.id)">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h6 th:text="${categoryResource.name}" class="my-0" >Name rubric</h6>
+                  </div>
+                </a>
+              </li>
+            </ul>
+            <div class="mt-5 mx-0 py-2 px-3 border-top">
+              <div class="row my-2 mx-0 p-0 justify-content-between">
+                <span class="col ttl-4">Создание категории</span>
+                <button class="col-auto btn btn-primary btn-sm w-auto px-3" type="button">+</button>
+              </div>
+              <form th:method="POST" th:action="@{/administration/categoriesresources/new}" th:object="${categoryResource}">
+                <input th:field="*{id}" type="hidden" name="id" id="id">
+                <div class="row my-2 mx-0 p-0 align-items-center justify-content-center">
+                  <label class="col-12 lbl-3" for="number">Номер<sup>*</sup></label>
+                  <input th:field="*{number}" type="text" name="number" id="number"
+                         class="form-control form-control-sm" placeholder="Введите номер">
+                </div>
+                <div class="row my-2 mx-0 p-0 align-items-center justify-content-center">
+                  <label class="col-12 lbl-3" for="categoryResourceKey">Ключ<sup>*</sup></label>
+                  <input th:field="*{categoryResourceKey}" type="text" name="categoryResourceKey" id="categoryResourceKey"
+                         class="form-control form-control-sm" placeholder="Введите ключ">
+                </div>
+                <div class="row my-2 mx-0 p-0 align-items-center justify-content-center">
+                  <label class="col-12 lbl-3" for="name">Наименование<sup>*</sup></label>
+                  <input th:field="*{name}" type="text" name="name" id="name"
+                         class="form-control form-control-sm" placeholder="Введите наименование">
+                </div>
+                <div class="row my-2 mx-0 p-0 align-items-center justify-content-center">
+                  <label class="col-auto lbl-3 mb-1" for="active">Active</label>
+                  <div class="col form-check">
+                    <input th:field="*{active}" type="checkbox" name="active" id="active" class="form-check-input">
+                  </div>
+                </div>
+                <div class="row my-2 mx-0 p-0 align-items-center justify-content-center">
+                  <label class="col-auto lbl-3 mb-1">Date:</label>
+                  <label th:text="${#temporals.format(categoryResource.dateStamp, 'dd.MM.yyyy HH:mm:ss')}"
+                         class="col lbl-3 mb-1 px-0" id="dateStamp"></label>
+                </div>
+                <div class="row my-2 mx-0 p-0 justify-content-center">
+                  <button class="btn btn-primary w-auto btn-sm" type="submit">Добавить категорию</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="col menu-admin-list-box">
+            <div class="row justify-content-center" id="resources">
+              <!--
+              <div th:each="resource : ${resources}" class="resource-box">
+                <a href="#" class="resource">
+                  <img src="/static/images/{imageResource}(imageResource = ${resource.resourceKey} + '.png')}"
+                       class="resource-img">
+                </a>
+              </div>
+              -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

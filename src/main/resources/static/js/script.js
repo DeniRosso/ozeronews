@@ -75,6 +75,7 @@ window.addEventListener('load', function () {
     if (currentPage == 'news' || currentPage == 'subscriptions') {
         document.getElementById('articles').innerHTML = "";
         document.getElementById('message').innerHTML = "";
+
         if (articleId != null) { //undefined
             id = articleId[1];
             search = null;
@@ -191,6 +192,16 @@ function loadArticles(id, search, numberPage, sizePage) {
     var section = pathURLArray[2];
     var name = pathURLArray[3];
 
+    // Make spinner
+    var spinner = document.createElement('DIV');
+    spinner.id = 'spinner';
+    spinner.classList.add('text-center');
+    spinner.innerHTML =
+        ' <div class="spinner-border text-primary m-4" role="status"> ' +
+            ' <span class="visually-hidden">Loading...</span> ' +
+        ' </div> ';
+    document.getElementById('articles').appendChild(spinner);
+
     // Load first group articles
     var xhr = new XMLHttpRequest();
 
@@ -217,9 +228,9 @@ function loadArticles(id, search, numberPage, sizePage) {
         if (jsonRequest.length === 0) {
             var newMessage = document.createElement('DIV');
             newMessage.innerHTML =
-            ' <div class="alert alert-danger" role="alert"> ' +
-            ' Статья не найдена '
-            ' </div> ';
+                ' <div class="alert alert-danger" role="alert"> ' +
+                    ' Статья не найдена '
+                ' </div> ';
             document.getElementById('message').appendChild(newMessage);
         }
 
@@ -327,6 +338,7 @@ function loadArticles(id, search, numberPage, sizePage) {
 
             newArticleGroups.appendChild(newCard);
         }
+        document.getElementById('spinner').parentNode.removeChild(document.getElementById('spinner'));
         document.getElementById('articles').appendChild(newArticleGroups);
     };
 };

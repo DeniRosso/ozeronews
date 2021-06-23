@@ -13,6 +13,7 @@ public class ArticlesCollectScheduler {
 
 //    https://michael-smirnov.ru/ - RSS каналы
 //    https://novayagazeta.ru/news - novayagazeta
+//    https://team29.org/ - Команда 29
 
     int articleCount;
 
@@ -72,6 +73,14 @@ public class ArticlesCollectScheduler {
     private ParsingMetroNews parsingMetroNews;
     private ParsingYtro parsingYtro;
     private ParsingAIF parsingAIF;
+    private ParsingCurrentTime parsingCurrentTime;
+    private ParsingCNews parsingCNews;
+    private ParsingMediazona parsingMediazona;
+    private ParsingSnob parsingSnob;
+    private ParsingZnak parsingZnak;
+    private ParsingProekt parsingProekt;
+    private ParsingNG parsingNG;
+    private ParsingNovayaGazeta parsingNovayaGazeta;
 
 //    @Value("${schedule.work}")
 //    private String scheduleTime;
@@ -131,7 +140,15 @@ public class ArticlesCollectScheduler {
                                     ParsingBBCRussian parsingBBCRussian,
                                     ParsingMetroNews parsingMetroNews,
                                     ParsingYtro parsingYtro,
-                                    ParsingAIF parsingAIF) {
+                                    ParsingAIF parsingAIF,
+                                    ParsingCurrentTime parsingCurrentTime,
+                                    ParsingCNews parsingCNews,
+                                    ParsingMediazona parsingMediazona,
+                                    ParsingSnob parsingSnob,
+                                    ParsingZnak parsingZnak,
+                                    ParsingProekt parsingProekt,
+                                    ParsingNG parsingNG,
+                                    ParsingNovayaGazeta parsingNovayaGazeta) {
 
         this.newsResourceRepository = newsResourceRepository;
         this.parsingRIA = parsingRIA;
@@ -189,6 +206,14 @@ public class ArticlesCollectScheduler {
         this.parsingMetroNews = parsingMetroNews;
         this.parsingYtro = parsingYtro;
         this.parsingAIF = parsingAIF;
+        this.parsingCurrentTime = parsingCurrentTime;
+        this.parsingCNews = parsingCNews;
+        this.parsingMediazona = parsingMediazona;
+        this.parsingSnob = parsingSnob;
+        this.parsingZnak = parsingZnak;
+        this.parsingProekt = parsingProekt;
+        this.parsingNG = parsingNG;
+        this.parsingNovayaGazeta = parsingNovayaGazeta;
     }
 
     @Scheduled(initialDelay = 10000, fixedRateString = "${article.collection.schedule}")
@@ -254,10 +279,18 @@ public class ArticlesCollectScheduler {
 //        parsingMetroNews.getArticles();
 //        parsingYtro.getArticles();
 //        parsingAIF.getArticles();
+        parsingCurrentTime.getArticles();
+        parsingCNews.getArticles();
+        parsingMediazona.getArticles();
+        parsingSnob.getArticles();
+        parsingZnak.getArticles();
+//        parsingProekt.getArticles();
+        parsingNG.getArticles();
+//        parsingNovayaGazeta.getArticles();
 
         Iterable<NewsResource> newsResources = newsResourceRepository.findAll();
         for (NewsResource newsResource : newsResources) {
-            if (newsResource.isActive() && true) {
+            if (newsResource.isActive() && false) {
                 switch (newsResource.getResourceKey()) {
                     case "ria":
                         System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
@@ -527,6 +560,46 @@ public class ArticlesCollectScheduler {
                     case "aif":
                         System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
                         articleCount = parsingAIF.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "currenttime":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingCurrentTime.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "cnews":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingCNews.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "mediazona":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingMediazona.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "snob":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingSnob.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "znak":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingZnak.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "proekt":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingProekt.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "ng":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingNG.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "novayagazeta":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingNovayaGazeta.getArticles();
                         System.out.println(articleCount + " articles completed");
                         break;
                 }

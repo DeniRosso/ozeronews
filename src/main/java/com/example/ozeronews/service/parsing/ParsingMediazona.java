@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingAIF {
+public class ParsingMediazona {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -37,9 +37,9 @@ public class ParsingAIF {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "aif";
-        String newsResourceLink = "https://aif.ru/";
-        String newsLink = "https://aif.ru/rss/all.php";
+        String newsResourceKey = "mediazona";
+        String newsResourceLink = "https://zona.media/";
+        String newsLink = "https://zona.media/rss";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -66,8 +66,8 @@ public class ParsingAIF {
                 articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri()
-                        .substring(feed.getEntries().get(i).getUri().lastIndexOf("/") + 1);
+                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
+                        feed.getEntries().get(i).getUri().lastIndexOf("/") + 1);
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;

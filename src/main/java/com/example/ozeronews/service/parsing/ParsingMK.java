@@ -83,7 +83,7 @@ public class ParsingMK {
 
                 articleDatePublication = ZonedDateTime.ofInstant(
                         Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
-                        ZoneId.of("UTC"));
+                        ZoneId.of("Europe/Moscow")).withZoneSameInstant(ZoneId.of("UTC"));;
 
                 dateStamp = ZonedDateTime.now(ZoneId.of("UTC"));
 
@@ -110,7 +110,7 @@ public class ParsingMK {
                     articleNumber = newsResourceKey + "_" + articleNumber.substring(
                             articleNumber.indexOf("\"id\":") + 5, articleNumber.lastIndexOf("}"));
                 }
-                if (articleRepository.checkByArticleNumber(articleNumber)) break;
+                if (articleRepository.checkByArticleNumber(articleNumber)) continue;
 
                 NewsResource newsResource = new NewsResource();
                 newsResource.setResourceKey(newsResourceKey);

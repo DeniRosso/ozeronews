@@ -1197,9 +1197,9 @@ main {
 
 .resource-box {
     display: flex;
-    flex: 0 0 5.0rem;
-    width: 5.0rem;
-    height: 5.0rem;
+    flex: 0 0 4.0rem;
+    width: 4.0rem;
+    height: 4.0rem;
     margin: 0.5rem;
     padding: 0.0rem;
 }

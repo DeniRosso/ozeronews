@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingAIF {
+public class ParsingCurrentTime {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -37,9 +37,9 @@ public class ParsingAIF {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "aif";
-        String newsResourceLink = "https://aif.ru/";
-        String newsLink = "https://aif.ru/rss/all.php";
+        String newsResourceKey = "currenttime";
+        String newsResourceLink = "https://www.currenttime.tv/";
+        String newsLink = "https://www.currenttime.tv/api/zg$ip_e_tpp_";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -66,9 +66,9 @@ public class ParsingAIF {
                 articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri()
-                        .substring(feed.getEntries().get(i).getUri().lastIndexOf("/") + 1);
-                articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
+                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
+                        feed.getEntries().get(i).getUri().lastIndexOf("/") + 1,
+                        feed.getEntries().get(i).getUri().lastIndexOf(".html"));
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 

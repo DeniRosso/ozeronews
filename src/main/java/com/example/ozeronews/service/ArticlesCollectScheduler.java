@@ -290,7 +290,7 @@ public class ArticlesCollectScheduler {
 
         Iterable<NewsResource> newsResources = newsResourceRepository.findAll();
         for (NewsResource newsResource : newsResources) {
-            if (newsResource.isActive() && true) {
+            if (newsResource.isActive() && false) {
                 switch (newsResource.getResourceKey()) {
                     case "ria":
                         System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");

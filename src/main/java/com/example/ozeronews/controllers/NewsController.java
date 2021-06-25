@@ -19,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -265,7 +267,9 @@ public class NewsController {
                 .findArticleById(Long.valueOf(id), startNumberNews, pageable.getPageSize());
         Head head = appConfig.getHead();
         head.setUrl(head.getUrl() + "news/news/all/" + id + "?id=" + id);
-        head.setDescription(articles.get(0).getTitle() + " " + articles.get(0).getResourceId().getFullName() + " " + articles.get(0).getPeriodPublication());
+        head.setTitle(articles.get(0).getTitle());
+        head.setDescription("\"" + articles.get(0).getResourceId().getFullName() + "\"" + " | " +
+                articles.get(0).getDatePublication().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")));
         head.setImage(articles.get(0).getImage());
 
         model.addAttribute("section", section);

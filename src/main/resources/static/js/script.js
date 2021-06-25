@@ -257,6 +257,23 @@ function loadArticles(id, search, numberPage, sizePage) {
                 var image = '/static/images/' + resourceKey + '.png';
             }
 
+            // Add mate for article
+//             if (id !== null && id !== '') {
+//                // Google / Search Engine Tags
+//                document.querySelector('meta[itemprop="description"]').setAttribute("content", title);
+//                document.querySelector('meta[itemprop="image"]').setAttribute("content", image);
+//
+//                // Facebook Meta Tags
+//                document.querySelector('meta[property="og:url"]').setAttribute("content", link);
+//                document.querySelector('meta[property="og:description"]').setAttribute("content", title);
+//                document.querySelector('meta[property="og:image"]').setAttribute("content", image);
+//
+//                // Twitter Meta Tags
+//                document.querySelector('meta[name="twitter:url"]').setAttribute("content", link);
+//                document.querySelector('meta[name="twitter:description"]').setAttribute("content", title);
+//                document.querySelector('meta[name="twitter:image"]').setAttribute("content", image);
+//            }
+
             var periodPublication = '';
             var publicationDate = new Date(jsonRequest[i].datePublication);
 
@@ -343,6 +360,7 @@ function loadArticles(id, search, numberPage, sizePage) {
         }
         document.getElementById('spinner').parentNode.removeChild(document.getElementById('spinner'));
         document.getElementById('articles').appendChild(newArticleGroups);
+        document.querySelector('meta[http-equiv="refresh"]').setAttribute("content", '1200');
     };
 };
 

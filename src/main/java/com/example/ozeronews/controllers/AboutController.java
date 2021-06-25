@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.Contact;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.models.dto.CaptchaResponseDTO;
@@ -33,6 +34,7 @@ public class AboutController {
     private UserCurrentService userCurrentService;
     private MailSenderService mailSenderService;
     private RestTemplate restTemplate;
+    private AppConfig appConfig;
 
     @Value("${website.baseURL}")
     private String websiteBaseURL;
@@ -50,69 +52,55 @@ public class AboutController {
     public AboutController(UserRepository userRepository,
                            UserCurrentService userCurrentService,
                            MailSenderService mailSenderService,
-                           RestTemplate restTemplate) {
+                           RestTemplate restTemplate,
+                           AppConfig appConfig) {
         this.userRepository = userRepository;
         this.userCurrentService = userCurrentService;
         this.mailSenderService = mailSenderService;
         this.restTemplate = restTemplate;
+        this.appConfig = appConfig;
     }
 
     @GetMapping("/about")
-    public String about(Principal principal,
-                        Model model) {
-        model.addAttribute("title", "О Нас");
-        model.addAttribute("website", websiteBaseURL);
-        model.addAttribute("websiteName", websiteName);
-        model.addAttribute("company", companyName);
+    public String viewAbout(Principal principal, Model model) {
 
         User user = userCurrentService.getCurrentUser(principal);
         model.addAttribute("currentPage", "about");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", user);
-
         return "about";
     }
     @GetMapping("/about/privacy")
-    public String privacy(Principal principal,
-                          Model model) {
-        model.addAttribute("title", "Политика конфиденциальности");
-        model.addAttribute("website", websiteBaseURL);
-        model.addAttribute("websiteName", websiteName);
-        model.addAttribute("company", companyName);
+    public String viewPrivacy(Principal principal, Model model) {
 
-        User user = userCurrentService.getCurrentUser(principal);
         model.addAttribute("currentPage", "privacy");
-        model.addAttribute("user", user);
+        model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "privacy";
     }
 
     @GetMapping("/about/termsofuse")
-    public String termsofuse(Principal principal,
-                                Model model) {
-        model.addAttribute("title", "Пользовательское соглашение");
-        model.addAttribute("website", websiteBaseURL);
-        model.addAttribute("websiteName", websiteName);
-        model.addAttribute("company", companyName);
+    public String viewTermsofuse(Principal principal, Model model) {
 
-        User user = userCurrentService.getCurrentUser(principal);
         model.addAttribute("currentPage", "useragreement");
-        model.addAttribute("user", user);
+        model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "termsofuse";
     }
 
     @GetMapping("/about/contact")
-    public String contact(Principal principal,
-                          Model model) {
-        model.addAttribute("title", "Контакты");
+    public String viewContact(Principal principal, Model model) {
+
         model.addAttribute("contact", new Contact());
 
-        User user = userCurrentService.getCurrentUser(principal);
         model.addAttribute("currentPage", "contact");
-        model.addAttribute("user", user);
+        model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "contact";
     }
 
     @PostMapping("/about/contact")
-    public String sendMessage(Principal principal,
+    public String sendContactMessage(Principal principal,
                               @RequestParam("g-recaptcha-response") String captchaResponse,
                               @Valid Contact contact,
                               BindingResult bindingResult,

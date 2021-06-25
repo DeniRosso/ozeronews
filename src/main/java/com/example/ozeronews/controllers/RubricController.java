@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.Rubric;
 import com.example.ozeronews.repo.RubricRepository;
 import com.example.ozeronews.service.UserCurrentService;
@@ -21,28 +22,32 @@ public class RubricController {
 
     private UserCurrentService userCurrentService;
     private RubricRepository rubricRepository;
+    private AppConfig appConfig;
 
     @Autowired
     public RubricController(UserCurrentService userCurrentService,
-                            RubricRepository rubricRepository) {
+                            RubricRepository rubricRepository,
+                            AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.rubricRepository = rubricRepository;
+        this.appConfig = appConfig;
     }
 
     @GetMapping("/administration/rubrics")
-    public String viewRubrics(Principal principal,
-                              Model model) {
+    public String viewRubrics(Principal principal, Model model) {
+
         model.addAttribute("rubrics", rubricRepository.findAll());
         model.addAttribute("rubricSelect", new Rubric());
 
         model.addAttribute("currentPage", "adminRubrics");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "rubrics";
     }
 
     @PostMapping("/administration/rubrics")
-    public String updateRubric(Rubric rubricSelect,
-                               Model model) {
+    public String updateRubric(Rubric rubricSelect) {
+
         rubricSelect.setDateStamp(ZonedDateTime.now(ZoneId.of("UTC")));
         rubricRepository.updateRubric(rubricSelect);
         return "redirect:/rubrics";
@@ -56,13 +61,14 @@ public class RubricController {
         model.addAttribute("rubricSelect", rubricRepository.findById(id));
 
         model.addAttribute("currentPage", "adminRubrics");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "rubrics";
     }
 
     @PostMapping("/administration/rubrics/{id}")
-    public String updateRubric1(Rubric rubricSelect,
-                                Model model) {
+    public String updateRubric1(Rubric rubricSelect) {
+
         rubricSelect.setDateStamp(ZonedDateTime.now(ZoneId.of("UTC")));
         rubricRepository.updateRubric(rubricSelect);
         return "redirect:/administration/rubrics/{id}";

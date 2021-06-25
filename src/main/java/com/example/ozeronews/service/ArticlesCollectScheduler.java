@@ -3,6 +3,7 @@ package com.example.ozeronews.service;
 import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.NewsResourceRepository;
 import com.example.ozeronews.service.parsing.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -84,6 +85,9 @@ public class ArticlesCollectScheduler {
 
 //    @Value("${schedule.work}")
 //    private String scheduleTime;
+
+    @Value("${article.collection.active}")
+    private boolean articleCollectionActive;
 
     public ArticlesCollectScheduler(NewsResourceRepository newsResourceRepository,
                                     ParsingRIA parsingRIA,
@@ -290,7 +294,7 @@ public class ArticlesCollectScheduler {
 
         Iterable<NewsResource> newsResources = newsResourceRepository.findAll();
         for (NewsResource newsResource : newsResources) {
-            if (newsResource.isActive() && true) {
+            if (newsResource.isActive() && articleCollectionActive) {
                 switch (newsResource.getResourceKey()) {
                     case "ria":
                         System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");

@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.AuthProvider;
 import com.example.ozeronews.models.Subscription;
 import com.example.ozeronews.models.User;
@@ -24,21 +25,23 @@ public class SubscriptionController {
     private UserRepo userRepo;
     private SubscriptionRepository subscriptionRepository;
     private SubscriptionService subscriptionService;
+    private AppConfig appConfig;
 
     @Autowired
     public SubscriptionController(UserCurrentService userCurrentService,
                                   UserRepo userRepo,
                                   SubscriptionRepository subscriptionRepository,
-                                  SubscriptionService subscriptionService) {
+                                  SubscriptionService subscriptionService,
+                                  AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepo = userRepo;
         this.subscriptionRepository = subscriptionRepository;
         this.subscriptionService = subscriptionService;
+        this.appConfig = appConfig;
     }
 
     @GetMapping("")
-    public String viewSubscription(Principal principal,
-                                   Model model) {
+    public String viewSubscription(Principal principal, Model model) {
 
         User user = userCurrentService.getCurrentUser(principal);
         if (user.getAuthProvider().stream().findFirst().get().equals(AuthProvider.LOCAL)) {
@@ -48,6 +51,7 @@ public class SubscriptionController {
         }
         model.addAttribute("subscriptions", subscriptionService.findAllByUser(userRepo.findByEmail(principal.getName())));
         model.addAttribute("currentPage", "userSubscriptions");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "subscriptions";
     }

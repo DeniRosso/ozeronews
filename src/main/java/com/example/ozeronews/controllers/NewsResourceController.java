@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.NewsResourceRepository;
 import com.example.ozeronews.service.UserCurrentService;
@@ -21,21 +22,25 @@ public class NewsResourceController {
 
     private UserCurrentService userCurrentService;
     private NewsResourceRepository newsResourceRepository;
+    private AppConfig appConfig;
 
     @Autowired
     public NewsResourceController(UserCurrentService userCurrentService,
-                                  NewsResourceRepository newsResourceRepository) {
+                                  NewsResourceRepository newsResourceRepository,
+                                  AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.newsResourceRepository = newsResourceRepository;
+        this.appConfig = appConfig;
     }
 
     @GetMapping("/administration/news-resources")
-    public String viewNewsResources(Principal principal,
-                                    Model model) {
+    public String viewNewsResources(Principal principal, Model model) {
+
         model.addAttribute("newsResources", newsResourceRepository.findAll());
         model.addAttribute("newsResourceSelect", new NewsResource());
 
         model.addAttribute("currentPage", "adminResources");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "news-resources";
     }
@@ -48,13 +53,14 @@ public class NewsResourceController {
         model.addAttribute("newsResourceSelect", newsResourceRepository.findById(id));
 
         model.addAttribute("currentPage", "adminResources");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "news-resources";
     }
 
     @PostMapping("/administration/news-resources/{id}")
-    public String updateNewsResources(NewsResource newsResourceSelect,
-                                      Model model) {
+    public String updateNewsResources(NewsResource newsResourceSelect) {
+
         newsResourceSelect.setDateStamp(ZonedDateTime.now(ZoneId.of("UTC")));
         newsResourceRepository.updateResource(newsResourceSelect);
         return "redirect:/administration/news-resources/{id}";

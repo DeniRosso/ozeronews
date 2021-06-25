@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.service.UserCurrentService;
 import com.example.ozeronews.service.UserService;
@@ -20,24 +21,28 @@ public class UserChangePasswordController {
 
     private UserCurrentService userCurrentService;
     private UserService userService;
+    private AppConfig appConfig;
 
     @Autowired
     public UserChangePasswordController(UserCurrentService userCurrentService,
-                                        UserService userService) {
+                                        UserService userService,
+                                        AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userService = userService;
+        this.appConfig = appConfig;
     }
 
     @GetMapping("/changepassword")
     public String viewChangePassword(Principal principal, Model model) {
-        User user = userCurrentService.getCurrentUser(principal);
+
         model.addAttribute("currentPage", "userChangePassword");
 
         model.addAttribute("password", "");
         model.addAttribute("newPassword", "");
         model.addAttribute("newPassword2", "");
 
-        model.addAttribute("user", user);
+        model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "users/changepassword";
     }
 
@@ -54,6 +59,7 @@ public class UserChangePasswordController {
         if (!new BCryptPasswordEncoder().matches(password, user.getPassword())) {
             model.addAttribute("passwordError", "Неверный текущий пароль.");
             model.addAttribute("currentPage", "userChangePassword");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/changepassword";
         }
@@ -61,6 +67,7 @@ public class UserChangePasswordController {
             model.addAttribute("newPasswordError", "Пароли не совпадают");
             model.addAttribute("newPassword2Error", "Пароли не совпадают");
             model.addAttribute("currentPage", "userChangePassword");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/changepassword";
         }
@@ -68,12 +75,14 @@ public class UserChangePasswordController {
             model.addAttribute("messageType", "alert alert-danger");
             model.addAttribute("message", "Пароль не удалось изменить. Попробуйте еще раз.");
             model.addAttribute("currentPage", "userChangePassword");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/changepassword";
         }
         model.addAttribute("messageType", "alert alert-success");
         model.addAttribute("message", "Пароль успешно изменен.");
         model.addAttribute("currentPage", "userChangePassword");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", user);
         return "users/changepassword";
     }

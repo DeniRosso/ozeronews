@@ -19,7 +19,7 @@
                     </ul>
                     <ul class="about-subtitle">
                         <li>
-                            Веб-сайт <a th:href="@{website}" th:text="${websiteName}"></a> позволяет получать
+                            Веб-сайт <a th:href="@{head.url}" th:text="${head.siteName}"></a> позволяет получать
                             актуальную информацию в ленте новостей.
                         </li>
                         <li>
@@ -28,7 +28,7 @@
                     </ul>
                     <ul class="about-subtitle  border-top">
                         <li class="text-right">
-                            С Уважением, Администация "<span th:text="${websiteName}"></span>".
+                            С Уважением, Администация "<span th:text="${head.siteName}"></span>".
                         </li>
                     </ul>
                 </div>

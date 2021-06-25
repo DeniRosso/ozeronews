@@ -83,7 +83,11 @@ public class ParsingMK {
 
                 articleDatePublication = ZonedDateTime.ofInstant(
                         Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
-                        ZoneId.of("Europe/Moscow")).withZoneSameInstant(ZoneId.of("UTC"));;
+                        ZoneId.of("UTC"));
+
+//                articleDatePublication = ZonedDateTime.ofInstant(
+//                        Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
+//                        ZoneId.of("Europe/Moscow")).withZoneSameInstant(ZoneId.of("UTC"));;
 
                 dateStamp = ZonedDateTime.now(ZoneId.of("UTC"));
 

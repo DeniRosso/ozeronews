@@ -1,5 +1,7 @@
 package com.example.ozeronews.config;
 
+import com.example.ozeronews.models.Head;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
@@ -12,6 +14,21 @@ import java.util.Locale;
 
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
+
+    @Value("${company.name}")
+    private String companyName;
+
+    @Value("${website.name}")
+    private String websiteName;
+
+    @Value("${website.baseURL}")
+    private String websiteBaseURL;
+
+    @Value("${website.logo}")
+    private String websiteLogo;
+
+    @Value("${website.description}")
+    private String websiteDescription;
 
     @Bean
     public LocaleResolver localeResolver() {
@@ -40,5 +57,10 @@ public class AppConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
+    }
+
+    @Bean
+    public Head getHead() {
+        return new Head(companyName, websiteName, websiteBaseURL, websiteName, websiteLogo, websiteDescription);
     }
 }

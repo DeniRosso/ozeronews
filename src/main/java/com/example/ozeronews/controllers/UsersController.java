@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.Role;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.RoleRepository;
@@ -32,6 +33,7 @@ public class UsersController {
     private RoleRepository roleRepository;
     private MailSenderService mailSenderService;
     private RestTemplate restTemplate;
+    private AppConfig appConfig;
 
     @Autowired
     private UserRepo userRepo;
@@ -48,27 +50,28 @@ public class UsersController {
                            UserService userService,
                            RoleRepository roleRepository,
                            MailSenderService mailSenderService,
-                           RestTemplate restTemplate) {
+                           RestTemplate restTemplate,
+                           AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepository = userRepository;
         this.userService = userService;
         this.roleRepository = roleRepository;
         this.mailSenderService = mailSenderService;
         this.restTemplate = restTemplate;
+        this.appConfig = appConfig;
     }
 
     // View all users
     @PreAuthorize(value = "hasAuthority('USER') OR hasAuthority('ADMIN')")
     @GetMapping("/administration/users")
-    public String viewUsers(Principal principal,
-                            Model model) {
-
+    public String viewUsers(Principal principal, Model model) {
 
         model.addAttribute("users", userRepo.findAll());
         model.addAttribute("roles", Role.values()); //model.addAttribute("roles", Role.class);
         model.addAttribute("userSelect", new User());
 
         model.addAttribute("currentPage", "adminUsers");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "users/users";
     }
@@ -85,6 +88,7 @@ public class UsersController {
         model.addAttribute("userSelect", userRepository.findById(id));
 
         model.addAttribute("currentPage", "adminUsers");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "users/users";
     }
@@ -107,6 +111,7 @@ public class UsersController {
             model.addAttribute("userSelect", userRepository.findById(userSelect.getId()));
 
             model.addAttribute("currentPage", "adminUsers");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", userCurrentService.getCurrentUser(principal));
             return "users/users";
         }
@@ -119,6 +124,7 @@ public class UsersController {
             model.addAttribute("userSelect", userRepository.findById(userSelect.getId()));
 
             model.addAttribute("currentPage", "adminUsers");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", userCurrentService.getCurrentUser(principal));
             return "users/users";
         }

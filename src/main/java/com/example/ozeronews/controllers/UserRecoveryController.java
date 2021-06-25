@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.models.dto.CaptchaResponseDTO;
 import com.example.ozeronews.repo.UserRepository;
@@ -29,6 +30,7 @@ public class UserRecoveryController {
     private UserService userService;
     private MailSenderService mailSenderService;
     private RestTemplate restTemplate;
+    private AppConfig appConfig;
 
     @Value("${recaptcha.secret}")
     private String secret;
@@ -36,19 +38,21 @@ public class UserRecoveryController {
     public UserRecoveryController(UserRepository userRepository,
                                   UserService userService,
                                   MailSenderService mailSenderService,
-                                  RestTemplate restTemplate) {
+                                  RestTemplate restTemplate,
+                                  AppConfig appConfig) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailSenderService = mailSenderService;
         this.restTemplate = restTemplate;
+        this.appConfig = appConfig;
     }
 
     // Recovery password
     @GetMapping("/recovery")
     public String viewRecovery(Model model) {
 
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", new User());
-
         return "users/recovery";
     }
 
@@ -68,12 +72,14 @@ public class UserRecoveryController {
             if (errors.hasFieldErrors("email")) {
 
             }
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/recovery";
         }
         if (!userRepository.checkByEmail(user.getEmail())) {
             model.addAttribute("messageType", "alert alert-danger");
             model.addAttribute("message", "Пользователя с указанным адрессом электронной почты не существует.");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/recovery";
         }
@@ -85,11 +91,13 @@ public class UserRecoveryController {
             if (!mailSenderService.mailRecovery(user)) {
                 model.addAttribute("messageType", "alert alert-danger");
                 model.addAttribute("message", "Неудалось отправить письмо для восстановления пароля");
+                model.addAttribute("head", appConfig.getHead());
                 model.addAttribute("user", userRepository.findByAuthorization(user));
                 return "users/recovery";
             } else {
                 model.addAttribute("messageType", "alert alert-success");
                 model.addAttribute("message", "Письмо для восстановления пароля отправленно на электронную почту.");
+                model.addAttribute("head", appConfig.getHead());
                 model.addAttribute("user", new User());
                 return "users/login";
             }
@@ -98,12 +106,13 @@ public class UserRecoveryController {
     }
 
     @GetMapping("/recovery/{code}")
-    public String viewSetNewPassword(@PathVariable String code,
-                              Model model) {
+    public String viewSetNewPassword(@PathVariable String code, Model model) {
+
         List<User> users = userRepository.findByRecoveryCode(code);
         if (users.isEmpty()) {
             model.addAttribute("messageType", "alert alert-danger");
             model.addAttribute("message", "Пользователь не был найден.");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", new User());
             return "users/login";
         }
@@ -111,11 +120,13 @@ public class UserRecoveryController {
             if (user.getRecoveryCode() != null) {
                 model.addAttribute("messageType", "alert alert-secondary");
                 model.addAttribute("message", "Восстановление пароля.");
+                model.addAttribute("head", appConfig.getHead());
                 model.addAttribute("user", user);
                 return "users/newpassword";
             } else {
                 model.addAttribute("messageType", "alert alert-danger");
                 model.addAttribute("message", "Пользователь не был найден.");
+                model.addAttribute("head", appConfig.getHead());
                 model.addAttribute("user", new User());
                 return "users/login";
             }
@@ -129,7 +140,9 @@ public class UserRecoveryController {
                                   BindingResult bindingResult,
                                   Model model,
                                   Errors errors) {
+
         if (errors.hasFieldErrors("password")) {
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", new User());
             return "users/newpassword";
         }
@@ -138,12 +151,14 @@ public class UserRecoveryController {
             user.setPassword2(null);
             model.addAttribute("passwordError", "Пароли не совпадают");
             model.addAttribute("password2Error", "Пароли не совпадают");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/newpassword";
         }
         if (userService.recoveryUser(user, code)) {
             model.addAttribute("messageType", "alert alert-success");
             model.addAttribute("message", "Пароль изменен.");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", new User());
             return "users/login";
         } else {
@@ -151,6 +166,7 @@ public class UserRecoveryController {
             user.setPassword2(null);
             model.addAttribute("messageType", "alert alert-danger");
             model.addAttribute("message", "Не удалось изменить пароль.");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/newpassword";
         }

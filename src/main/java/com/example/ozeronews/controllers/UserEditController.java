@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.UserRepo;
 import com.example.ozeronews.repo.UserRepository;
@@ -36,6 +37,7 @@ public class UserEditController {
     private UserService userService;
     private MailSenderService mailSenderService;
     private RestTemplate restTemplate;
+    private AppConfig appConfig;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -49,20 +51,23 @@ public class UserEditController {
                               UserRepository userRepository,
                               UserService userService,
                               MailSenderService mailSenderService,
-                              RestTemplate restTemplate) {
+                              RestTemplate restTemplate,
+                              AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepo = userRepo;
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailSenderService = mailSenderService;
         this.restTemplate = restTemplate;
+        this.appConfig = appConfig;
     }
 
     // View edit user
     @GetMapping("/edit")
-    public String editUser(Principal principal,
-                           Model model) {
+    public String editUser(Principal principal, Model model) {
+
         model.addAttribute("currentPage", "userEdit");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "users/edit";
     }
@@ -79,6 +84,7 @@ public class UserEditController {
             Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errorsMap);
             model.addAttribute("currentPage", "userEdit");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/edit";
         }
@@ -88,6 +94,7 @@ public class UserEditController {
             user.setPassword(null);
             model.addAttribute("passwordError", "Введен неверный пароль.");
             model.addAttribute("currentPage", "userEdit");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/edit";
         }
@@ -111,6 +118,7 @@ public class UserEditController {
                         "Не удалось сохранить файл '" + file.getName() + "'. Попробуйте еще раз.");
                 user.setPassword(null);
                 model.addAttribute("currentPage", "userEdit");
+                model.addAttribute("head", appConfig.getHead());
                 model.addAttribute("user", user);
                 return "users/edit";
             }

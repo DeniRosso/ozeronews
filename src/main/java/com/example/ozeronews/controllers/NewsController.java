@@ -1,6 +1,8 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.Article;
+import com.example.ozeronews.models.Head;
 import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.*;
@@ -8,6 +10,7 @@ import com.example.ozeronews.service.ArticleFindService;
 import com.example.ozeronews.service.CategoryResourceService;
 import com.example.ozeronews.service.UserCurrentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -16,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("")
@@ -30,6 +34,7 @@ public class NewsController {
     private CategoryResourceService categoryResourceService;
     private UserRepository userRepository;
     private UserCurrentService userCurrentService;
+    private AppConfig appConfig;
 
     @Autowired
     public NewsController(ArticleFindService articleFindService,
@@ -40,7 +45,8 @@ public class NewsController {
                           CategoryResourceRepository categoryResourceRepository,
                           CategoryResourceService categoryResourceService,
                           UserRepository userRepository,
-                          UserCurrentService userCurrentService) {
+                          UserCurrentService userCurrentService,
+                          AppConfig appConfig) {
         this.articleFindService = articleFindService;
         this.articleRepository = articleRepository;
         this.subscriptionRepository = subscriptionRepository;
@@ -50,6 +56,7 @@ public class NewsController {
         this.categoryResourceService = categoryResourceService;
         this.userRepository = userRepository;
         this.userCurrentService = userCurrentService;
+        this.appConfig = appConfig;
     }
 
 //    <div sec:authorize="isAuthenticated()" class="row">
@@ -109,7 +116,7 @@ public class NewsController {
             @RequestParam(value="currentPage") String currentPage,
             @RequestParam(value="id") String articleId,
             @PageableDefault(sort = { "date_publication" }, direction = Sort.Direction.DESC) Pageable pageable) {
-        Iterable<Article> articles = null;
+
         int startNumberNews;
         startNumberNews = (pageable.getPageNumber()) * pageable.getPageSize();
 
@@ -118,7 +125,7 @@ public class NewsController {
             return null;
         }
 
-        articles = articleRepository.findArticleById(Long.valueOf(articleId), startNumberNews, pageable.getPageSize());
+        Iterable<Article> articles = articleRepository.findArticleById(Long.valueOf(articleId), startNumberNews, pageable.getPageSize());
 
         return articles;
     }
@@ -201,6 +208,7 @@ public class NewsController {
         model.addAttribute("categoriesResources", categoryResourceRepository.findByActive(true));
         model.addAttribute("search", null);
 
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", user);
 
         return "news";
@@ -232,7 +240,50 @@ public class NewsController {
         model.addAttribute("categoriesResources", categoryResourceRepository.findByActive(true));
         model.addAttribute("search", null);
 
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", user);
+        return "news";
+    }
+
+    @GetMapping("/news/{section}/{name}/{id}")
+    public String viewNewsById(Principal principal,
+                           @PathVariable("section") String section,
+                           @PathVariable("name") String name,
+                           @PathVariable("id") String id,
+                           @PageableDefault(sort = { "date_publication" }, direction = Sort.Direction.DESC) Pageable pageable,
+                           Model model) {
+
+        int countResources = 10;
+        int countRubrics = 10;
+        int[] countArticlesList = {10, 30, 50, 100};
+        int startNumberNews;
+        startNumberNews = (pageable.getPageNumber()) * pageable.getPageSize();
+
+        User user = userCurrentService.getCurrentUser(principal);
+
+        List<Article> articles = (List<Article>) articleRepository
+                .findArticleById(Long.valueOf(id), startNumberNews, pageable.getPageSize());
+        Head head = appConfig.getHead();
+        head.setUrl(head.getUrl() + "news/news/all/" + id + "?id=" + id);
+        head.setDescription(articles.get(0).getTitle() + " " + articles.get(0).getResourceId().getFullName() + " " + articles.get(0).getPeriodPublication());
+        head.setImage(articles.get(0).getImage());
+
+        model.addAttribute("section", section);
+        model.addAttribute("name", name);
+        model.addAttribute("countArticlesList", countArticlesList);
+        model.addAttribute("pageable", pageable);
+        model.addAttribute("currentPage", "news");
+        model.addAttribute("articles", "not null");
+        model.addAttribute("topRubrics", rubricRepository.findTopRubrics(countRubrics));
+        model.addAttribute("allRubrics", rubricRepository.findAllRubrics());
+        model.addAttribute("topNewsResources", newsResourceRepository.findTopResources(countResources));
+        model.addAttribute("resources", newsResourceRepository.findAllResources());
+        model.addAttribute("categoriesResources", categoryResourceRepository.findByActive(true));
+        model.addAttribute("search", null);
+
+        model.addAttribute("head", head);
+        model.addAttribute("user", user);
+
         return "news";
     }
 

@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.AuthProvider;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.UserRepo;
@@ -27,19 +28,21 @@ public class UserDeleteController {
     private UserCurrentService userCurrentService;
     private UserRepository userRepository;
     private UserRepo userRepo;
+    private AppConfig appConfig;
 
     @Autowired
     public UserDeleteController(UserCurrentService userCurrentService,
                                 UserRepository userRepository,
-                                UserRepo userRepo) {
+                                UserRepo userRepo,
+                                AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepository = userRepository;
         this.userRepo = userRepo;
+        this.appConfig = appConfig;
     }
 
     @GetMapping("/delete")
-    public String viewDeleteUser(Principal principal,
-                                 Model model) {
+    public String viewDeleteUser(Principal principal, Model model) {
 
         User user = userCurrentService.getCurrentUser(principal);
         if (user.getAuthProvider().stream().findFirst().get().equals(AuthProvider.LOCAL)) {
@@ -48,6 +51,7 @@ public class UserDeleteController {
             model.addAttribute("provider", user.getAuthProvider().stream().findFirst().get());
         }
         model.addAttribute("currentPage", "userDelete");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", user);
         return "users/delete";
     }
@@ -64,6 +68,7 @@ public class UserDeleteController {
         if (errors.hasFieldErrors("password")) {
             model.addAttribute("passwordError", "Введите пароль");
             model.addAttribute("currentPage", "userDelete");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/delete";
         }
@@ -74,6 +79,7 @@ public class UserDeleteController {
             user.setPassword(null);
             model.addAttribute("passwordError", "Введен неверный пароль.");
             model.addAttribute("currentPage", "userDelete");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "users/delete";
         }
@@ -84,6 +90,7 @@ public class UserDeleteController {
 //        userRepo.delete(currentUser);
         model.addAttribute("messageType", "alert alert-success");
         model.addAttribute("message", "Пользователь удален");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", new User());
         return "users/login";
     }

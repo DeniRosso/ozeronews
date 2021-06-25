@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.AuthProvider;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.models.dto.CaptchaResponseDTO;
@@ -39,6 +40,7 @@ public class UserRegistrationController {
     private UserService userService;
     private MailSenderService mailSenderService;
     private RestTemplate restTemplate;
+    private AppConfig appConfig;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -52,18 +54,22 @@ public class UserRegistrationController {
                                       UserRepository userRepository,
                                       UserService userService,
                                       MailSenderService mailSenderService,
-                                      RestTemplate restTemplate) {
+                                      RestTemplate restTemplate,
+                                      AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepo = userRepo;
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailSenderService = mailSenderService;
         this.restTemplate = restTemplate;
+        this.appConfig = appConfig;
     }
 
     // View registration form
     @GetMapping("/registration")
     public String viewRegistrationUser(Model model) {
+
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", new User());
         model.addAttribute("newUser", new User());
         return "users/registration";
@@ -88,6 +94,7 @@ public class UserRegistrationController {
             }
             Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errorsMap);
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", new User());
             model.addAttribute("newUser", newUser);
             return "users/registration";
@@ -97,6 +104,7 @@ public class UserRegistrationController {
             newUser.setPassword2(null);
             model.addAttribute("passwordError", "Пароли не совпадают");
             model.addAttribute("password2Error", "Пароли не совпадают");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", new User());
             model.addAttribute("newUser", newUser);
             return "users/registration";
@@ -115,6 +123,7 @@ public class UserRegistrationController {
             }
             newUser.setPassword(null);
             newUser.setPassword2(null);
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", new User());
             model.addAttribute("newUser", newUser);
             return "users/registration";
@@ -135,6 +144,7 @@ public class UserRegistrationController {
                         "Не удалось сохранить файл '" + file.getName() + "'. Попробуйте еще раз.");
                 newUser.setPassword(null);
                 newUser.setPassword2(null);
+                model.addAttribute("head", appConfig.getHead());
                 model.addAttribute("user", new User());
                 model.addAttribute("newUser", newUser);
                 return "users/registration";
@@ -150,6 +160,7 @@ public class UserRegistrationController {
                 model.addAttribute("message", "Неудалось отправить письмо для активации профиля. Попробуйте еще раз.");
                 newUser.setPassword(null);
                 newUser.setPassword2(null);
+                model.addAttribute("head", appConfig.getHead());
                 model.addAttribute("user", new User());
                 model.addAttribute("newUser", newUser);
                 return "users/registration";
@@ -157,6 +168,7 @@ public class UserRegistrationController {
         }
         model.addAttribute("messageType", "alert alert-success");
         model.addAttribute("message", "Пользователь создан.");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", new User());
         model.addAttribute("newUser", newUser);
         userService.saveNewUser(newUser);
@@ -166,6 +178,8 @@ public class UserRegistrationController {
     // View registration form
     @GetMapping("/registrationsuccess")
     public String viewRegistrationUserSuccess(Model model) {
+
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", new User());
         return "users/registrationsuccess";
     }

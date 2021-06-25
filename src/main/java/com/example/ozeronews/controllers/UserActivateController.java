@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.UserRepository;
 import com.example.ozeronews.service.MailSenderService;
@@ -23,21 +24,24 @@ public class UserActivateController {
     private UserRepository userRepository;
     private UserService userService;
     private MailSenderService mailSenderService;
+    private AppConfig appConfig;
 
     @Autowired
     public UserActivateController(UserCurrentService userCurrentService,
                                   UserRepository userRepository,
                                   UserService userService,
-                                  MailSenderService mailSenderService) {
+                                  MailSenderService mailSenderService,
+                                  AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailSenderService = mailSenderService;
+        this.appConfig = appConfig;
     }
 
     @GetMapping("/activate")
-    public String requestActivate(Principal principal,
-                                  Model model) {
+    public String requestActivate(Principal principal, Model model) {
+
         User currentUser = userCurrentService.getCurrentUser(principal);
         if (!StringUtils.isEmpty(principal.getName())) {
             if (!mailSenderService.mailActivateUser(currentUser)) {
@@ -48,13 +52,14 @@ public class UserActivateController {
                         "Код активации потправлен на Email " + principal.getName());
             }
         }
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", currentUser);
         return "users/profile";
     }
 
     @GetMapping("/activate/{code}")
-    public String confirmActivate(@PathVariable String code,
-                                  Model model) {
+    public String confirmActivate(@PathVariable String code, Model model) {
+
         Iterable<User> users = userRepository.findByActivationCode(code);
         for (User user : users) {
             if (userService.activateUser(code)) {
@@ -65,6 +70,7 @@ public class UserActivateController {
                 model.addAttribute("message", "Ошибка активании");
             }
         }
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", new User());
         return "users/login";
     }

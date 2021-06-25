@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.AuthProvider;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.UserRepo;
@@ -22,16 +23,19 @@ public class UserProfileController {
     private UserRepository userRepository;
     private UserRepo userRepo;
     private SubscriptionService subscriptionService;
+    private AppConfig appConfig;
 
     @Autowired
     public UserProfileController(UserCurrentService userCurrentService,
                                  UserRepository userRepository,
                                  UserRepo userRepo,
-                                 SubscriptionService subscriptionService) {
+                                 SubscriptionService subscriptionService,
+                                 AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepository = userRepository;
         this.userRepo = userRepo;
         this.subscriptionService = subscriptionService;
+        this.appConfig = appConfig;
     }
 
     // View account form with user
@@ -50,6 +54,7 @@ public class UserProfileController {
         }
         model.addAttribute("subscriptions", subscriptionService.findByUser(userRepo.findByEmail(principal.getName())));
         model.addAttribute("currentPage", "userProfile");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", user);
         return "users/profile";
     }

@@ -236,8 +236,10 @@ function loadArticles(id, search, numberPage, sizePage) {
 
         for (var i = 0; i < jsonRequest.length; i++) {
 
-            var newCard = document.createElement('DIV');
+            var newCard = document.createElement('ARTICLE');
 //            newCard.classList.add('card');
+            newCard.setAttribute('itemscope', '');
+            newCard.setAttribute('itemtype', 'http://schema.org/NewsArticle');
             newCard.classList.add('p-sm-2');
             newCard.classList.add('card-article');
 
@@ -253,23 +255,6 @@ function loadArticles(id, search, numberPage, sizePage) {
                 var image = jsonRequest[i].image;
             } else {
                 var image = '/static/images/' + resourceKey + '.png';
-            }
-
-            // Add mate for article
-             if (id !== null && id !== '') {
-                // Google / Search Engine Tags
-                document.querySelector('meta[itemprop="description"]').setAttribute("content", title);
-                document.querySelector('meta[itemprop="image"]').setAttribute("content", image);
-
-                // Facebook Meta Tags
-                document.querySelector('meta[property="og:url"]').setAttribute("content", link);
-                document.querySelector('meta[property="og:description"]').setAttribute("content", title);
-                document.querySelector('meta[property="og:image"]').setAttribute("content", image);
-
-                // Twitter Meta Tags
-                document.querySelector('meta[name="twitter:url"]').setAttribute("content", link);
-                document.querySelector('meta[name="twitter:description"]').setAttribute("content", title);
-                document.querySelector('meta[name="twitter:image"]').setAttribute("content", image);
             }
 
             var periodPublication = '';
@@ -326,8 +311,8 @@ function loadArticles(id, search, numberPage, sizePage) {
                 '<div class="col me-1 me-sm-2 d-flex align-items-start flex-column">' +
                     '<div class="card-body p-0 mb-auto w-100 d-flex align-items-start flex-column">' +
                         '<span class="article-id" hidden style="color: #FFF">' + id + '</span>' +
-                        '<a href="' + link + '" target="_blank" class="text-decoration-none">' +
-                            '<h5 class="card-title card-article-ttl">' + title + '</h5>' +
+                        '<a href="' + link + '" itemprop="relatedLink" target="_blank" class="text-decoration-none">' +
+                            '<h1 itemprop="headline" class="card-title card-article-ttl">' + title + '</h1>' +
                         '</a>' +
                         '<div class="row d-inline-flex g-1 p-0 m-0 my-auto w-100 align-items-center justify-content-end" style="max-height: 28px; overflow-x: auto;">' +
                             rubrics +
@@ -343,12 +328,13 @@ function loadArticles(id, search, numberPage, sizePage) {
                                 '<p class="m-0 text-right card-article-footer-txt">' + resourceShortName + '</p>' +
                             '</a>' +
                             '<div class="card-article-footer-border"></div>' +
-                            '<p class="m-0 my-auto card-article-footer-txt">' + timePublication + '</p>' +
+//                            '<p class="m-0 my-auto card-article-footer-txt">' + timePublication + '</p>' +
+                            '<time itemprop="datePublished" datetime="' + publicationDate + '" class="m-0 my-auto card-article-footer-txt">' + timePublication + '</time>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
                 '<div class="col-auto d-flex align-items-start justify-content-center">' +
-                    '<div class="card-article-img" style="background:url(' + image + '); background-position: center; background-size: cover;"' +
+                    '<div itemprop="image" class="card-article-img" style="background:url(' + image + '); background-position: center; background-size: cover;"' +
                     '</div>' +
                 '</div>' +
             '</div>';
@@ -372,7 +358,7 @@ window.addEventListener('load', function () {
         let buttonShare = document.getElementById(sender.id).getBoundingClientRect();
         var id = sender.id.slice(sender.id.indexOf('_') + 1);
 
-        var link = baseURL + '/news/news/all' + '?id=' + id;
+        var link = baseURL + '/news/news/all/' + id + '?id=' + id;
 
         if (shareScreenStatus == 'off') {
             shareScreenBackground.style.display = 'block';

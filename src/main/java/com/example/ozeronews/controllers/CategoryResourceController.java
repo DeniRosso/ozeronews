@@ -1,5 +1,6 @@
 package com.example.ozeronews.controllers;
 
+import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.CategoryResource;
 import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.CategoryResourceRepository;
@@ -24,16 +25,19 @@ public class CategoryResourceController {
     private NewsResourceRepository newsResourceRepository;
     private CategoryResourceRepository categoryResourceRepository;
     private CategoryResourceService categoryResourceService;
+    private AppConfig appConfig;
 
     @Autowired
     public CategoryResourceController(UserCurrentService userCurrentService,
                                       NewsResourceRepository newsResourceRepository,
                                       CategoryResourceRepository categoryResourceRepository,
-                                      CategoryResourceService categoryResourceService) {
+                                      CategoryResourceService categoryResourceService,
+                                      AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.newsResourceRepository = newsResourceRepository;
         this.categoryResourceRepository = categoryResourceRepository;
         this.categoryResourceService = categoryResourceService;
+        this.appConfig = appConfig;
     }
 
     @GetMapping("/administration/categoriesresources")
@@ -46,6 +50,7 @@ public class CategoryResourceController {
         model.addAttribute("categoriesResources", categoryResourceRepository.findAll());
         model.addAttribute("resources", new NewsResource());
         model.addAttribute("currentPage", "adminCategoriesResources");
+        model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", userCurrentService.getCurrentUser(principal));
         return "categoriesresources";
     }

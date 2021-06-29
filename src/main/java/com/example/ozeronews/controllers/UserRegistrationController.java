@@ -6,7 +6,7 @@ import com.example.ozeronews.models.User;
 import com.example.ozeronews.models.dto.CaptchaResponseDTO;
 import com.example.ozeronews.repo.UserRepo;
 import com.example.ozeronews.repo.UserRepository;
-import com.example.ozeronews.service.MailSenderService;
+import com.example.ozeronews.service.MailService;
 import com.example.ozeronews.service.UserCurrentService;
 import com.example.ozeronews.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -38,7 +40,7 @@ public class UserRegistrationController {
     private UserRepo userRepo;
     private UserRepository userRepository;
     private UserService userService;
-    private MailSenderService mailSenderService;
+    private MailService mailService;
     private RestTemplate restTemplate;
     private AppConfig appConfig;
 
@@ -53,14 +55,14 @@ public class UserRegistrationController {
                                       UserRepo userRepo,
                                       UserRepository userRepository,
                                       UserService userService,
-                                      MailSenderService mailSenderService,
+                                      MailService mailService,
                                       RestTemplate restTemplate,
                                       AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepo = userRepo;
         this.userRepository = userRepository;
         this.userService = userService;
-        this.mailSenderService = mailSenderService;
+        this.mailService = mailService;
         this.restTemplate = restTemplate;
         this.appConfig = appConfig;
     }
@@ -78,11 +80,12 @@ public class UserRegistrationController {
     // Registration a new user
     @PostMapping("/registration")
     public String addNewUser(@RequestParam("g-recaptcha-response") String captchaResponse,
+                             Locale locale,
                              @Valid User newUser,
                              BindingResult bindingResult,
                              Model model,
                              Errors errors,
-                             @RequestParam("file") MultipartFile file) throws IOException {
+                             @RequestParam("file") MultipartFile file) throws IOException, MessagingException {
 
         String url = String.format(CAPTCHA_URL, secret, captchaResponse);
         CaptchaResponseDTO responseDTO = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDTO.class);
@@ -155,7 +158,7 @@ public class UserRegistrationController {
             }
         }
         if (!StringUtils.isEmpty(newUser.getEmail())) {
-            if (!mailSenderService.mailActivateUser(newUser)) {
+            if (!mailService.activateUser(newUser, locale)) {
                 model.addAttribute("messageType", "alert alert-danger");
                 model.addAttribute("message", "Неудалось отправить письмо для активации профиля. Попробуйте еще раз.");
                 newUser.setPassword(null);

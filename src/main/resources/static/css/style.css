@@ -617,8 +617,8 @@ main {
     flex: 0 0 2.5rem;
     width: 2.5rem;
     height: 2.5rem;
+    /*border: 1px solid #FFFFFF;*/
     border-radius: 50%;
-    border: 1px solid #FFFFFF;
     margin: 0.0rem 0.5rem 0.0rem 0.5rem;
     overflow: hidden;
     position: relative;
@@ -686,14 +686,17 @@ main {
     text-decoration: none;
 }
 .main-menu-list-link.active {
+    border-bottom: 2px solid #0d6efd;
+    transition: 0.5s;
     color: var(--text-color-primary);
-    font-size: 1.1rem;
+    font-size: 1.0rem;
     text-decoration: none;
 }
 .main-menu-list-link:hover,
 .main-menu-list-link.active:hover {
     color: var(--text-color-primary);
-    text-decoration: underline;
+    border-bottom: 2px solid #0d6efd;
+    text-decoration: none;
 }
 .main-menu-list-link.disable {
     color: var(--text-color-secondary);
@@ -848,6 +851,13 @@ main {
     font-size: 0.65rem;
     text-decoration: none;
 }
+.menu-footer-btn.disable {
+    color: var(--text-color-secondary);
+    font-size: 0.65rem;
+    text-decoration: none;
+    cursor: not-allowed;
+    pointer-events: none;
+}
 .menu-footer-btn:hover {
     color: var(--text-color-secondary);
     text-decoration: none;
@@ -882,8 +892,8 @@ main {
 .profile-image-box {
     /*display: flex;*/
     flex: 0 0 5.0rem;
+    /*border: 1px solid #FFFFFF;*/
     border-radius: 50%;
-    border: 1px solid #FFFFFF;
     margin: 0.0rem 0.5rem 0.0rem 0.5rem;
     padding: 0.0rem 0.0rem 0.0rem 0.0rem;
     overflow: hidden;

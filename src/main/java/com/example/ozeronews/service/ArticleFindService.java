@@ -42,20 +42,20 @@ public class ArticleFindService {
         this.userRepo = userRepo;
     }
 
-    public Iterable<Article> findAllArticlesByLimit(String timeZone, int startNumber, int linesNumber) {
-        Iterable<Article> articles = articleRepository.findAllArticlesByLimit(startNumber, linesNumber);
+    public Iterable<Article> findAllArticlesByLimit(String timeZone, Long maxId, int startNumber, int linesNumber) {
+        Iterable<Article> articles = articleRepository.findAllArticlesByLimit(maxId, startNumber, linesNumber);
         return setTimeToArticle(timeZone, articles);
     }
 
-    public Iterable<Article> findArticlesByResource(String timeZone, String resourceKey, int startNumber, int linesNumber) {
+    public Iterable<Article> findArticlesByResource(String resourceKey, String timeZone, Long maxId, int startNumber, int linesNumber) {
         // Получить id из news_resources по resource_key
         NewsResource newsResource = newsResourcesRepository.findByResourceKey(resourceKey);
         // Получить все статьи по resource_id
-        Iterable<Article> articles = articleRepository.findArticlesByResource(newsResource.getId(), startNumber, linesNumber);
+        Iterable<Article> articles = articleRepository.findArticlesByResource(newsResource.getId(), maxId, startNumber, linesNumber);
         return setTimeToArticle(timeZone, articles);
     }
 
-    public Iterable<Article> findArticlesByRubric(String timeZone, String rubricKey, int startNumber, int linesNumber) {
+    public Iterable<Article> findArticlesByRubric(String rubricKey, String timeZone, Long maxId, int startNumber, int linesNumber) {
         // Получить id из rubrics по rubricKey
         Iterable<Rubric> rubrics = rubricRepository.findByRubricKey(rubricKey);
         // Получить все статьи по rubric_id
@@ -73,7 +73,7 @@ public class ArticleFindService {
                     String.valueOf(rubricsList.substring(0, rubricsList.length() - 2)));
         }
         String rubricsListIds = String.valueOf(rubricsList);
-        Iterable<Article> articles = articleRepository.findArticlesByRubric(rubricsListIds, startNumber, linesNumber);
+        Iterable<Article> articles = articleRepository.findArticlesByRubric(rubricsListIds, maxId, startNumber, linesNumber);
         return setTimeToArticle(timeZone, articles);
     }
 
@@ -82,7 +82,7 @@ public class ArticleFindService {
         return setTimeToArticle(timeZone, articles);
     }
 
-    public Iterable<Article> findArticlesBySubscriptions(String timeZone, String email, int startNumber, int linesNumber) {
+    public Iterable<Article> findArticlesBySubscriptions(String email, String timeZone, Long maxId, int startNumber, int linesNumber) {
         // Найти User
 //        User user = userRepo.findByEmail(email);
         // По user.id получить все subscriptions
@@ -104,7 +104,7 @@ public class ArticleFindService {
         }
         String subscriptionsListId = String.valueOf(subscriptionsList);
         // Получить все статьи по списку из resource_id
-        Iterable<Article> articles = articleRepository.findArticlesBySubscriptions(subscriptionsListId, startNumber, linesNumber);
+        Iterable<Article> articles = articleRepository.findArticlesBySubscriptions(subscriptionsListId, maxId, startNumber, linesNumber);
         return setTimeToArticle(timeZone, articles);
     }
 

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:remove="all"></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <style type="text/css">
+    body {
+      font-family: 'Source Sans Pro', "Helvetica Neue", Helvetica, sans-serif;
+      font-weight: normal;
+      font-style: normal;
+    }
+  </style>
+</head>
+<body>
+<div id="frame" class="ui-sortable">
+  <table class="wrapper" cellpadding="0" cellspacing="0" role="presentation" width="100%"
+         data-module="Header Centered" data-group="" data-thumb="">
+    <tbody>
+    <tr>
+      <td class="px-sm-16" align="center" bgcolor="#EEEEEE" data-bgcolor="Outer">
+        <table class="container" cellpadding="0" cellspacing="0" role="presentation" width="600">
+          <tbody>
+          <tr>
+            <td class="px-sm-8" align="left" bgcolor="#EEEEEE" data-bgcolor="Inner">
+              <div class="spacer line-height-sm-0 py-sm-8" style="line-height: 24px;">‌</div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <table class="wrapper" cellpadding="0" cellspacing="0" role="presentation" width="100%"
+         data-module="Intro Headline" data-group="" data-thumb="">
+    <tbody>
+    <tr>
+      <td class="px-sm-16" align="center" bgcolor="#EEEEEE" data-bgcolor="Outer">
+        <table class="container" cellpadding="0" cellspacing="0" role="presentation" width="600">
+          <tbody>
+          <tr>
+            <td bgcolor="#5E5CE6" style="background: linear-gradient(to right, #5E5CE6, #3634A3);">
+              <!--[if gte mso 9]>
+              <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:600px;">
+                <v:fill type="gradient" color="#0072FF" color2="#00C6FF" angle="90" ></v:fill>
+                <v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0">
+                  <div><![endif]-->
+              <div class="spacer line-height-sm-0 py-sm-16" style="line-height: 32px;">‌</div>
+              <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                  <td align="center" class="px-sm-16" style="padding: 0 32px; text-shadow: 1px 2px 0 rgba(0,0,0,0.1);">
+                    <h1 th:text="${title}" mc:edit="" class="webfont h1"
+                        style="color: #FFFFFF; font-size: 36px; font-weight: 300; line-height: 100%; margin: 0;"
+                        data-color="Headline" data-size="Headline"></h1>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="spacer line-height-sm-0 py-sm-16" style="line-height: 36px;">‌</div>
+              <!--[if gte mso 9]></div></v:textbox></v:rect><![endif]-->
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <table class="wrapper" cellpadding="0" cellspacing="0" role="presentation" width="100%"
+         data-module="Confirm" data-group="" data-thumb="">
+    <tbody>
+    <tr>
+      <td class="px-sm-16" align="center" bgcolor="#EEEEEE" data-bgcolor="Outer">
+        <table class="container" cellpadding="0" cellspacing="0" role="presentation" width="600">
+          <tbody>
+          <tr>
+            <td class="px-sm-8" align="left" bgcolor="#FFFFFF" style="padding: 0 24px;" data-bgcolor="Inner">
+              <div class="spacer line-height-sm-0 py-sm-8" style="line-height: 24px;">‌</div>
+              <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                  <td class="col px-sm-16" align="center" width="100%" style="padding: 0 64px;">
+                    <h2 th:text="'Здравствуйте, ' + ${username}" mc:edit=""
+                        style="color: #000; font-size: 20px; font-weight: 300; line-height: 28px; margin: 0 0 24px;"
+                        data-color="Greeting" data-size="Greeting"></h2>
+                    <p th:text="${text}" mc:edit=""
+                       style="color: #888888; font-size: 16px; font-weight: 400; line-height: 24px; margin: 0;"
+                       data-color="Text" data-size="Text"></p>
+                    <div class="spacer" style="line-height: 32px;">‌</div>
+                    <table class="hover-scale" bgcolor="#0072FF" cellpadding="0" cellspacing="0" role="presentation"
+                           style="border-radius: 3px;" data-bgcolor="Button">
+                      <tbody>
+                      <tr>
+                        <th mc:edit="" class="webfont" style="mso-padding-alt: 6px 32px 12px;">
+                          <a th:href="@{${link}}" th:text="${button}" target="_blank"
+                             style="background-color: #5E5CE6; color: #FFFFFF; display: inline-block; font-size: 14px; font-weight: 400; padding: 12px 32px;"
+                             data-color="Button" data-size="Button"></a>
+                        </th>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="spacer line-height-sm-0 py-sm-8" style="line-height: 24px;">‌</div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <table class="wrapper" cellpadding="0" cellspacing="0" role="presentation" width="100%"
+         data-module="Divider Boxed" data-group="" data-thumb="">
+    <tbody>
+    <tr>
+      <td class="px-sm-16" align="center" bgcolor="#EEEEEE" data-bgcolor="Outer">
+        <table class="container" cellpadding="0" cellspacing="0" role="presentation" width="600">
+          <tbody>
+          <tr>
+            <td class="divider py-sm-16 px-sm-16" bgcolor="#FFFFFF" style="padding: 0px 32px;" data-bgcolor="Inner">
+              <div style="background: #EEEEEE; height: 1px; line-height: 1px;" data-bgcolor="Hairline">‌</div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <table class="wrapper" cellpadding="0" cellspacing="0" role="presentation" width="100%"
+         data-module="Footer" data-group="" data-thumb="">
+    <tbody>
+    <tr>
+      <td class="px-sm-16" align="center" bgcolor="#EEEEEE" data-bgcolor="Outer">
+        <table class="container" cellpadding="0" cellspacing="0" role="presentation" width="600">
+          <tbody>
+          <tr>
+            <td class="px-sm-8" bgcolor="#FFFFFF" style="padding: 0 24px;" data-bgcolor="Inner">
+              <div class="spacer line-height-sm-0 py-sm-8" style="line-height: 24px;">‌</div>
+              <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                  <td class="col" align="center" width="100%" style="padding: 0 8px;">
+                    <div mc:edit="">
+                      <img th:src="|cid:${logo}|" src="https://public.thememountain.com/products/email/sartre/demo/images/logo-dark.png" alt="Footer Logo" width="48" data-crop="false">
+                    </div>
+                    <div class="spacer" style="line-height: 12px;">‌</div>
+                    <p mc:edit="" style="color: #888888; margin: 0;" data-color="Copyright Text"
+                       data-size="Copyright Text">© Ozero Media Lab, 2021 г. Все права защищены.</p>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="spacer line-height-sm-0 py-sm-8" style="line-height: 24px;">‌</div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <table class="wrapper" cellpadding="0" cellspacing="0" role="presentation" width="100%"
+         data-module="Text Grid 1 Column" data-group="" data-thumb="">
+    <tbody>
+    <tr>
+      <td class="px-sm-16" align="center" bgcolor="#EEEEEE" data-bgcolor="Outer">
+        <table class="container" cellpadding="0" cellspacing="0" role="presentation" width="600">
+          <tbody>
+          <tr>
+            <td class="px-sm-8" align="left" bgcolor="#EEEEEE" style="padding: 0 24px;" data-bgcolor="Inner">
+              <div class="spacer line-height-sm-0 py-sm-8" style="line-height: 24px;">‌</div>
+              <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                <tbody>
+                <tr>
+                  <td class="col" width="100%" style="padding: 0 8px;">
+                    <p mc:edit="" style="color: #888888; margin: 0; text-align: center;"
+                       data-color="Text" data-size="Text">
+                      Остались вопросы? Вы можете
+                      <a th:href="@{${websiteURL} + 'contact/'}"
+                         style="color: #888888; text-decoration: underline;">связаться с нами</a>
+                      .
+                    </p>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="spacer line-height-sm-0 py-sm-8" style="line-height: 24px;">‌</div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

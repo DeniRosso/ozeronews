@@ -86,21 +86,30 @@ public class ArticleRepositoryJDBC implements ArticleRepository {
     }
 
     @Override
-    public Iterable<Article> findAllArticlesByLimit(int startNumber, int linesNumber) {
-        String query =
-            "SELECT * FROM articles ORDER BY date_publication DESC, number DESC LIMIT :startNumber, :linesNumber";
+    public Article findMaxId() {
+        String query = "SELECT * FROM articles WHERE id = (SELECT MAX(id) FROM articles)";
+        SqlParameterSource parameterSource = new MapSqlParameterSource().addValue("id", "id");
+        return namedParameterJdbcTemplate.queryForObject(query, parameterSource, this::mapRowToArticle);
+    }
+
+    @Override
+    public Iterable<Article> findAllArticlesByLimit(Long maxId, int startNumber, int linesNumber) {
+        String query = " SELECT * FROM articles WHERE id < :maxId OR id = :maxId " +
+            " ORDER BY date_publication DESC, number DESC LIMIT :startNumber, :linesNumber";
         SqlParameterSource rowLimit = new MapSqlParameterSource()
+                .addValue("maxId", maxId)
                 .addValue("startNumber", startNumber)
                 .addValue("linesNumber", linesNumber);
         return namedParameterJdbcTemplate.query(query, rowLimit, this::mapRowToArticle);
     }
 
     @Override
-    public Iterable<Article> findArticlesByResource(Long resourceId, int startNumber, int linesNumber) {
+    public Iterable<Article> findArticlesByResource(Long resourceId, Long maxId, int startNumber, int linesNumber) {
         String query =
-            "SELECT * FROM articles WHERE resource_id = :resourceId " +
+            "SELECT * FROM articles WHERE (id < :maxId OR id = :maxId) AND resource_id = :resourceId " +
             " ORDER BY date_publication DESC, number DESC LIMIT :startNumber, :linesNumber";
         SqlParameterSource rowLimit = new MapSqlParameterSource()
+                .addValue("maxId", maxId)
                 .addValue("startNumber", startNumber)
                 .addValue("linesNumber", linesNumber)
                 .addValue("resourceId", resourceId);
@@ -108,14 +117,16 @@ public class ArticleRepositoryJDBC implements ArticleRepository {
     }
 
     @Override
-    public Iterable<Article> findArticlesByRubric(String rubricsListIds, int startNumber, int linesNumber) {
+    public Iterable<Article> findArticlesByRubric(String rubricsListIds, Long maxId, int startNumber, int linesNumber) {
         String query =
             "SELECT * FROM articles, articles_rubrics " +
-            " WHERE articles_rubrics.rubric_id IN ( " + rubricsListIds + " )" +
+            " WHERE (articles.id < :maxId OR articles.id = :maxId) " +
+            " AND articles_rubrics.rubric_id IN ( " + rubricsListIds + " )" +
             " AND articles.id = articles_rubrics.article_id " +
             " ORDER BY date_publication DESC, number DESC " +
             " LIMIT :startNumber, :linesNumber";
         SqlParameterSource rowLimit = new MapSqlParameterSource()
+                .addValue("maxId", maxId)
                 .addValue("startNumber", startNumber)
                 .addValue("linesNumber", linesNumber)
                 .addValue("rubricsListIds", rubricsListIds);
@@ -144,10 +155,12 @@ public class ArticleRepositoryJDBC implements ArticleRepository {
     }
 
     @Override
-    public Iterable<Article> findArticlesBySubscriptions(String subscriptionsListId, int startNumber, int linesNumber) {
-        String query = "SELECT * FROM articles WHERE resource_id IN (" + subscriptionsListId + ") " +
+    public Iterable<Article> findArticlesBySubscriptions(String subscriptionsListId, Long maxId, int startNumber, int linesNumber) {
+        String query = "SELECT * FROM articles WHERE (id < :maxId OR id = :maxId) " +
+                " AND resource_id IN (" + subscriptionsListId + ") " +
                 " ORDER BY date_publication DESC, number DESC LIMIT :startNumber, :linesNumber";
         SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("maxId", maxId)
                 .addValue("startNumber", startNumber)
                 .addValue("linesNumber", linesNumber)
                 .addValue("subscriptionsListId", subscriptionsListId);

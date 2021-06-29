@@ -77,7 +77,7 @@ public class UserRepositoryJDBC implements UserRepository{
 
     @Override
     public int[] saveRecoveryCode(User user) {
-        String query = "UPDATE users SET recovery_code = :recoveryCode WHERE email LIKE :email";
+        String query = "UPDATE users SET recovery_code = :recoveryCode WHERE id = :id";
         SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(user);
         return namedParameterJdbcTemplate.batchUpdate(query, batch);
     }

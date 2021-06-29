@@ -4,7 +4,6 @@ import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.UserRepo;
 import com.example.ozeronews.repo.UserRepository;
-import com.example.ozeronews.service.MailSenderService;
 import com.example.ozeronews.service.UserCurrentService;
 import com.example.ozeronews.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,6 @@ public class UserEditController {
     private UserRepo userRepo;
     private UserRepository userRepository;
     private UserService userService;
-    private MailSenderService mailSenderService;
     private RestTemplate restTemplate;
     private AppConfig appConfig;
 
@@ -50,14 +48,12 @@ public class UserEditController {
                               UserRepo userRepo,
                               UserRepository userRepository,
                               UserService userService,
-                              MailSenderService mailSenderService,
                               RestTemplate restTemplate,
                               AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepo = userRepo;
         this.userRepository = userRepository;
         this.userService = userService;
-        this.mailSenderService = mailSenderService;
         this.restTemplate = restTemplate;
         this.appConfig = appConfig;
     }

@@ -42,19 +42,23 @@
                 <i class="fas fa-redo-alt fa-2x d-block"></i>
                 <span class="menu-footer-lbl">Обновить</span>
             </a>
-            <a th:href="@{/news/news/all}" class="menu-footer-btn">
+            <a th:href="@{/news/news/all}"
+               class="menu-footer-btn">
                 <i class="fas fa-home fa-2x d-block"></i>
                 <span class="menu-footer-lbl">Домой</span>
             </a>
-            <a th:href="@{/subscriptions/news/all}" class="menu-footer-btn">
+            <a th:href="@{/subscriptions/news/all}"
+               th:class="${!user.getRole().isEmpty()} ? 'menu-footer-btn' : 'menu-footer-btn disable' ">
                 <i class="fas fa-pen-square fa-2x d-block"></i>
                 <span class="menu-footer-lbl">Подписки</span>
             </a>
-            <a href="#" class="menu-footer-btn" id="btnResources">
+            <a href="#" id="btnResources"
+               th:class="${currentPage == 'news' || currentPage == 'subscriptions'} ? 'menu-footer-btn' : 'menu-footer-btn disable' ">
                 <i class="fas fa-bullseye fa-2x d-block"></i>
                 <span class="menu-footer-lbl">Ресурсы</span>
             </a>
-            <a href="#" class="menu-footer-btn" id="btnRubrics">
+            <a href="#" id="btnRubrics"
+               th:class="${currentPage == 'news' || currentPage == 'subscriptions'} ? 'menu-footer-btn' : 'menu-footer-btn disable' ">
                 <i class="fab fa-buromobelexperte fa-2x d-block"></i>
                 <span class="menu-footer-lbl">Рубрики</span>
             </a>

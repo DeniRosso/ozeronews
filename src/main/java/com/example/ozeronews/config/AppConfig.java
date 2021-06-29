@@ -21,16 +21,38 @@ public class AppConfig implements WebMvcConfigurer {
     @Value("${website.name}")
     private String websiteName;
 
-    @Value("${website.baseURL}")
-    private String websiteBaseURL;
+    @Value("${website.url}")
+    private String websiteURL;
 
     @Value("${website.logo}")
     private String websiteLogo;
 
+    @Value("${website.email.help}")
+    private String emailHelp;
+
+    @Value("${website.email.support}")
+    private String emailSupport;
+
     @Value("${website.description}")
     private String websiteDescription;
 
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(localeChangeInterceptor());
+    }
+
+
     @Bean
+    public Head getHead() {
+        return new Head(companyName, websiteName, websiteURL, websiteLogo, emailHelp, emailSupport,
+                websiteName, websiteDescription, websiteLogo);
+    }
+
+
+
+
+//    @Bean
     public LocaleResolver localeResolver() {
 
 //        TimeZone timeZone = TimeZone.getTimeZone(ZoneId.of("Europe/Moscow"));
@@ -46,7 +68,7 @@ public class AppConfig implements WebMvcConfigurer {
         return cls;
     }
 
-    @Bean
+//    @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
 //        lci.setParamName("timezone");
@@ -54,13 +76,5 @@ public class AppConfig implements WebMvcConfigurer {
         return lci;
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(localeChangeInterceptor());
-    }
 
-    @Bean
-    public Head getHead() {
-        return new Head(companyName, websiteName, websiteBaseURL, websiteName, websiteLogo, websiteDescription);
-    }
 }

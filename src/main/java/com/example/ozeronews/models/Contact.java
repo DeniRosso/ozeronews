@@ -1,11 +1,13 @@
 package com.example.ozeronews.models;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
-@Data
+@Getter
+@Setter
 public class Contact {
 
     @Size(max=100, message = "Максимальная длина 100 символом")
@@ -18,4 +20,6 @@ public class Contact {
     @Size(max=2000, message = "Максимальная длина 100 символом")
     private String text;
 
+    public Contact() {
+    }
 }

@@ -10,7 +10,6 @@ import com.example.ozeronews.service.ArticleFindService;
 import com.example.ozeronews.service.CategoryResourceService;
 import com.example.ozeronews.service.UserCurrentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -19,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -74,6 +72,7 @@ public class NewsController {
             @RequestParam(value="currentPage") String currentPage,
             @RequestParam(value="section") String section,
             @RequestParam(value="name") String name,
+            @RequestParam(value="maxId") Long maxId,
             @PageableDefault(sort = { "date_publication" }, direction = Sort.Direction.DESC) Pageable pageable) {
 
         Iterable<Article> articles = null;
@@ -83,14 +82,14 @@ public class NewsController {
         if (currentPage.equals("news")) {
             switch (section) {
                 case "news":
-                    articles = articleFindService.findAllArticlesByLimit("UTC", startNumberNews, pageable.getPageSize());
+                    articles = articleFindService.findAllArticlesByLimit("UTC", maxId, startNumberNews, pageable.getPageSize());
                     //Page<Article> articlePage = articleRepo.findAll(pageable);
                     break;
                 case "rubrics":
-                    articles = articleFindService.findArticlesByRubric("UTC", name, startNumberNews, pageable.getPageSize());
+                    articles = articleFindService.findArticlesByRubric(name, "UTC", maxId, startNumberNews, pageable.getPageSize());
                     break;
                 case "resources":
-                    articles = articleFindService.findArticlesByResource("UTC", name, startNumberNews, pageable.getPageSize());
+                    articles = articleFindService.findArticlesByResource(name, "UTC", maxId, startNumberNews, pageable.getPageSize());
                     break;
             }
         }
@@ -98,17 +97,24 @@ public class NewsController {
         if (currentPage.equals("subscriptions")) {
             switch (section) {
                 case "news":
-                    articles = articleFindService.findArticlesBySubscriptions("UTC", principal.getName(), startNumberNews, pageable.getPageSize());
+                    articles = articleFindService.findArticlesBySubscriptions(principal.getName(), "UTC", maxId, startNumberNews, pageable.getPageSize());
                     break;
                 case "rubrics":
-                    articles = articleFindService.findArticlesByRubric("UTC", name, startNumberNews, pageable.getPageSize());
+                    articles = articleFindService.findArticlesByRubric(name, "UTC", maxId, startNumberNews, pageable.getPageSize());
                     break;
                 case "resources":
-                    articles = articleFindService.findArticlesByResource("UTC", name, startNumberNews, pageable.getPageSize());
+                    articles = articleFindService.findArticlesByResource(name, "UTC", maxId, startNumberNews, pageable.getPageSize());
                     break;
             }
         }
         return articles;
+    }
+
+    // Получение максимального ID статей
+    @GetMapping("/news/max-id")
+    @ResponseBody
+    public String loadMaxIdArticle() {
+        return String.valueOf(articleRepository.findMaxId().getId());
     }
 
     // Поиск статей
@@ -266,7 +272,7 @@ public class NewsController {
         List<Article> articles = (List<Article>) articleRepository
                 .findArticleById(Long.valueOf(id), startNumberNews, pageable.getPageSize());
         Head head = appConfig.getHead();
-        head.setUrl(head.getUrl() + "news/news/all/" + id + "?id=" + id);
+        head.setWebsiteURL(head.getWebsiteURL() + "news/news/all/" + id + "?id=" + id);
         head.setTitle(articles.get(0).getTitle());
         head.setDescription("\"" + articles.get(0).getResourceId().getFullName() + "\"" + " | " +
                 articles.get(0).getDatePublication().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")));

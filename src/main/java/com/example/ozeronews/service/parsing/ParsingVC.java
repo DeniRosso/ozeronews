@@ -22,11 +22,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
-public class ParsingRT {
+public class ParsingVC {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -39,13 +37,13 @@ public class ParsingRT {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "rt";
-        String newsResourceLink = "https://russian.rt.com/";
-        String newsLink = "https://russian.rt.com/rss";
+        String newsResourceKey = "vc";
+        String newsResourceLink = "https://vc.ru/";
+        String newsLink = "https://vc.ru/rss/new";
         String articleTitle;
         String articleLink;
         String articleNumber;
-        String articleImage = null;
+        String articleImage;
         String rubricAliasName;
         ZonedDateTime articleDatePublication;
         ZonedDateTime dateStamp;
@@ -65,29 +63,21 @@ public class ParsingRT {
                 articleDatePublication = null;
                 dateStamp = null;
 
-                articleTitle = feed.getEntries().get(i).getTitle();
+                articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
-//                articleNumber = newsResourceKey + "_" + articleLink.substring(
-//                        articleLink.lastIndexOf("/") + 1, articleLink.indexOf("-"));
 
-                Pattern pat = Pattern.compile("\\d+");
-                Matcher matcher = pat.matcher(articleLink.substring(articleLink.lastIndexOf("/") + 1));
-                while (matcher.find()) {
-                    articleNumber = newsResourceKey + "_" + matcher.group();
-                };
+                articleNumber = newsResourceKey + "_" + articleLink.substring(
+                        articleLink.lastIndexOf("/") + 1,
+                        articleLink.indexOf("-"));
+                articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
-//                if (feed.getEntries().get(i).getDescription().getValue().indexOf("src=\"") > 0) {
-//                    articleImage = feed.getEntries().get(i).getDescription().getValue();
-//                    articleImage = articleImage.substring(articleImage.indexOf("src=\"") + 5);
-//                    articleImage = articleImage.substring(0, articleImage.indexOf("\""));
-//                }
-
                 List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
-                if(enclosures!=null) {
+                if(enclosures != null) {
                     for(SyndEnclosure enclosure : enclosures) {
-                        if(enclosure.getType()!=null && enclosure.getType().equals("image/jpeg")){
+                        if(enclosure.getType() != null &&
+                                (enclosure.getType().equals("image/jpeg") || enclosure.getType().equals("image/gif"))) {
                             articleImage = enclosure.getUrl();
                         }
                     }
@@ -102,13 +92,14 @@ public class ParsingRT {
                 int k = 0;
                 List<ArticleRubric> articleRubricList = new ArrayList<>();
                 List<SyndCategory> categories = feed.getEntries().get(i).getCategories();
-                if (categories != null) {
-                    for (SyndCategory category : categories) {
+                if(categories!=null) {
+                    for(SyndCategory category : categories) {
                         rubricAliasName = category.getName();
                         if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
                         articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                     }
                 }
+
                 NewsResource newsResource = new NewsResource();
                 newsResource.setResourceKey(newsResourceKey);
                 newsResource.setResourceLink(newsResourceLink);
@@ -129,16 +120,16 @@ public class ParsingRT {
                 articleSaveService.saveArticle(article);
                 articleCount++;
 
-//                System.out.println("*************************");
-////                System.out.println("article " + newsResourceKey + " = " + article);
-//                System.out.println("articleTitle = " + articleTitle);
-//                System.out.println("articleLink = " + articleLink);
-//                System.out.println("articleNumber = " + articleNumber);
-//                System.out.println("articleImage = " + articleImage);
-//                System.out.println("articleRubricList = " + articleRubricList);
-//                System.out.println("articleDatePublication = " + articleDatePublication);
-//                System.out.println("dateStamp = " + dateStamp);
-//                System.out.println("*************************");
+                System.out.println("*************************");
+//                System.out.println("article " + newsResourceKey + " = " + article);
+                System.out.println("articleTitle = " + articleTitle);
+                System.out.println("articleLink = " + articleLink);
+                System.out.println("articleNumber = " + articleNumber);
+                System.out.println("articleImage = " + articleImage);
+                System.out.println("articleRubricList = " + articleRubricList);
+                System.out.println("articleDatePublication = " + articleDatePublication);
+                System.out.println("dateStamp = " + dateStamp);
+                System.out.println("*************************");
             }
         } catch (IOException | FeedException e) {
             e.printStackTrace();

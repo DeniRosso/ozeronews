@@ -5,7 +5,7 @@ import com.example.ozeronews.models.Contact;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.models.dto.CaptchaResponseDTO;
 import com.example.ozeronews.repo.UserRepository;
-import com.example.ozeronews.service.MailSenderService;
+import com.example.ozeronews.service.MailService;
 import com.example.ozeronews.service.UserCurrentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.util.StringUtils;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Collections;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("")
@@ -32,11 +34,11 @@ public class AboutController {
 
     private UserRepository userRepository;
     private UserCurrentService userCurrentService;
-    private MailSenderService mailSenderService;
+    private MailService mailService;
     private RestTemplate restTemplate;
     private AppConfig appConfig;
 
-    @Value("${website.baseURL}")
+    @Value("${website.url}")
     private String websiteBaseURL;
 
     @Value("${website.name}")
@@ -51,12 +53,12 @@ public class AboutController {
     @Autowired
     public AboutController(UserRepository userRepository,
                            UserCurrentService userCurrentService,
-                           MailSenderService mailSenderService,
+                           MailService mailService,
                            RestTemplate restTemplate,
                            AppConfig appConfig) {
         this.userRepository = userRepository;
         this.userCurrentService = userCurrentService;
-        this.mailSenderService = mailSenderService;
+        this.mailService = mailService;
         this.restTemplate = restTemplate;
         this.appConfig = appConfig;
     }
@@ -89,23 +91,26 @@ public class AboutController {
     }
 
     @GetMapping("/about/contact")
-    public String viewContact(Principal principal, Model model) {
+    public String viewContact(Principal principal,
+                              Model model) {
 
         model.addAttribute("contact", new Contact());
 
         model.addAttribute("currentPage", "contact");
         model.addAttribute("head", appConfig.getHead());
         model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+//        model.addAttribute("user", userRepository.findById(3L));
         return "contact";
     }
 
     @PostMapping("/about/contact")
     public String sendContactMessage(Principal principal,
-                              @RequestParam("g-recaptcha-response") String captchaResponse,
-                              @Valid Contact contact,
-                              BindingResult bindingResult,
-                              Model model,
-                              Errors errors) {
+              Locale locale,
+              @RequestParam("g-recaptcha-response") String captchaResponse,
+              @Valid Contact contact,
+              BindingResult bindingResult,
+              Model model,
+              Errors errors) throws MessagingException {
 
         String url = String.format(CAPTCHA_URL, secret, captchaResponse);
         CaptchaResponseDTO responseDTO = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDTO.class);
@@ -121,15 +126,17 @@ public class AboutController {
             }
             model.addAttribute("contact", contact);
             model.addAttribute("currentPage", "contact");
+            model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", user);
             return "contact";
         }
         if (!StringUtils.isEmpty(contact.getEmail())) {
-            if (!mailSenderService.mailContact(contact)) {
+            if (!mailService.contact(contact, locale)) {
                 model.addAttribute("messageType", "alert alert-danger");
                 model.addAttribute("message", "Неудалось отправить сообщение. Попробуйте еще раз.");
                 model.addAttribute("contact", contact);
                 model.addAttribute("currentPage", "contact");
+                model.addAttribute("head", appConfig.getHead());
                 model.addAttribute("user", user);
                 return "contact";
             } else {
@@ -137,6 +144,7 @@ public class AboutController {
                 model.addAttribute("message", "Сообщение отправлено. Спасибо за Ваше обращение.");
                 model.addAttribute("contact", new Contact());
                 model.addAttribute("currentPage", "contact");
+                model.addAttribute("head", appConfig.getHead());
                 model.addAttribute("user", user);
                 return "contact";
             }

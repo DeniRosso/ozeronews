@@ -3,7 +3,7 @@ package com.example.ozeronews.controllers;
 import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.UserRepository;
-import com.example.ozeronews.service.MailSenderService;
+import com.example.ozeronews.service.MailService;
 import com.example.ozeronews.service.UserCurrentService;
 import com.example.ozeronews.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.thymeleaf.util.StringUtils;
 
+import javax.mail.MessagingException;
 import java.security.Principal;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("")
@@ -23,28 +25,28 @@ public class UserActivateController {
     private UserCurrentService userCurrentService;
     private UserRepository userRepository;
     private UserService userService;
-    private MailSenderService mailSenderService;
+    private MailService mailService;
     private AppConfig appConfig;
 
     @Autowired
     public UserActivateController(UserCurrentService userCurrentService,
                                   UserRepository userRepository,
                                   UserService userService,
-                                  MailSenderService mailSenderService,
+                                  MailService mailService,
                                   AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepository = userRepository;
         this.userService = userService;
-        this.mailSenderService = mailSenderService;
+        this.mailService = mailService;
         this.appConfig = appConfig;
     }
 
     @GetMapping("/activate")
-    public String requestActivate(Principal principal, Model model) {
+    public String requestActivate(Principal principal, Locale locale, Model model) throws MessagingException {
 
         User currentUser = userCurrentService.getCurrentUser(principal);
         if (!StringUtils.isEmpty(principal.getName())) {
-            if (!mailSenderService.mailActivateUser(currentUser)) {
+            if (!mailService.activateUser(currentUser, locale)) {
                 model.addAttribute("messageError",
                         "Неудалось отправить письмо для активации профиля. Попробуйте еще раз.");
             } else {

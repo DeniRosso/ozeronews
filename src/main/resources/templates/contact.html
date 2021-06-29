@@ -17,28 +17,28 @@
         <div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-5 mx-auto">
           <form th:method="POST" th:action="@{/about/contact}" th:object="${contact}">
             <div class="row my-2 p-0">
-              <label for="emailContact" class="form-label mb-1">Email<sup>*</sup></label>
+              <label for="emailContact" class="form-label mb-1 lbl-3">Email<sup>*</sup></label>
               <input th:field="*{email}" type="text" name="email" id="emailContact"
                      th:class="${#fields.hasErrors('email')} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
                      onKeyup="checkform()" placeholder="Введите Ваш Email" autofocus="true" required>
               <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">Text error</span>
             </div>
             <div class="row my-2 p-0">
-              <label for="subjectContact" class="form-label mb-1">Тема сообщения<sup>*</sup></label>
+              <label for="subjectContact" class="form-label mb-1 lbl-3">Тема сообщения<sup>*</sup></label>
               <input th:field="*{subject}" type="text" name="subject" id="subjectContact"
                      th:class="${#fields.hasErrors('subject')} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
                      onKeyup="checkform()" placeholder="Введите тему сообщения" required>
               <span th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}" class="invalid-feedback">Text error</span>
             </div>
             <div class="row my-2 p-0">
-              <label for="nameContact" class="form-label mb-1">Имя<sup>*</sup></label>
+              <label for="nameContact" class="form-label mb-1 lbl-3">Имя<sup>*</sup></label>
               <input th:field="*{name}" type="text" name="name" id="nameContact"
                      th:class="${#fields.hasErrors('name')} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
                      onKeyup="checkform()" placeholder="Введите Ваше имя" required>
               <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback">Text error</span>
             </div>
             <div class="row my-2 p-0">
-              <label for="textContact" class="form-label mb-1">Сообщение<sup>*</sup></label>
+              <label for="textContact" class="form-label mb-1 lbl-3">Сообщение<sup>*</sup></label>
               <textarea th:field="*{text}" name="text" id="textContact"
                         th:class="${#fields.hasErrors('text')} ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm' "
                         onKeyup="checkform()" rows="6" placeholder="Введите сообщение" required></textarea>

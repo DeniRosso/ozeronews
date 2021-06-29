@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -31,15 +33,15 @@ public class UserService {
 
     private UserRepository userRepository;
     private UserRepo userRepo;
-    private MailSenderService mailSenderService;
+    private MailService mailService;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        UserRepo userRepo,
-                       MailSenderService mailSenderService) {
+                       MailService mailService) {
         this.userRepository = userRepository;
         this.userRepo = userRepo;
-        this.mailSenderService = mailSenderService;
+        this.mailService = mailService;
     }
 
     @Value("${upload.path}")
@@ -186,14 +188,13 @@ public class UserService {
         return false;
     }
 
-    public boolean changePassword(User user, String password) {
-        // Отправить письмо
-        if (!mailSenderService.mailNewPassword(user)) {
+    public boolean changePassword(User user, Locale locale) throws MessagingException {
+
+        // Отправка письма пользователю
+        if (!mailService.changePassword(user, locale)) {
             return false;
         }
-        // Сохранить новый пароль
-//        user.setPassword(passwordEncoder.encode(password));
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        // Сохранение пользователя
         user.setDateStamp(ZonedDateTime.now());
         userRepo.save(user);
         return true;

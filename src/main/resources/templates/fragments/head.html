@@ -1,6 +1,6 @@
 <head th:fragment="head">
 
-    <title th:text="${head.siteName}"/>
+    <title th:text="${head.websiteName}"/>
     <!--<title th:text="${title}"/>-->
     <!--<title th:replace="${title}"/>-->
 
@@ -8,23 +8,25 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html">
     <meta http-equiv="refresh" content="">
+    <meta name="yandex-verification" content="107cd98b0cbd2219" />
+    <!--<meta name="google-site-verification" content="-mZ3BnmuZPl5XeANycOu__0BILAi20UPppXKvk-HC-Q"/>-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#7952b3">
-    <meta name="application-name" th:content="${head.siteName}">
+    <meta name="application-name" th:content="${head.websiteName}">
     <meta name="description" content="Лента новостей в стране и мире от ведущих информационных агенств.">
     <meta name="author" content="Ozero Media Lab">
     <meta name="generator" content="">
 
     <!-- Google / Search Engine Tags -->
-    <meta itemprop="name" th:content="${head.siteName}">
+    <meta itemprop="name" th:content="${head.websiteName}">
     <meta itemprop="description" th:content="${head.description}">
     <meta itemprop="image" th:content="${head.image}">
 
     <!-- Facebook Meta Tags -->
-    <meta property="og:site_name" th:content="${head.siteName}">
+    <meta property="og:site_name" th:content="${head.websiteName}">
     <meta property="og:locale" content="ru_RU">
     <meta property="og:type" content="article">
-    <meta property="og:url" th:content="${head.url}">
+    <meta property="og:url" th:content="${head.websiteURL}">
     <meta property="og:title" th:content="${head.title}">
     <!--<meta property="og:long_title" content="" data-react-helmet="true">-->
     <meta property="og:description" th:content="${head.description}">
@@ -35,7 +37,7 @@
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" th:content="${head.title}">
-    <meta name="twitter:url" th:content="${head.url}">
+    <meta name="twitter:url" th:content="${head.websiteURL}">
     <meta name="twitter:description" th:content="${head.description}">
     <meta name="twitter:image" th:content="${head.image}">
 

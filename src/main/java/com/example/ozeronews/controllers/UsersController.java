@@ -6,7 +6,6 @@ import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.RoleRepository;
 import com.example.ozeronews.repo.UserRepo;
 import com.example.ozeronews.repo.UserRepository;
-import com.example.ozeronews.service.MailSenderService;
 import com.example.ozeronews.service.UserCurrentService;
 import com.example.ozeronews.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ public class UsersController {
     private UserRepository userRepository;
     private UserService userService;
     private RoleRepository roleRepository;
-    private MailSenderService mailSenderService;
     private RestTemplate restTemplate;
     private AppConfig appConfig;
 
@@ -49,14 +47,12 @@ public class UsersController {
                            UserRepository userRepository,
                            UserService userService,
                            RoleRepository roleRepository,
-                           MailSenderService mailSenderService,
                            RestTemplate restTemplate,
                            AppConfig appConfig) {
         this.userCurrentService = userCurrentService;
         this.userRepository = userRepository;
         this.userService = userService;
         this.roleRepository = roleRepository;
-        this.mailSenderService = mailSenderService;
         this.restTemplate = restTemplate;
         this.appConfig = appConfig;
     }

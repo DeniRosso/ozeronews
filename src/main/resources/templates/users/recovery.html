@@ -7,7 +7,7 @@
   <div class="row m-auto align-items-center justify-content-center">
     <h1 class="ttl-3">Возникли проблемы при входе в учетную запись?</h1>
     <div th:if="${message != null}" th:text="${message}"
-         th:class="${messageType}" role="alert">
+         th:class="${messageType}" role="alert" style="width: auto;">
     </div>
     <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4 text-center">
       <form method="POST" th:action="@{/recovery}" th:object="${user}" class="text-center">

@@ -4,7 +4,7 @@ import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.User;
 import com.example.ozeronews.models.dto.CaptchaResponseDTO;
 import com.example.ozeronews.repo.UserRepository;
-import com.example.ozeronews.service.MailSenderService;
+import com.example.ozeronews.service.MailService;
 import com.example.ozeronews.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.util.StringUtils;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 @Controller
@@ -28,7 +30,7 @@ public class UserRecoveryController {
 
     private UserRepository userRepository;
     private UserService userService;
-    private MailSenderService mailSenderService;
+    private MailService mailService;
     private RestTemplate restTemplate;
     private AppConfig appConfig;
 
@@ -37,12 +39,12 @@ public class UserRecoveryController {
 
     public UserRecoveryController(UserRepository userRepository,
                                   UserService userService,
-                                  MailSenderService mailSenderService,
+                                  MailService mailService,
                                   RestTemplate restTemplate,
                                   AppConfig appConfig) {
         this.userRepository = userRepository;
         this.userService = userService;
-        this.mailSenderService = mailSenderService;
+        this.mailService = mailService;
         this.restTemplate = restTemplate;
         this.appConfig = appConfig;
     }
@@ -58,10 +60,11 @@ public class UserRecoveryController {
 
     @PostMapping("/recovery")
     public String sendRecoveryCode(@RequestParam("g-recaptcha-response") String captchaResponse,
+                                   Locale locale,
                                    @Valid User user,
                                    BindingResult bindingResult,
                                    Model model,
-                                   Errors errors) {
+                                   Errors errors) throws MessagingException {
         String url = String.format(CAPTCHA_URL, secret, captchaResponse);
         CaptchaResponseDTO responseDTO = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDTO.class);
 
@@ -88,7 +91,7 @@ public class UserRecoveryController {
         userRepository.saveRecoveryCode(user);
 
         if (!StringUtils.isEmpty(user.getEmail())) {
-            if (!mailSenderService.mailRecovery(user)) {
+            if (!mailService.recoveryUser(user, locale)) {
                 model.addAttribute("messageType", "alert alert-danger");
                 model.addAttribute("message", "Неудалось отправить письмо для восстановления пароля");
                 model.addAttribute("head", appConfig.getHead());
@@ -116,12 +119,13 @@ public class UserRecoveryController {
             model.addAttribute("user", new User());
             return "users/login";
         }
-        for (User user : users) {
-            if (user.getRecoveryCode() != null) {
+        for (User recoveryUser : users) {
+            if (recoveryUser.getRecoveryCode() != null) {
                 model.addAttribute("messageType", "alert alert-secondary");
                 model.addAttribute("message", "Восстановление пароля.");
                 model.addAttribute("head", appConfig.getHead());
-                model.addAttribute("user", user);
+                model.addAttribute("recoveryUser", recoveryUser);
+                model.addAttribute("user", new User());
                 return "users/newpassword";
             } else {
                 model.addAttribute("messageType", "alert alert-danger");
@@ -136,7 +140,7 @@ public class UserRecoveryController {
 
     @PostMapping("/recovery/{code}")
     public String changePassword(@PathVariable String code,
-                                  @Valid User user,
+                                  @Valid User recoveryUser,
                                   BindingResult bindingResult,
                                   Model model,
                                   Errors errors) {
@@ -146,28 +150,30 @@ public class UserRecoveryController {
             model.addAttribute("user", new User());
             return "users/newpassword";
         }
-        if (user.getPassword() != null && !user.getPassword().equals(user.getPassword2())) {
-            user.setPassword(null);
-            user.setPassword2(null);
+        if (recoveryUser.getPassword() != null && !recoveryUser.getPassword().equals(recoveryUser.getPassword2())) {
+            recoveryUser.setPassword(null);
+            recoveryUser.setPassword2(null);
             model.addAttribute("passwordError", "Пароли не совпадают");
             model.addAttribute("password2Error", "Пароли не совпадают");
             model.addAttribute("head", appConfig.getHead());
-            model.addAttribute("user", user);
+            model.addAttribute("recoveryUser", recoveryUser);
+            model.addAttribute("user", new User());
             return "users/newpassword";
         }
-        if (userService.recoveryUser(user, code)) {
+        if (userService.recoveryUser(recoveryUser, code)) {
             model.addAttribute("messageType", "alert alert-success");
             model.addAttribute("message", "Пароль изменен.");
             model.addAttribute("head", appConfig.getHead());
             model.addAttribute("user", new User());
             return "users/login";
         } else {
-            user.setPassword(null);
-            user.setPassword2(null);
+            recoveryUser.setPassword(null);
+            recoveryUser.setPassword2(null);
             model.addAttribute("messageType", "alert alert-danger");
             model.addAttribute("message", "Не удалось изменить пароль.");
             model.addAttribute("head", appConfig.getHead());
-            model.addAttribute("user", user);
+            model.addAttribute("recoveryUser", recoveryUser);
+            model.addAttribute("user", new User());
             return "users/newpassword";
         }
     }

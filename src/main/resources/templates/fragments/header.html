@@ -12,20 +12,30 @@
                 <nav class="main-menu">
                     <ul class="main-menu-list">
                         <li class="">
-                            <a th:class="${currentPage == 'news'} ? 'main-menu-list-link active' : 'main-menu-list-link'"
-                               th:href="@{/news/news/all}">Все новости</a>
+                            <a th:href="@{/news/news/all}"
+                               th:class="${currentPage == 'news'} ? 'main-menu-list-link active' : 'main-menu-list-link'">
+                                Все новости
+                            </a>
                         </li>
-                        <li th:if="${user.getRole.isEmpty()}" class="">
-                            <a class="main-menu-list-link disable" style=""
-                               th:href="@{/subscriptions/news/all}">Моя лента</a>
+                        <li th:if="${user.getRole().isEmpty()}">
+                            <a th:href="@{/subscriptions/news/all}"
+                               th:class="${user.getRole().isEmpty()} ? 'main-menu-list-link disable' : 'main-menu-list-link' ">
+                                Моя лента
+                            </a>
                         </li>
                         <li sec:authorize="hasAnyAuthority('ADMIN') OR hasAnyAuthority('USER')" class="">
-                            <a th:class="${currentPage == 'subscriptions'} ? 'main-menu-list-link active' : 'main-menu-list-link'"
-                               th:href="@{/subscriptions/news/all}">Моя лента</a>
+                            <a th:href="@{/subscriptions/news/all}"
+                               th:class="${currentPage == 'subscriptions'} ? 'main-menu-list-link active' : 'main-menu-list-link'">
+                                Моя лента
+                            </a>
                         </li>
                         <li sec:authorize="hasAnyAuthority('ADMIN')" class=""> <!--sec:authorize="hasRole('ADMIN')" -->
-                            <a  th:class="${#strings.startsWith(currentPage,'admin')} ? 'main-menu-list-link active' : 'main-menu-list-link'"
-                                th:href="@{/administration}">Администрирование</a>
+                            <!--<a  th:class="${#strings.startsWith(currentPage,'admin')} ? 'main-menu-list-link active' : 'main-menu-list-link'"
+                                th:href="@{/administration}">Администрирование</a>-->
+                            <a   th:href="@{/administration}"
+                                 th:class="${currentPage == 'administration'} ? 'main-menu-list-link active' : 'main-menu-list-link'">
+                                Администрирование
+                            </a>
                         </li>
                     </ul>
                     <div th:if="${currentPage == 'news' || currentPage == 'subscriptions'}"  class="main-menu-search ms-auto">

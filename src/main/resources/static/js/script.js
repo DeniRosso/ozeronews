@@ -62,36 +62,40 @@ if (document.getElementById('btnSearchArticles') != null) {
 }
 
 // Load News Page
-window.addEventListener('load', function () {
+window.addEventListener('load', async function () {
 
     var id = null;
     var search = null;
     var numberPage = 0;
     var sizePage = 10;
+    var baseURL = window.location.protocol + '//' + window.location.host;
     var pathURLArray = window.location.pathname.split('/');
     var currentPage = pathURLArray[1];
     var articleId = window.location.search.match(new RegExp('id' + '=([^&=]+)'));
 
     if (currentPage == 'news' || currentPage == 'subscriptions') {
+
         document.getElementById('articles').innerHTML = "";
         document.getElementById('message').innerHTML = "";
+
+        // Установка максимального ID article
+        var maxId = await httpGet(baseURL + '/news/max-id');
 
         if (articleId != null) { //undefined
             id = articleId[1];
             search = null;
-            loadArticles(id, search, numberPage, sizePage);
+            loadArticles(maxId, id, search, numberPage, sizePage);
         } else {
             id = null;
             search = null;
-            loadArticles(id, search, numberPage, sizePage);
+            loadArticles(maxId, id, search, numberPage, sizePage);
         }
-
     }
 
     if (document.querySelector('#btnLoadArticles') !== null) {
         document.querySelector('#btnLoadArticles').onclick = function(e) {
             numberPage++;
-            loadArticles(id, search, numberPage, sizePage);
+            loadArticles(maxId, id, search, numberPage, sizePage);
             return false;
         }
     }
@@ -103,7 +107,7 @@ window.addEventListener('load', function () {
                 document.getElementById('articles').innerHTML = "";
                 numberPage = 0;
                 sizePage = 10;
-                loadArticles(id, search, numberPage, sizePage);
+                loadArticles(maxId, id, search, numberPage, sizePage);
                 document.getElementById('formSearch').reset();
                 document.getElementById('message').innerHTML = "";
                 return false;
@@ -114,18 +118,20 @@ window.addEventListener('load', function () {
 
         document.getElementById('fldSearch').addEventListener('keydown', function(e) {
             if (e.keyCode === 13) {
-                search = document.getElementById('formSearch').elements.search.value;
-                if (search.length > 0) {
-                    document.getElementById('articles').innerHTML = "";
-                    numberPage = 0;
-                    sizePage = 10;
-                    loadArticles(id, search, numberPage, sizePage);
-                    document.getElementById('formSearch').reset();
-                    document.getElementById('message').innerHTML = "";
-                    return false;
-                } else {
-                  alert('Для поиска введите значение.');
-                }
+                document.getElementById('btnSearchArticles').click();
+//
+//                search = document.getElementById('formSearch').elements.search.value;
+//                if (search.length > 0) {
+//                    document.getElementById('articles').innerHTML = "";
+//                    numberPage = 0;
+//                    sizePage = 10;
+//                    document.getElementById('formSearch').reset();
+//                    document.getElementById('message').innerHTML = "";
+//                    loadArticles(maxId, id, search, numberPage, sizePage);
+//                    return false;
+//                } else {
+//                  alert('Для поиска введите значение.');
+//                }
             }
         });
     }
@@ -139,7 +145,7 @@ window.addEventListener('load', function () {
             document.querySelector('#btnSizePage50').classList.remove('active');
             document.querySelector('#btnSizePage100').classList.remove('active');
             document.getElementById('articles').innerHTML = "";
-            loadArticles(id, search, numberPage, sizePage);
+            loadArticles(maxId, id, search, numberPage, sizePage);
         }
     }
 
@@ -152,7 +158,7 @@ window.addEventListener('load', function () {
             document.querySelector('#btnSizePage50').classList.remove('active');
             document.querySelector('#btnSizePage100').classList.remove('active');
             document.getElementById('articles').innerHTML = "";
-            loadArticles(id, search, numberPage, sizePage);
+            loadArticles(maxId, id, search, numberPage, sizePage);
         }
     }
 
@@ -165,7 +171,7 @@ window.addEventListener('load', function () {
             document.querySelector('#btnSizePage50').classList.add('active');
             document.querySelector('#btnSizePage100').classList.remove('active');
             document.getElementById('articles').innerHTML = "";
-            loadArticles(id, search, numberPage, sizePage);
+            loadArticles(maxId, id, search, numberPage, sizePage);
         }
     }
 
@@ -178,13 +184,41 @@ window.addEventListener('load', function () {
             document.querySelector('#btnSizePage50').classList.remove('active');
             document.querySelector('#btnSizePage100').classList.add('active');
             document.getElementById('articles').innerHTML = "";
-            loadArticles(id, search, numberPage, sizePage);
+            loadArticles(maxId, id, search, numberPage, sizePage);
         }
     }
 })
 
+// Получение http
+async function httpGet(url) {
+
+  return new Promise(function(resolve, reject) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+
+    xhr.onload = function() {
+      if (this.status == 200) {
+        resolve(this.response);
+      } else {
+        var error = new Error(this.statusText);
+        error.code = this.status;
+        reject(error);
+      }
+    };
+
+    xhr.onerror = function() {
+      reject(new Error("Network Error"));
+    };
+
+    xhr.send();
+  });
+
+}
+
+
 // Добавление статей на страницу news
-function loadArticles(id, search, numberPage, sizePage) {
+function loadArticles(maxId, id, search, numberPage, sizePage) {
 //    var currentURL = window.location.href;
     var baseURL = window.location.protocol + '//' + window.location.host;
     var pathURLArray = window.location.pathname.split('/');
@@ -202,20 +236,19 @@ function loadArticles(id, search, numberPage, sizePage) {
         ' </div> ';
     document.getElementById('articles').appendChild(spinner);
 
-    // Load first group articles
-    var xhr = new XMLHttpRequest();
-
     if (id !== null && id !== '') {
         var url = baseURL + '/news/id' + '?currentPage=' + currentPage +
-            '&id=' + id + '&page=' + numberPage + '&size=' + sizePage;
+            '&id=' + id + '&maxId=' + maxId + '&page=' + numberPage + '&size=' + sizePage;
     } else if (search != null && search != '') {
         var url = baseURL + '/news/search' + '?currentPage=' + currentPage + '&section=' + section + '&name=' + name +
-            '&search=' + search + '&page=' + numberPage + '&size=' + sizePage;
+            '&search=' + search + '&maxId=' + maxId + '&page=' + numberPage + '&size=' + sizePage;
     } else {
         var url = baseURL + '/news' + '?currentPage=' + currentPage + '&section=' + section + '&name=' + name +
-            '&page=' + numberPage + '&size=' + sizePage;
+            '&maxId=' + maxId + '&page=' + numberPage + '&size=' + sizePage;
     }
 
+    // Load first group articles
+    var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.send();
 //        xhr.setRequestHeader('Content-Type', 'application/json');
@@ -256,23 +289,6 @@ function loadArticles(id, search, numberPage, sizePage) {
             } else {
                 var image = '/static/images/' + resourceKey + '.png';
             }
-
-            // Add mate for article
-//             if (id !== null && id !== '') {
-//                // Google / Search Engine Tags
-//                document.querySelector('meta[itemprop="description"]').setAttribute("content", title);
-//                document.querySelector('meta[itemprop="image"]').setAttribute("content", image);
-//
-//                // Facebook Meta Tags
-//                document.querySelector('meta[property="og:url"]').setAttribute("content", link);
-//                document.querySelector('meta[property="og:description"]').setAttribute("content", title);
-//                document.querySelector('meta[property="og:image"]').setAttribute("content", image);
-//
-//                // Twitter Meta Tags
-//                document.querySelector('meta[name="twitter:url"]').setAttribute("content", link);
-//                document.querySelector('meta[name="twitter:description"]').setAttribute("content", title);
-//                document.querySelector('meta[name="twitter:image"]').setAttribute("content", image);
-//            }
 
             var periodPublication = '';
             var publicationDate = new Date(jsonRequest[i].datePublication);

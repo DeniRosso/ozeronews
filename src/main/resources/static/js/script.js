@@ -396,8 +396,8 @@ window.addEventListener('load', function () {
 
         if (shareScreenStatus == 'off') {
             shareScreenBackground.style.display = 'block';
-            shareScreen.style.top = buttonShare.top + 18 + 'px' ;
-            shareScreen.style.left = buttonShare.left + 'px';
+            shareScreen.style.top = buttonShare.top  + pageYOffset + 18 + 'px' ;
+            shareScreen.style.left = buttonShare.left + pageXOffset + 'px';
             shareScreen.style.display = 'block';
             shareScreenStatus = 'on';
         } else {
@@ -477,7 +477,7 @@ window.addEventListener('load', function () {
             shareScreenStatus = 'off';
             window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + link + '','sharer','toolbar=0,status=0,width=620,height=390');
         }
-
+        event.preventDefault();
     }
 })
 
@@ -488,11 +488,13 @@ window.addEventListener('load', function () {
 //    window.open('https://telegram.me/share/url?url=' + baseURL + '','sharer','status=0,toolbar=0,width=650,height=500');
 //}
 
-function shareArticle() {
-    var shareScreen = document.getElementById('btnShare_');
-
-    document.querySelector('.share').classList.toggle('active');
-}
+//function shareArticle() {
+//
+//    var shareScreen = document.getElementById('btnShare_');
+//
+//    document.querySelector('.share').classList.toggle('active');
+//
+//}
 
 // Load Administration Category Resource Page
 //window.addEventListener('load', function () {

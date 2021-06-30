@@ -80,6 +80,9 @@ public class ParsingLife {
                     }
                 }
 
+                System.out.println("## = \n" + feed.getEntries().get(i).getUri());
+                System.out.println("## = \n" + feed.getEntries().get(i));
+
 //                articleDatePublication = ZonedDateTime.ofInstant(
 //                        Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
 //                        ZoneId.of("UTC"));
@@ -97,12 +100,12 @@ public class ParsingLife {
 //                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
 //                        ZoneId.of("UTC");
 
-                System.out.println("articleDatePublication = " + feed.getEntries().get(i).getUri());
-
-                articleDatePublication = ZonedDateTime.of(LocalDateTime.parse(
-                        (feed.getEntries().get(i).getPublishedDate().toInstant().toString()).substring(0, 19),
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                        ZoneId.of("UTC"));
+//                System.out.println("articleDatePublication = " + feed.getEntries().get(i).getUri());
+//
+//                articleDatePublication = ZonedDateTime.of(LocalDateTime.parse(
+//                        (feed.getEntries().get(i).getPublishedDate().toInstant().toString()).substring(0, 19),
+//                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+//                        ZoneId.of("UTC"));
 
                 dateStamp = ZonedDateTime.now(ZoneId.of("UTC"));
 
@@ -138,8 +141,19 @@ public class ParsingLife {
                 article.setDateStamp(dateStamp);
 
 //                articleSaveService.saveArticle(article);
-                    articleCount++;
-                }
+                articleCount++;
+
+                System.out.println("*************************");
+//                System.out.println("article " + newsResourceKey + " = " + article);
+                System.out.println("articleTitle = " + articleTitle);
+                System.out.println("articleLink = " + articleLink);
+                System.out.println("articleNumber = " + articleNumber);
+                System.out.println("articleImage = " + articleImage);
+                System.out.println("articleRubricList = " + articleRubricList);
+                System.out.println("articleDatePublication = " + articleDatePublication);
+                System.out.println("dateStamp = " + dateStamp);
+                System.out.println("*************************");
+            }
         } catch (IOException | FeedException e) {
             e.printStackTrace();
         }

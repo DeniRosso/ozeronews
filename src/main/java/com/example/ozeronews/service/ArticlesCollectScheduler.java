@@ -14,9 +14,15 @@ public class ArticlesCollectScheduler {
 
 //    https://michael-smirnov.ru/ - RSS каналы
 //    https://team29.org/ - Команда 29
-//    https://rb.ru/feeds/all/ - RUSBASE Новости технологий и бизнеса
+//    http://www.profinance.ru/rss/ - Pro Finance
 
     int articleCount;
+
+//    @Value("${schedule.work}")
+//    private String scheduleTime;
+
+    @Value("${article.collection.active}")
+    private boolean articleCollectionActive;
 
     private NewsResourceRepository newsResourceRepository;
     private ParsingRIA parsingRIA;
@@ -83,12 +89,18 @@ public class ArticlesCollectScheduler {
     private ParsingNG parsingNG;
     private ParsingNovayaGazeta parsingNovayaGazeta;
     private ParsingVC parsingVC;
-
-//    @Value("${schedule.work}")
-//    private String scheduleTime;
-
-    @Value("${article.collection.active}")
-    private boolean articleCollectionActive;
+    private ParsingRusBase parsingRusBase;
+    private ParsingAdme parsingAdme;
+    private ParsingBankiRu parsingBankiRu;
+    private ParsingChaspik parsingChaspik;
+    private ParsingEnterHub parsingEnterHub;
+    private ParsingEurosport parsingEurosport;
+    private ParsingEADaily parsingEADaily;
+    private ParsingHelloMagazine parsingHelloMagazine;
+    private ParsingKinoLexx parsingKinoLexx;
+    private ParsingKinoNews parsingKinoNews;
+    private ParsingKMRu parsingKMRu;
+    private ParsingMyShowsMe parsingMyShowsMe;
 
     public ArticlesCollectScheduler(NewsResourceRepository newsResourceRepository,
                                     ParsingRIA parsingRIA,
@@ -154,7 +166,19 @@ public class ArticlesCollectScheduler {
                                     ParsingProekt parsingProekt,
                                     ParsingNG parsingNG,
                                     ParsingNovayaGazeta parsingNovayaGazeta,
-                                    ParsingVC parsingVC) {
+                                    ParsingVC parsingVC,
+                                    ParsingRusBase parsingRusBase,
+                                    ParsingAdme parsingAdme,
+                                    ParsingBankiRu parsingBankiRu,
+                                    ParsingChaspik parsingChaspik,
+                                    ParsingEnterHub parsingEnterHub,
+                                    ParsingEurosport parsingEurosport,
+                                    ParsingEADaily parsingEADaily,
+                                    ParsingHelloMagazine parsingHelloMagazine,
+                                    ParsingKinoLexx parsingKinoLexx,
+                                    ParsingKinoNews parsingKinoNews,
+                                    ParsingKMRu parsingKMRu,
+                                    ParsingMyShowsMe parsingMyShowsMe) {
 
         this.newsResourceRepository = newsResourceRepository;
         this.parsingRIA = parsingRIA;
@@ -221,6 +245,18 @@ public class ArticlesCollectScheduler {
         this.parsingNG = parsingNG;
         this.parsingNovayaGazeta = parsingNovayaGazeta;
         this.parsingVC = parsingVC;
+        this.parsingRusBase = parsingRusBase;
+        this.parsingAdme = parsingAdme;
+        this.parsingBankiRu = parsingBankiRu;
+        this.parsingChaspik = parsingChaspik;
+        this.parsingEnterHub = parsingEnterHub;
+        this.parsingEurosport = parsingEurosport;
+        this.parsingEADaily = parsingEADaily;
+        this.parsingHelloMagazine = parsingHelloMagazine;
+        this.parsingKinoLexx = parsingKinoLexx;
+        this.parsingKinoNews = parsingKinoNews;
+        this.parsingKMRu = parsingKMRu;
+        this.parsingMyShowsMe = parsingMyShowsMe;
     }
 
     @Scheduled(initialDelay = 10000, fixedRateString = "${article.collection.schedule}")
@@ -229,7 +265,6 @@ public class ArticlesCollectScheduler {
 //    @Scheduled(fixedRateString = "${schedule.work}")
 //    - Фиксированное время между вызовами
     public void runCollectArticles() {
-        System.out.println(LocalDateTime.now() + ": Start collecting articles");
 
 //        parsingRIA.getArticles();
 //        parsingTsargrad.getArticles();
@@ -237,7 +272,7 @@ public class ArticlesCollectScheduler {
 //        parsingMeduza.getArticles();
 //        parsingINOSMI.getArticles();
 //        parsingXTrue.getArticles();
-////        parsingLife.getArticles();
+//        parsingLife.getArticles();
 //        parsingFontanka.getArticles();
 //        parsingDniru.getArticles();
 //        parsingRegnum.getArticles();
@@ -295,6 +330,21 @@ public class ArticlesCollectScheduler {
 //        parsingNG.getArticles();
 ////        parsingNovayaGazeta.getArticles();
 //        parsingVC.getArticles();
+//        parsingRusBase.getArticles();
+//        parsingAdme.getArticles();
+//        parsingBankiRu.getArticles();
+//        parsingChaspik.getArticles();
+//        parsingEnterHub.getArticles();
+//        parsingEurosport.getArticles();
+//        parsingEADaily.getArticles();
+//        parsingHelloMagazine.getArticles();
+//        parsingKinoLexx.getArticles();
+//        parsingKinoNews.getArticles();
+//        parsingKMRu.getArticles();
+////        parsingMyShowsMe.getArticle();
+
+
+        System.out.println(LocalDateTime.now() + ": Start collecting articles");
 
         Iterable<NewsResource> newsResources = newsResourceRepository.findAll();
         for (NewsResource newsResource : newsResources) {
@@ -613,6 +663,61 @@ public class ArticlesCollectScheduler {
                     case "vc":
                         System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
                         articleCount = parsingVC.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "rusbase":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingRusBase.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "adme":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingAdme.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "bankiru":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingBankiRu.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "chaspik":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingChaspik.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "enterhub":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingEnterHub.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "eurosport":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingEurosport.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "eadaily":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingEADaily.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "hellomagazine":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingHelloMagazine.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "kinolexx":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingKinoLexx.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "kinonews":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingKinoNews.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "kmru":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingKMRu.getArticles();
                         System.out.println(articleCount + " articles completed");
                         break;
                 }

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingVC {
+public class ParsingKinoLexx {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -37,9 +37,9 @@ public class ParsingVC {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "vc";
-        String newsResourceLink = "https://vc.ru/";
-        String newsLink = "https://vc.ru/rss/new";
+        String newsResourceKey = "kinolexx";
+        String newsResourceLink = "https://kinolexx.ru/";
+        String newsLink = "https://kinolexx.ru/rss/";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -66,9 +66,10 @@ public class ParsingVC {
                 articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + articleLink.substring(
-                        articleLink.lastIndexOf("/") + 1,
-                        articleLink.indexOf("-"));
+                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
+                        feed.getEntries().get(i).getUri().lastIndexOf("-") + 1,
+                        feed.getEntries().get(i).getUri().lastIndexOf(".html")
+                );
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingVC {
+public class ParsingBankiRu {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -37,9 +37,9 @@ public class ParsingVC {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "vc";
-        String newsResourceLink = "https://vc.ru/";
-        String newsLink = "https://vc.ru/rss/new";
+        String newsResourceKey = "bankiru";
+        String newsResourceLink = "https://www.banki.ru/";
+        String newsLink = "https://www.banki.ru/xml/news.rss";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -67,8 +67,8 @@ public class ParsingVC {
                 articleLink = feed.getEntries().get(i).getLink();
 
                 articleNumber = newsResourceKey + "_" + articleLink.substring(
-                        articleLink.lastIndexOf("/") + 1,
-                        articleLink.indexOf("-"));
+                        articleLink.lastIndexOf("id=") + 3,
+                        articleLink.indexOf("&"));
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;

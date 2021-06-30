@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingVC {
+public class ParsingAdme {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -37,9 +37,9 @@ public class ParsingVC {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "vc";
-        String newsResourceLink = "https://vc.ru/";
-        String newsLink = "https://vc.ru/rss/new";
+        String newsResourceKey = "adme";
+        String newsResourceLink = "https://www.adme.ru/";
+        String newsLink = "https://www.adme.ru/rss/";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -67,21 +67,26 @@ public class ParsingVC {
                 articleLink = feed.getEntries().get(i).getLink();
 
                 articleNumber = newsResourceKey + "_" + articleLink.substring(
-                        articleLink.lastIndexOf("/") + 1,
-                        articleLink.indexOf("-"));
+                        articleLink.lastIndexOf("-") + 1,
+                        articleLink.lastIndexOf("/"));
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
-                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
-                if(enclosures != null) {
-                    for(SyndEnclosure enclosure : enclosures) {
-                        if(enclosure.getType() != null &&
-                                (enclosure.getType().equals("image/jpeg") || enclosure.getType().equals("image/gif"))) {
-                            articleImage = enclosure.getUrl();
-                        }
-                    }
-                }
+//                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
+//                if(enclosures != null) {
+//                    for(SyndEnclosure enclosure : enclosures) {
+//                        if(enclosure.getType() != null &&
+//                                (enclosure.getType().equals("image/jpeg") || enclosure.getType().equals("image/gif"))) {
+//                            articleImage = enclosure.getUrl();
+//                        }
+//                    }
+//                }
+
+                articleImage = feed.getEntries().get(i).getDescription().getValue().substring(
+                        feed.getEntries().get(i).getDescription().getValue().indexOf("src=\"") + 5,
+                        feed.getEntries().get(i).getDescription().getValue().indexOf("\" ")
+                );
 
                 articleDatePublication = ZonedDateTime.ofInstant(
                         Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),

@@ -6,7 +6,6 @@ import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.ArticleRepository;
 import com.example.ozeronews.service.ArticleSaveService;
 import com.rometools.rome.feed.synd.SyndCategory;
-import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingVC {
+public class ParsingEurosport {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -37,9 +36,9 @@ public class ParsingVC {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "vc";
-        String newsResourceLink = "https://vc.ru/";
-        String newsLink = "https://vc.ru/rss/new";
+        String newsResourceKey = "eurosport";
+        String newsResourceLink = "https://www.eurosport.ru/";
+        String newsLink = "https://www.eurosport.ru/rss.xml";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -66,22 +65,26 @@ public class ParsingVC {
                 articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + articleLink.substring(
-                        articleLink.lastIndexOf("/") + 1,
-                        articleLink.indexOf("-"));
+                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
+                        feed.getEntries().get(i).getUri().indexOf("eurosport-") + 10);
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
-                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
-                if(enclosures != null) {
-                    for(SyndEnclosure enclosure : enclosures) {
-                        if(enclosure.getType() != null &&
-                                (enclosure.getType().equals("image/jpeg") || enclosure.getType().equals("image/gif"))) {
-                            articleImage = enclosure.getUrl();
-                        }
-                    }
-                }
+//                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
+//                if(enclosures != null) {
+//                    for(SyndEnclosure enclosure : enclosures) {
+//                        if(enclosure.getType() != null &&
+//                                (enclosure.getType().equals("image/jpeg") || enclosure.getType().equals("image/gif"))) {
+//                            articleImage = enclosure.getUrl();
+//                        }
+//                    }
+//                }
+
+                articleImage = feed.getEntries().get(i).getDescription().getValue().substring(
+                        feed.getEntries().get(i).getDescription().getValue().indexOf("src=\"") + 5,
+                        feed.getEntries().get(i).getDescription().getValue().indexOf("\" ")
+                );
 
                 articleDatePublication = ZonedDateTime.ofInstant(
                         Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),

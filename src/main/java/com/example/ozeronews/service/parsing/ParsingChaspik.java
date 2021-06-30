@@ -11,6 +11,8 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingVC {
+public class ParsingChaspik {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -37,9 +39,9 @@ public class ParsingVC {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "vc";
-        String newsResourceLink = "https://vc.ru/";
-        String newsLink = "https://vc.ru/rss/new";
+        String newsResourceKey = "chaspik";
+        String newsResourceLink = "http://www.chaspik.spb.ru/";
+        String newsLink = "http://www.chaspik.spb.ru/feed/";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -66,9 +68,8 @@ public class ParsingVC {
                 articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + articleLink.substring(
-                        articleLink.lastIndexOf("/") + 1,
-                        articleLink.indexOf("-"));
+                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
+                        feed.getEntries().get(i).getUri().indexOf("p=") + 2);
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
@@ -98,6 +99,19 @@ public class ParsingVC {
                         if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
                         articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                     }
+                }
+
+                // Получение дополнительной информаций по статье
+                Document docArticleDescription = Jsoup.connect(articleLink)
+                        .userAgent("Safari")
+                        .get();
+
+                if (!docArticleDescription.select("section[class=single_post]").first()
+                        .select("div[class=main_part]").first()
+                        .select("img").isEmpty()) {
+                    articleImage = docArticleDescription.select("section[class=single_post]").first()
+                            .select("div[class=main_part]").first()
+                            .select("img").first().attr("src");
                 }
 
                 NewsResource newsResource = new NewsResource();

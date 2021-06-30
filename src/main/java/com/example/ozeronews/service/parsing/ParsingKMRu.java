@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingVC {
+public class ParsingKMRu {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -37,9 +37,9 @@ public class ParsingVC {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "vc";
-        String newsResourceLink = "https://vc.ru/";
-        String newsLink = "https://vc.ru/rss/new";
+        String newsResourceKey = "kmru";
+        String newsResourceLink = "https://www.km.ru/";
+        String newsLink = "https://www.km.ru/xml/rss/main";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -66,9 +66,10 @@ public class ParsingVC {
                 articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + articleLink.substring(
-                        articleLink.lastIndexOf("/") + 1,
-                        articleLink.indexOf("-"));
+                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
+                        feed.getEntries().get(i).getUri().lastIndexOf("/") + 1
+                );
+                articleNumber = articleNumber.substring(0, articleNumber.indexOf("-"));
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
@@ -119,6 +120,17 @@ public class ParsingVC {
 
                 articleSaveService.saveArticle(article);
                 articleCount++;
+
+//                System.out.println("*************************");
+////                System.out.println("article " + newsResourceKey + " = " + article);
+//                System.out.println("articleTitle = " + articleTitle);
+//                System.out.println("articleLink = " + articleLink);
+//                System.out.println("articleNumber = " + articleNumber);
+//                System.out.println("articleImage = " + articleImage);
+//                System.out.println("articleRubricList = " + articleRubricList);
+//                System.out.println("articleDatePublication = " + articleDatePublication);
+//                System.out.println("dateStamp = " + dateStamp);
+//                System.out.println("*************************");
             }
         } catch (IOException | FeedException e) {
             e.printStackTrace();

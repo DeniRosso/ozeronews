@@ -45,6 +45,18 @@ public class NewsResourceController {
         return "news-resources";
     }
 
+    @PostMapping("/administration/news-resources")
+    public String saveNewsResources(NewsResource newsResource) {
+
+        newsResource.setDateStamp(ZonedDateTime.now(ZoneId.of("UTC")));
+        if (!newsResourceRepository.checkByResourceKey(newsResource.getResourceKey())) {
+            newsResourceRepository.saveResource(newsResource);
+        } else {
+            newsResourceRepository.updateResource(newsResource);
+        }
+        return "redirect:/administration/news-resources";
+    }
+
     @GetMapping("/administration/news-resources/{id}")
     public String ViewNewsResourceByKey(Principal principal,
                                         @PathVariable("id") Long id,

@@ -29,22 +29,22 @@ public class NewsResourceRepositoryJDBC implements NewsResourceRepository {
     }
 
     @Override
-    public int[] updateResource(NewsResource newsResource) {
-        String query = "UPDATE news_resources SET " +
-            " full_name = :fullName, short_name = :shortName, " +
-            " resource_link = :resourceLink, news_link = :newsLink, active = :active, date_stamp = :dateStamp " +
-            " WHERE id = :id ";
-        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(newsResource);
-        return namedParameterJdbcTemplate.batchUpdate(query, batch);
-    }
-
-    @Override
     public int[] saveResource(NewsResource newsResource) {
         String query = "INSERT INTO news_resources (resource_key, resource_link, news_link, active, date_stamp) " +
                 " SELECT :resourceKey, :resourceLink, :newsLink, :active, :dateStamp FROM DUAL WHERE NOT EXISTS ( " +
                 " SELECT resource_key FROM news_resources " +
                 " WHERE resource_key LIKE :resourceKey " +
                 " ) LIMIT 1 ";
+        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(newsResource);
+        return namedParameterJdbcTemplate.batchUpdate(query, batch);
+    }
+
+    @Override
+    public int[] updateResource(NewsResource newsResource) {
+        String query = "UPDATE news_resources SET " +
+                " full_name = :fullName, short_name = :shortName, " +
+                " resource_link = :resourceLink, news_link = :newsLink, active = :active, date_stamp = :dateStamp " +
+                " WHERE id = :id ";
         SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(newsResource);
         return namedParameterJdbcTemplate.batchUpdate(query, batch);
     }

@@ -36,7 +36,7 @@
                         </ul>
                     </div>
                     <div class="col mx-auto text-left">
-                        <form th:method="POST" th:action="@{/administration/news-resources/{id}(id=${newsResourceSelect.id})}" th:object="${newsResourceSelect}" class="">
+                        <form th:method="POST" th:action="@{/administration/news-resources}" th:object="${newsResourceSelect}" class=""> <!--/{id}(id=${newsResourceSelect.id})-->
                             <div class="row g-3">
                                 <div class="my-1">
                                     <input th:field="*{id}" type="hidden" class="form-control form-control-sm" name="id" id="id" placeholder="id">

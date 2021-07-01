@@ -101,6 +101,7 @@ public class ArticlesCollectScheduler {
     private ParsingKinoNews parsingKinoNews;
     private ParsingKMRu parsingKMRu;
     private ParsingMyShowsMe parsingMyShowsMe;
+    private ParsingPikabu parsingPikabu;
 
     public ArticlesCollectScheduler(NewsResourceRepository newsResourceRepository,
                                     ParsingRIA parsingRIA,
@@ -178,7 +179,8 @@ public class ArticlesCollectScheduler {
                                     ParsingKinoLexx parsingKinoLexx,
                                     ParsingKinoNews parsingKinoNews,
                                     ParsingKMRu parsingKMRu,
-                                    ParsingMyShowsMe parsingMyShowsMe) {
+                                    ParsingMyShowsMe parsingMyShowsMe,
+                                    ParsingPikabu parsingPikabu) {
 
         this.newsResourceRepository = newsResourceRepository;
         this.parsingRIA = parsingRIA;
@@ -257,6 +259,7 @@ public class ArticlesCollectScheduler {
         this.parsingKinoNews = parsingKinoNews;
         this.parsingKMRu = parsingKMRu;
         this.parsingMyShowsMe = parsingMyShowsMe;
+        this.parsingPikabu = parsingPikabu;
     }
 
     @Scheduled(initialDelay = 10000, fixedRateString = "${article.collection.schedule}")
@@ -342,6 +345,7 @@ public class ArticlesCollectScheduler {
 //        parsingKinoNews.getArticles();
 //        parsingKMRu.getArticles();
 ////        parsingMyShowsMe.getArticle();
+        parsingPikabu.getArticles();
 
 
         System.out.println(LocalDateTime.now() + ": Start collecting articles");
@@ -718,6 +722,11 @@ public class ArticlesCollectScheduler {
                     case "kmru":
                         System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
                         articleCount = parsingKMRu.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "pikabu":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingPikabu.getArticles();
                         System.out.println(articleCount + " articles completed");
                         break;
                 }

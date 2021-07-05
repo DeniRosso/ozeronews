@@ -15,7 +15,7 @@
              th:class="${messageType}" role="alert" style="width: auto;">
         </div>
         <div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-5 mx-auto">
-          <form th:method="POST" th:action="@{/about/contact}" th:object="${contact}">
+          <form method="POST" th:action="@{/about/contact}" th:object="${contact}">
             <div class="row my-2 p-0">
               <label for="emailContact" class="form-label mb-1 lbl-3">Email<sup>*</sup></label>
               <input th:field="*{email}" type="text" name="email" id="emailContact"

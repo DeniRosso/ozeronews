@@ -2,6 +2,7 @@ package com.example.ozeronews.controllers;
 
 import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.Rubric;
+import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.RubricRepository;
 import com.example.ozeronews.service.UserCurrentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +37,15 @@ public class RubricController {
     @GetMapping("/administration/rubrics")
     public String viewRubrics(Principal principal, Model model) {
 
+        User user = userCurrentService.getCurrentUser(principal);
+
         model.addAttribute("rubrics", rubricRepository.findAll());
         model.addAttribute("rubricSelect", new Rubric());
 
         model.addAttribute("currentPage", "adminRubrics");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "rubrics";
     }
 
@@ -57,12 +61,16 @@ public class RubricController {
     public String newsRubricById(Principal principal,
                                  @PathVariable("id") Long id,
                                  Model model) {
+
+        User user = userCurrentService.getCurrentUser(principal);
+
         model.addAttribute("rubrics", rubricRepository.findAll());
         model.addAttribute("rubricSelect", rubricRepository.findById(id));
 
         model.addAttribute("currentPage", "adminRubrics");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "rubrics";
     }
 

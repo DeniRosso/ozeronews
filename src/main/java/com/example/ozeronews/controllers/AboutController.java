@@ -69,24 +69,29 @@ public class AboutController {
         User user = userCurrentService.getCurrentUser(principal);
         model.addAttribute("currentPage", "about");
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
         model.addAttribute("user", user);
         return "about";
     }
     @GetMapping("/about/privacy")
     public String viewPrivacy(Principal principal, Model model) {
 
+        User user = userCurrentService.getCurrentUser(principal);
         model.addAttribute("currentPage", "privacy");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "privacy";
     }
 
     @GetMapping("/about/termsofuse")
     public String viewTermsofuse(Principal principal, Model model) {
 
+        User user = userCurrentService.getCurrentUser(principal);
         model.addAttribute("currentPage", "useragreement");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "termsofuse";
     }
 
@@ -94,12 +99,13 @@ public class AboutController {
     public String viewContact(Principal principal,
                               Model model) {
 
+        User user = userCurrentService.getCurrentUser(principal);
         model.addAttribute("contact", new Contact());
 
         model.addAttribute("currentPage", "contact");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
-//        model.addAttribute("user", userRepository.findById(3L));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "contact";
     }
 
@@ -127,6 +133,7 @@ public class AboutController {
             model.addAttribute("contact", contact);
             model.addAttribute("currentPage", "contact");
             model.addAttribute("head", appConfig.getHead());
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
             model.addAttribute("user", user);
             return "contact";
         }
@@ -137,6 +144,7 @@ public class AboutController {
                 model.addAttribute("contact", contact);
                 model.addAttribute("currentPage", "contact");
                 model.addAttribute("head", appConfig.getHead());
+                model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
                 model.addAttribute("user", user);
                 return "contact";
             } else {
@@ -145,6 +153,7 @@ public class AboutController {
                 model.addAttribute("contact", new Contact());
                 model.addAttribute("currentPage", "contact");
                 model.addAttribute("head", appConfig.getHead());
+                model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
                 model.addAttribute("user", user);
                 return "contact";
             }

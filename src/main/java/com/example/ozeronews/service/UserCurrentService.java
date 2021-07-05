@@ -5,6 +5,7 @@ import com.example.ozeronews.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 
 @Service
@@ -21,5 +22,23 @@ public class UserCurrentService {
             }
         }
         return user;
+    }
+
+    // Формирование userPicture
+    public String getUserPicture(User user) {
+        String userPicture = null;
+
+        if (user.getPicture() != null) {
+            try {
+                userPicture = "data:image/png;base64," + new String(user.getPicture(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else if (user.getAvatar() != null) {
+            userPicture = user.getAvatar();
+        }  else {
+            userPicture = "/static/images/login.png";
+        }
+        return userPicture;
     }
 }

@@ -3,6 +3,7 @@ package com.example.ozeronews.controllers;
 import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.CategoryResource;
 import com.example.ozeronews.models.NewsResource;
+import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.CategoryResourceRepository;
 import com.example.ozeronews.repo.NewsResourceRepository;
 import com.example.ozeronews.service.CategoryResourceService;
@@ -45,13 +46,16 @@ public class CategoryResourceController {
                                        CategoryResource categoryResource,
                                        Model model) {
 
+        User user = userCurrentService.getCurrentUser(principal);
+
         model.addAttribute("categoryResource", new CategoryResource());
         model.addAttribute("categoryResourceSelect", new CategoryResource());
         model.addAttribute("categoriesResources", categoryResourceRepository.findAll());
         model.addAttribute("resources", new NewsResource());
         model.addAttribute("currentPage", "adminCategoriesResources");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "categoriesresources";
     }
 

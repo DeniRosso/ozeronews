@@ -52,7 +52,8 @@ public class SubscriptionController {
         model.addAttribute("subscriptions", subscriptionService.findAllByUser(userRepo.findByEmail(principal.getName())));
         model.addAttribute("currentPage", "userSubscriptions");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "subscriptions";
     }
 

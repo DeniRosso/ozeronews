@@ -13,19 +13,18 @@
                     <div class="row">
                         <h1 class="ttl-3">Новостные ресурсы</h1>
                         <div th:each="subscription : ${subscriptions}"
-                             th:if="${subscription.resourceId.active}" class="col-auto m-2 " style="">
+                             th:if="${subscription.resourceId.active}" class="col-auto m-2 resource-box" style="">
                             <form th:method="POST" th:action="@{/users/subscriptions}">
                                 <input th:value="${subscription.id}" type="hidden" class="" name="id">
                                 <input th:value="${subscription.userId.id}" type="hidden" class="" name="userId.id">
                                 <input th:value="${subscription.resourceId.id}" type="hidden" class="" name="resourceId.id">
                                 <input th:value="${subscription.active}" type="hidden" class="" name="active">
-                                <button th:if="${!subscription.active}" class="btn btn-outline-light rounded-circle shadow-sm p-0 m-2" type="submit" style="width: 80px; height: 80px;">
+
+                                <button style="border: none; padding: 0.0rem;"
+                                   th:class="${!subscription.active} ? 'resource' : 'resource active' " type="submit">
                                     <img th:src="@{/static/images/{imageResource}(imageResource = ${subscription.resourceId.resourceKey} + '.png')}"
                                          th:alt="${subscription.resourceId.fullName}"
-                                         class="rounded-circle w-100 h-100 shadow-sm m-auto">
-                                </button>
-                                <button th:if="${subscription.active}" class="btn btn-outline-light rounded-circle p-0 m-2" type="submit" style="width: 80px; height: 80px; box-shadow: 0 0 0px 4px #0d6efd;">
-                                    <img th:src="@{/static/images/{imageResource}(imageResource = ${subscription.resourceId.resourceKey} + '.png')}" class="rounded-circle w-100 h-100 shadow-sm m-auto">
+                                         class="resource-img">
                                 </button>
                             </form>
                         </div>

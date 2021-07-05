@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.MessagingException;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -211,6 +212,5 @@ public class UserService {
             System.out.println("newUser = " + newUser);
 //            userRepository.save(newUser);
         }
-
     }
 }

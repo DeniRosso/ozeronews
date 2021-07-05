@@ -45,6 +45,9 @@ public class User {
     @Column(length = 45)
     private String lastname;
 
+    @Lob
+    private byte[] picture;
+
     @Column(length = 120)
     private String avatar;
 

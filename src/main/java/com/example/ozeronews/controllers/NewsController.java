@@ -217,6 +217,7 @@ public class NewsController {
         model.addAttribute("search", null);
 
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
         model.addAttribute("user", user);
 
         return "news";
@@ -249,6 +250,7 @@ public class NewsController {
         model.addAttribute("search", null);
 
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
         model.addAttribute("user", user);
         return "news";
     }
@@ -292,6 +294,7 @@ public class NewsController {
         model.addAttribute("search", null);
 
         model.addAttribute("head", head);
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
         model.addAttribute("user", user);
 
         return "news";

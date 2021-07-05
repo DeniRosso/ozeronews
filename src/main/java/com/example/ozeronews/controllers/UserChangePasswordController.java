@@ -37,13 +37,16 @@ public class UserChangePasswordController {
     @GetMapping("/users/change-password")
     public String viewChangePassword(Principal principal, Model model) {
 
+        User user = userCurrentService.getCurrentUser(principal);
+
         model.addAttribute("password", "");
         model.addAttribute("newPassword", "");
         model.addAttribute("newPassword2", "");
 
         model.addAttribute("currentPage", "userChangePassword");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "users/change-password";
     }
 
@@ -62,6 +65,7 @@ public class UserChangePasswordController {
 
         model.addAttribute("currentPage", "userChangePassword");
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
         model.addAttribute("user", user);
 
 //        if (!passwordEncoder.matches(password, user.getPassword())) {

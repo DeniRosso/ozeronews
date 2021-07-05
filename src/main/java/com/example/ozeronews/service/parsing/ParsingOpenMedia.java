@@ -11,6 +11,8 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingKMRu {
+public class ParsingOpenMedia {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -37,9 +39,9 @@ public class ParsingKMRu {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "kmru";
-        String newsResourceLink = "https://www.km.ru/";
-        String newsLink = "https://www.km.ru/xml/rss/main";
+        String newsResourceKey = "openmedia";
+        String newsResourceLink = "https://openmedia.io/";
+        String newsLink = "https://openmedia.io/feed/";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -67,9 +69,7 @@ public class ParsingKMRu {
                 articleLink = feed.getEntries().get(i).getLink();
 
                 articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
-                        feed.getEntries().get(i).getUri().lastIndexOf("/") + 1
-                );
-                articleNumber = articleNumber.substring(0, articleNumber.indexOf("-"));
+                        feed.getEntries().get(i).getUri().indexOf("p=") + 2);
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
@@ -95,10 +95,22 @@ public class ParsingKMRu {
                 List<SyndCategory> categories = feed.getEntries().get(i).getCategories();
                 if(categories!=null) {
                     for(SyndCategory category : categories) {
-                        rubricAliasName = category.getName();
+                        rubricAliasName = category.getName().substring(category.getName().lastIndexOf(" ") + 1);
+                        rubricAliasName = rubricAliasName.substring(0, 1).toUpperCase() + rubricAliasName.substring(1);
                         if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
                         articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                     }
+                }
+
+                // Получение дополнительной информаций по статье
+                Document docArticleDescription = Jsoup.connect(articleLink)
+                        .userAgent("Safari")
+                        .get();
+
+                if (!docArticleDescription.getElementsByTag("main").first()
+                        .select("img").select(".single-thumb").isEmpty()) {
+                    articleImage = docArticleDescription.getElementsByTag("main").first()
+                            .select("img").select(".single-thumb").first().attr("data-src");
                 }
 
                 NewsResource newsResource = new NewsResource();

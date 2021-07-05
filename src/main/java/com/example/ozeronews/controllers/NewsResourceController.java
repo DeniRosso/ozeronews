@@ -2,6 +2,7 @@ package com.example.ozeronews.controllers;
 
 import com.example.ozeronews.config.AppConfig;
 import com.example.ozeronews.models.NewsResource;
+import com.example.ozeronews.models.User;
 import com.example.ozeronews.repo.NewsResourceRepository;
 import com.example.ozeronews.service.UserCurrentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +37,15 @@ public class NewsResourceController {
     @GetMapping("/administration/news-resources")
     public String viewNewsResources(Principal principal, Model model) {
 
+        User user = userCurrentService.getCurrentUser(principal);
+
         model.addAttribute("newsResources", newsResourceRepository.findAll());
         model.addAttribute("newsResourceSelect", new NewsResource());
 
         model.addAttribute("currentPage", "adminResources");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "news-resources";
     }
 
@@ -61,12 +65,16 @@ public class NewsResourceController {
     public String ViewNewsResourceByKey(Principal principal,
                                         @PathVariable("id") Long id,
                                         Model model) {
+
+        User user = userCurrentService.getCurrentUser(principal);
+
         model.addAttribute("newsResources", newsResourceRepository.findAll());
         model.addAttribute("newsResourceSelect", newsResourceRepository.findById(id));
 
         model.addAttribute("currentPage", "adminResources");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "news-resources";
     }
 

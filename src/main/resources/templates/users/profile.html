@@ -20,8 +20,7 @@
                     <div class="row justify-content-center">
                         <div class="col-3">
                             <div class="profile-image-box mx-auto">
-                                <img th:src="${user.avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${user.getAvatar()})}"
-                                     class="profile-image-img mx-auto" id="profileImage" alt="">
+                                <img th:src="${userPicture}" class="profile-image-img mx-auto" alt=""/>
                             </div>
                         </div>
                         <div class="col border-left">
@@ -55,20 +54,23 @@
                     <div class="row">
                         <h1 class="ttl-3">Мои подписки</h1>
                         <div class="d-flex">
-                            <div th:if="${subscriptions == null}" class="justify-content-center">
-                                <p class="lbl-2">У Вас еще нет подписок на новостные ресурсы. </p>
-                                <p class="lbl-2">Для добавления подписок в ленту перейдите в
-                                    <a th:href="@{/users/subscriptions}"
-                                       th:style="${user.activationCode != null} ? 'color: currentColor; cursor: not-allowed; opacity: 0.8;' : ''">
-                                    Мои подписки
-                                    </a>
-                                    .
-                                </p>
+                            <div class="row">
+                                <div th:if="${subscriptions == null}" class="justify-content-center">
+                                    <p class="lbl-2">У Вас еще нет подписок на новостные ресурсы. </p>
+                                    <p class="lbl-2">Для добавления подписок в ленту перейдите в
+                                        <a th:href="@{/users/subscriptions}"
+                                           th:style="${user.activationCode != null} ? 'color: currentColor; cursor: not-allowed; opacity: 0.8;' : ''">
+                                            Мои подписки
+                                        </a>
+                                        .
+                                    </p>
+                                </div>
+                                <div th:each="subscription : ${subscriptions}" class="resource-box">
+                                    <img th:src="@{/static/images/{imageResource}(imageResource = ${subscription.resourceId.resourceKey} + '.png')}"
+                                         class="resource-img">
+                                </div>
                             </div>
-                            <div th:each="subscription : ${subscriptions}" class="subscription-box">
-                                <img th:src="@{/static/images/{imageResource}(imageResource = ${subscription.resourceId.resourceKey} + '.png')}"
-                                     class="subscription-img">
-                            </div>
+
                         </div>
                     </div>
                 </div>

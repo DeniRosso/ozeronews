@@ -9,6 +9,7 @@ import com.example.ozeronews.repo.UserRepository;
 import com.example.ozeronews.service.MailService;
 import com.example.ozeronews.service.UserCurrentService;
 import com.example.ozeronews.service.UserService;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -72,6 +73,7 @@ public class UserRegistrationController {
     public String viewRegistrationUser(Model model) {
 
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
         model.addAttribute("user", new User());
         model.addAttribute("newUser", new User());
         return "users/registration";
@@ -98,6 +100,7 @@ public class UserRegistrationController {
             Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errorsMap);
             model.addAttribute("head", appConfig.getHead());
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
             model.addAttribute("user", new User());
             model.addAttribute("newUser", newUser);
             return "users/registration";
@@ -108,6 +111,7 @@ public class UserRegistrationController {
             model.addAttribute("passwordError", "Пароли не совпадают");
             model.addAttribute("password2Error", "Пароли не совпадают");
             model.addAttribute("head", appConfig.getHead());
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
             model.addAttribute("user", new User());
             model.addAttribute("newUser", newUser);
             return "users/registration";
@@ -127,36 +131,44 @@ public class UserRegistrationController {
             newUser.setPassword(null);
             newUser.setPassword2(null);
             model.addAttribute("head", appConfig.getHead());
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
             model.addAttribute("user", new User());
             model.addAttribute("newUser", newUser);
             return "users/registration";
         }
+
         if (!file.isEmpty()) {
-            // Сохранение файла картинки
-            String currentFilename = null;
-            // Проверка существовани пользователя и картинки у него
-            if (existUser != null) {
-                currentFilename = existUser.getAvatar();
-                // !!! Нужно проверить равенство станого и нового файлов
-            }
-            // Сохранение файла
-            newUser.setAvatar("/img/" + userService.addAvatar(file));
-            if (newUser.getAvatar() == null || newUser.getAvatar().isEmpty()) {
-                model.addAttribute("messageType", "alert alert-danger");
-                model.addAttribute("message",
-                        "Не удалось сохранить файл '" + file.getName() + "'. Попробуйте еще раз.");
-                newUser.setPassword(null);
-                newUser.setPassword2(null);
-                model.addAttribute("head", appConfig.getHead());
-                model.addAttribute("user", new User());
-                model.addAttribute("newUser", newUser);
-                return "users/registration";
-            }
-            // Удаление файла предыдущей картинки после сохранения нового файла
-            if (currentFilename != null) {
-                // !!! Нужно удалить файл с диска
-            }
+            byte[] encodeBase64 = Base64.encodeBase64(file.getBytes());
+            newUser.setPicture(encodeBase64);
         }
+
+//        if (!file.isEmpty()) {
+//            // Сохранение файла картинки
+//            String currentFilename = null;
+//            // Проверка существовани пользователя и картинки у него
+//            if (existUser != null) {
+//                currentFilename = existUser.getAvatar();
+//                // !!! Нужно проверить равенство станого и нового файлов
+//            }
+//            // Сохранение файла
+//            newUser.setAvatar("/img/" + userService.addAvatar(file));
+//            if (newUser.getAvatar() == null || newUser.getAvatar().isEmpty()) {
+//                model.addAttribute("messageType", "alert alert-danger");
+//                model.addAttribute("message",
+//                        "Не удалось сохранить файл '" + file.getName() + "'. Попробуйте еще раз.");
+//                newUser.setPassword(null);
+//                newUser.setPassword2(null);
+//                model.addAttribute("head", appConfig.getHead());
+//                model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
+//                model.addAttribute("user", new User());
+//                model.addAttribute("newUser", newUser);
+//                return "users/registration";
+//            }
+//            // Удаление файла предыдущей картинки после сохранения нового файла
+//            if (currentFilename != null) {
+//                // !!! Нужно удалить файл с диска
+//            }
+//        }
         if (!StringUtils.isEmpty(newUser.getEmail())) {
             if (!mailService.activateUser(newUser, locale)) {
                 model.addAttribute("messageType", "alert alert-danger");
@@ -164,6 +176,7 @@ public class UserRegistrationController {
                 newUser.setPassword(null);
                 newUser.setPassword2(null);
                 model.addAttribute("head", appConfig.getHead());
+                model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
                 model.addAttribute("user", new User());
                 model.addAttribute("newUser", newUser);
                 return "users/registration";
@@ -172,6 +185,7 @@ public class UserRegistrationController {
         model.addAttribute("messageType", "alert alert-success");
         model.addAttribute("message", "Пользователь создан.");
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
         model.addAttribute("user", new User());
         model.addAttribute("newUser", newUser);
         userService.saveNewUser(newUser);
@@ -183,6 +197,7 @@ public class UserRegistrationController {
     public String viewRegistrationUserSuccess(Model model) {
 
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
         model.addAttribute("user", new User());
         return "users/registrationsuccess";
     }

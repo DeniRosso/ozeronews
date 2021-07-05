@@ -13,7 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.util.Base64;
 
 @Controller
 @RequestMapping("/users")
@@ -40,21 +42,23 @@ public class UserProfileController {
 
     // View account form with user
     @GetMapping("")
-    public String viewUser(Principal principal,
-                           Model model) {
+    public String viewUser(Principal principal, Model model) {
+
         if (userRepo.findByEmail(principal.getName()).getActivationCode() != null) {
             model.addAttribute("messageError", "Требуется активация учетной записи.");
-
         }
+
         User user = userCurrentService.getCurrentUser(principal);
         if (user.getAuthProvider().stream().findFirst().get().equals(AuthProvider.LOCAL)) {
             model.addAttribute("provider", null);
         } else {
             model.addAttribute("provider", user.getAuthProvider().stream().findFirst().get());
         }
+
         model.addAttribute("subscriptions", subscriptionService.findByUser(userRepo.findByEmail(principal.getName())));
         model.addAttribute("currentPage", "userProfile");
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
         model.addAttribute("user", user);
         return "users/profile";
     }

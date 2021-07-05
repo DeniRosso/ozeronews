@@ -44,9 +44,9 @@ public class UserActivateController {
     @GetMapping("/activate")
     public String requestActivate(Principal principal, Locale locale, Model model) throws MessagingException {
 
-        User currentUser = userCurrentService.getCurrentUser(principal);
+        User user = userCurrentService.getCurrentUser(principal);
         if (!StringUtils.isEmpty(principal.getName())) {
-            if (!mailService.activateUser(currentUser, locale)) {
+            if (!mailService.activateUser(user, locale)) {
                 model.addAttribute("messageError",
                         "Неудалось отправить письмо для активации профиля. Попробуйте еще раз.");
             } else {
@@ -55,7 +55,8 @@ public class UserActivateController {
             }
         }
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", currentUser);
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "users/profile";
     }
 
@@ -73,6 +74,7 @@ public class UserActivateController {
             }
         }
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
         model.addAttribute("user", new User());
         return "users/login";
     }

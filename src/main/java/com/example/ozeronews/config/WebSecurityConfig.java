@@ -114,6 +114,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/",
                         "/news/**",
                         "/about/**",
+                        "/about/contact",
                         "/login",
 //                        "/login/**",
 //                        "/oauth2/**",

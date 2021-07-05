@@ -15,7 +15,7 @@
                     <div class="row justify-content-center">
                         <div class="col-12 col-sm-12 col-md-3">
                             <div class="profile-image-box mx-auto">
-                                <img th:src="${avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${newUser.avatar})}"
+                                <img th:src="${userPicture}"
                                      class="profile-image-img mx-auto" id="registrationImage" alt="">
                             </div>
                             <div class="col-auto col-sm-auto col-md-12">

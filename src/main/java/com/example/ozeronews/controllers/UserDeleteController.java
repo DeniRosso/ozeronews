@@ -45,6 +45,7 @@ public class UserDeleteController {
     public String viewDeleteUser(Principal principal, Model model) {
 
         User user = userCurrentService.getCurrentUser(principal);
+
         if (user.getAuthProvider().stream().findFirst().get().equals(AuthProvider.LOCAL)) {
             model.addAttribute("provider", null);
         } else {
@@ -52,6 +53,7 @@ public class UserDeleteController {
         }
         model.addAttribute("currentPage", "userDelete");
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
         model.addAttribute("user", user);
         return "users/delete";
     }
@@ -69,6 +71,7 @@ public class UserDeleteController {
             model.addAttribute("passwordError", "Введите пароль");
             model.addAttribute("currentPage", "userDelete");
             model.addAttribute("head", appConfig.getHead());
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
             model.addAttribute("user", user);
             return "users/delete";
         }
@@ -80,6 +83,7 @@ public class UserDeleteController {
             model.addAttribute("passwordError", "Введен неверный пароль.");
             model.addAttribute("currentPage", "userDelete");
             model.addAttribute("head", appConfig.getHead());
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
             model.addAttribute("user", user);
             return "users/delete";
         }
@@ -91,6 +95,7 @@ public class UserDeleteController {
         model.addAttribute("messageType", "alert alert-success");
         model.addAttribute("message", "Пользователь удален");
         model.addAttribute("head", appConfig.getHead());
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
         model.addAttribute("user", new User());
         return "users/login";
     }

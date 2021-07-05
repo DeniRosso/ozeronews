@@ -58,8 +58,7 @@
 
                     <div th:if="${user.getEmail() != null}"  class="main-menu-dropdown">
                         <a class="main-menu-btn-dropdown">
-                            <img th:src="${user.avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${user.getAvatar()})}"
-                                 class="main-menu-user-img" alt="">
+                            <img th:src="${userPicture}" class="main-menu-user-img" alt="">
                         </a>
                         <ul class="main-menu-dropdown-content">
                             <li class="py-2 border-bottom">
@@ -67,8 +66,8 @@
                                     <div class="d-inline-flex">
                                         <div class="">
                                             <div class="profile-image-box m-0" style="width: 3.0rem; height: 3.0rem;">
-                                                <img th:src="${user.avatar == null} ? @{/static/images/login.png} : @{{avatar}(avatar = ${user.getAvatar()})}"
-                                                     class="profile-image-img mx-auto" id="profileImage" alt="">
+                                                <img th:src="${userPicture}"
+                                                     class="profile-image-img mx-auto" alt="">
                                             </div>
                                         </div>
                                         <div class="ml-3">

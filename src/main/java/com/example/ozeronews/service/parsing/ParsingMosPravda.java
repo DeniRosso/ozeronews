@@ -11,6 +11,8 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingKMRu {
+public class ParsingMosPravda {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -37,9 +39,9 @@ public class ParsingKMRu {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "kmru";
-        String newsResourceLink = "https://www.km.ru/";
-        String newsLink = "https://www.km.ru/xml/rss/main";
+        String newsResourceKey = "mospravda";
+        String newsResourceLink = "http://mospravda.ru/";
+        String newsLink = "http://mospravda.ru/feed/";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -63,26 +65,32 @@ public class ParsingKMRu {
                 articleDatePublication = null;
                 dateStamp = null;
 
-                articleTitle = feed.getEntries().get(i).getTitle().trim();
+                articleTitle = feed.getEntries().get(i).getTitle().substring(0, 1) +
+                        feed.getEntries().get(i).getTitle().substring(1).toLowerCase();
                 articleLink = feed.getEntries().get(i).getLink();
 
                 articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
-                        feed.getEntries().get(i).getUri().lastIndexOf("/") + 1
-                );
-                articleNumber = articleNumber.substring(0, articleNumber.indexOf("-"));
+                        feed.getEntries().get(i).getUri().indexOf("p=") + 2);
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
-                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
-                if(enclosures != null) {
-                    for(SyndEnclosure enclosure : enclosures) {
-                        if(enclosure.getType() != null &&
-                                (enclosure.getType().equals("image/jpeg") || enclosure.getType().equals("image/gif"))) {
-                            articleImage = enclosure.getUrl();
-                        }
-                    }
+//                List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
+//                if(enclosures != null) {
+//                    for(SyndEnclosure enclosure : enclosures) {
+//                        if(enclosure.getType() != null &&
+//                                (enclosure.getType().equals("image/jpeg") || enclosure.getType().equals("image/gif"))) {
+//                            articleImage = enclosure.getUrl();
+//                        }
+//                    }
+//                }
+
+                if (feed.getEntries().get(i).getDescription().getValue().indexOf("src=\"") > 0) {
+                    articleImage = feed.getEntries().get(i).getDescription().getValue().substring(
+                            feed.getEntries().get(i).getDescription().getValue().indexOf("src=\"") +5);
+                    articleImage = articleImage.substring(0, articleImage.indexOf("\" "));
                 }
+
 
                 articleDatePublication = ZonedDateTime.ofInstant(
                         Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
@@ -95,7 +103,13 @@ public class ParsingKMRu {
                 List<SyndCategory> categories = feed.getEntries().get(i).getCategories();
                 if(categories!=null) {
                     for(SyndCategory category : categories) {
-                        rubricAliasName = category.getName();
+                        if (category.getName().charAt(0) == '#') {
+                            rubricAliasName = category.getName().substring(1, 2).toUpperCase() +
+                                    category.getName().substring(2).toLowerCase();
+                        } else {
+                            rubricAliasName = category.getName().substring(0 ,1).toUpperCase() +
+                                    category.getName().substring(1).toLowerCase();
+                        }
                         if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
                         articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                     }
@@ -120,6 +134,17 @@ public class ParsingKMRu {
 
                 articleSaveService.saveArticle(article);
                 articleCount++;
+
+                System.out.println("*************************");
+//                System.out.println("article " + newsResourceKey + " = " + article);
+                System.out.println("articleTitle = " + articleTitle);
+                System.out.println("articleLink = " + articleLink);
+                System.out.println("articleNumber = " + articleNumber);
+                System.out.println("articleImage = " + articleImage);
+                System.out.println("articleRubricList = " + articleRubricList);
+                System.out.println("articleDatePublication = " + articleDatePublication);
+                System.out.println("dateStamp = " + dateStamp);
+                System.out.println("*************************");
             }
         } catch (IOException | FeedException e) {
             e.printStackTrace();

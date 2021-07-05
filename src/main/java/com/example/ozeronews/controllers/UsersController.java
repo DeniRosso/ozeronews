@@ -62,13 +62,16 @@ public class UsersController {
     @GetMapping("/administration/users")
     public String viewUsers(Principal principal, Model model) {
 
+        User user = userCurrentService.getCurrentUser(principal);
+
         model.addAttribute("users", userRepo.findAll());
         model.addAttribute("roles", Role.values()); //model.addAttribute("roles", Role.class);
         model.addAttribute("userSelect", new User());
 
         model.addAttribute("currentPage", "adminUsers");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "users/users";
     }
 
@@ -79,13 +82,16 @@ public class UsersController {
                            @PathVariable("id") Long id,
                            Model model) {
 
+        User user = userCurrentService.getCurrentUser(principal);
+
         model.addAttribute("users", userRepository.findAll());
         model.addAttribute("roles", Role.values());
         model.addAttribute("userSelect", userRepository.findById(id));
 
         model.addAttribute("currentPage", "adminUsers");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "users/users";
     }
 
@@ -94,6 +100,8 @@ public class UsersController {
     public String editUser(Principal principal,
                            User userSelect,
                            Model model) {
+
+        User user = userCurrentService.getCurrentUser(principal);
 
         // Проверка существования пользователя по Email и/или Username
         // Если Email и/или Username уже существуют, нужно вывести сообщение
@@ -108,7 +116,8 @@ public class UsersController {
 
             model.addAttribute("currentPage", "adminUsers");
             model.addAttribute("head", appConfig.getHead());
-            model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+            model.addAttribute("user", user);
             return "users/users";
         }
         userExist = userRepository.findByUsername(userSelect.getUsername());
@@ -121,7 +130,8 @@ public class UsersController {
 
             model.addAttribute("currentPage", "adminUsers");
             model.addAttribute("head", appConfig.getHead());
-            model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+            model.addAttribute("user", user);
             return "users/users";
         }
 

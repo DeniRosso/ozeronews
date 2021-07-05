@@ -5,6 +5,7 @@ import com.example.ozeronews.models.User;
 import com.example.ozeronews.models.dto.CaptchaResponseDTO;
 import com.example.ozeronews.repo.UserRepository;
 import com.example.ozeronews.service.MailService;
+import com.example.ozeronews.service.UserCurrentService;
 import com.example.ozeronews.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ public class UserRecoveryController {
 
     private final static String CAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s";
 
+    private UserCurrentService userCurrentService;
     private UserRepository userRepository;
     private UserService userService;
     private MailService mailService;
@@ -37,11 +39,13 @@ public class UserRecoveryController {
     @Value("${recaptcha.secret}")
     private String secret;
 
-    public UserRecoveryController(UserRepository userRepository,
+    public UserRecoveryController(UserCurrentService userCurrentService,
+                                  UserRepository userRepository,
                                   UserService userService,
                                   MailService mailService,
                                   RestTemplate restTemplate,
                                   AppConfig appConfig) {
+        this.userCurrentService = userCurrentService;
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
@@ -76,6 +80,7 @@ public class UserRecoveryController {
 
             }
             model.addAttribute("head", appConfig.getHead());
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
             model.addAttribute("user", user);
             return "users/recovery";
         }
@@ -83,6 +88,7 @@ public class UserRecoveryController {
             model.addAttribute("messageType", "alert alert-danger");
             model.addAttribute("message", "Пользователя с указанным адрессом электронной почты не существует.");
             model.addAttribute("head", appConfig.getHead());
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
             model.addAttribute("user", user);
             return "users/recovery";
         }
@@ -95,12 +101,14 @@ public class UserRecoveryController {
                 model.addAttribute("messageType", "alert alert-danger");
                 model.addAttribute("message", "Неудалось отправить письмо для восстановления пароля");
                 model.addAttribute("head", appConfig.getHead());
+                model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
                 model.addAttribute("user", userRepository.findByAuthorization(user));
                 return "users/recovery";
             } else {
                 model.addAttribute("messageType", "alert alert-success");
                 model.addAttribute("message", "Письмо для восстановления пароля отправленно на электронную почту.");
                 model.addAttribute("head", appConfig.getHead());
+                model.addAttribute("userPicture", userCurrentService.getUserPicture(new User()));
                 model.addAttribute("user", new User());
                 return "users/login";
             }

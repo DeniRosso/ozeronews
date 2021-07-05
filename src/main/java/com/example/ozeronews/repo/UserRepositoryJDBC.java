@@ -153,6 +153,11 @@ public class UserRepositoryJDBC implements UserRepository{
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                 ), ZoneId.of("UTC"));
 
+//        Byte[] picturesBytes = new Byte[rs.getBytes("picture").length];
+//        for (int i = 0; i < picturesBytes.length; i++) {
+//            picturesBytes[i] = rs.getBytes("picture")[i];
+//        }
+
         User user = new User();
         user.setId(rs.getLong("id"));
         user.setUsername(rs.getString("username"));
@@ -162,6 +167,7 @@ public class UserRepositoryJDBC implements UserRepository{
         user.setLastname(rs.getString("lastname"));
         user.setActivationCode(rs.getString("activation_code"));
         user.setRecoveryCode(rs.getString("recovery_code"));
+        user.setPicture(rs.getBytes("picture"));
         user.setAvatar(rs.getString("avatar"));
         user.setActive(rs.getBoolean("active"));
         user.setRole(Collections.singleton(roleRepository.findById(rs.getLong("id"))));

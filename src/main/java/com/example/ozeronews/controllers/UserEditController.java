@@ -6,6 +6,7 @@ import com.example.ozeronews.repo.UserRepo;
 import com.example.ozeronews.repo.UserRepository;
 import com.example.ozeronews.service.UserCurrentService;
 import com.example.ozeronews.service.UserService;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -62,9 +63,12 @@ public class UserEditController {
     @GetMapping("/edit")
     public String editUser(Principal principal, Model model) {
 
+        User user = userCurrentService.getCurrentUser(principal);
+
         model.addAttribute("currentPage", "userEdit");
         model.addAttribute("head", appConfig.getHead());
-        model.addAttribute("user", userCurrentService.getCurrentUser(principal));
+        model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
+        model.addAttribute("user", user);
         return "users/edit";
     }
 
@@ -81,6 +85,7 @@ public class UserEditController {
             model.mergeAttributes(errorsMap);
             model.addAttribute("currentPage", "userEdit");
             model.addAttribute("head", appConfig.getHead());
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
             model.addAttribute("user", user);
             return "users/edit";
         }
@@ -91,40 +96,55 @@ public class UserEditController {
             model.addAttribute("passwordError", "Введен неверный пароль.");
             model.addAttribute("currentPage", "userEdit");
             model.addAttribute("head", appConfig.getHead());
+            model.addAttribute("userPicture", userCurrentService.getUserPicture(user));
             model.addAttribute("user", user);
             return "users/edit";
         }
-        if (!file.isEmpty()) {
-            System.out.println("!file.isEmpty()");
-            // Сохранение файла картинки
-            String currentFilename = null;
-            // Проверка существовани пользователя и картинки у него
-            User existUser = userRepository.findByEmail(user.getEmail());
-            if (existUser != null) {
-                currentFilename = existUser.getAvatar();
-                // !!! Нужно проверить равенство станого и нового файлов
-            }
-            // Сохранение файла
-            user.setAvatar("/img/" + userService.addAvatar(file));
-//            user.setAvatar(userService.addAvatar(file));
 
-            if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
-                model.addAttribute("messageType", "alert alert-danger");
-                model.addAttribute("message",
-                        "Не удалось сохранить файл '" + file.getName() + "'. Попробуйте еще раз.");
-                user.setPassword(null);
-                model.addAttribute("currentPage", "userEdit");
-                model.addAttribute("head", appConfig.getHead());
-                model.addAttribute("user", user);
-                return "users/edit";
-            }
-            // Удаление файла предыдущей картинки после сохранения нового файла
-            if (currentFilename != null) {
-                // !!! Нужно удалить файл с диска
-            }
-        } else {
-            user.setAvatar(currentUser.getAvatar());
+        if (!file.isEmpty()) {
+//            Byte[] bytesPicture = new Byte[file.getBytes().length];
+//            for (int i = 0; i < file.getBytes().length; i++) {
+//                bytesPicture[i] = file.getBytes()[i];
+//            }
+//            user.setPicture(bytesPicture);
+
+            byte[] encodeBase64 = Base64.encodeBase64(file.getBytes());
+            user.setPicture(encodeBase64);
         }
+
+//        if (!file.isEmpty()) {
+//            System.out.println("!file.isEmpty()");
+//            // Сохранение файла картинки
+//            String currentFilename = null;
+//            // Проверка существовани пользователя и картинки у него
+//            User existUser = userRepository.findByEmail(user.getEmail());
+//            if (existUser != null) {
+//                currentFilename = existUser.getAvatar();
+//                // !!! Нужно проверить равенство станого и нового файлов
+//            }
+//            // Сохранение файла
+//            user.setAvatar("/img/" + userService.addAvatar(file));
+////            user.setAvatar(userService.addAvatar(file));
+//
+//            if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
+//                model.addAttribute("messageType", "alert alert-danger");
+//                model.addAttribute("message",
+//                        "Не удалось сохранить файл '" + file.getName() + "'. Попробуйте еще раз.");
+//                user.setPassword(null);
+//                model.addAttribute("currentPage", "userEdit");
+//                model.addAttribute("head", appConfig.getHead());
+//                model.addAttribute("user", user);
+//                return "users/edit";
+//            }
+//            // Удаление файла предыдущей картинки после сохранения нового файла
+//            if (currentFilename != null) {
+//                // !!! Нужно удалить файл с диска
+//            }
+//        } else {
+//            user.setAvatar(currentUser.getAvatar());
+//        }
+
+
         model.addAttribute("messageType", "alert alert-success");
         model.addAttribute("message", "Данные успешно изменены.");
         System.out.println("editUser = " + user);

@@ -6,7 +6,6 @@ import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.ArticleRepository;
 import com.example.ozeronews.service.ArticleSaveService;
 import com.rometools.rome.feed.synd.SyndCategory;
-import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ParsingMosPravda {
+public class ParsingMBK {
 
     @Autowired
     private ArticleSaveService articleSaveService;
@@ -39,9 +38,9 @@ public class ParsingMosPravda {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "mospravda";
-        String newsResourceLink = "http://mospravda.ru/";
-        String newsLink = "http://mospravda.ru/feed/";
+        String newsResourceKey = "mbk";
+        String newsResourceLink = "https://mbk-news.appspot.com/";
+        String newsLink = "https://mbk-news.appspot.com/feed/";
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -65,8 +64,7 @@ public class ParsingMosPravda {
                 articleDatePublication = null;
                 dateStamp = null;
 
-                articleTitle = feed.getEntries().get(i).getTitle().substring(0, 1) +
-                        feed.getEntries().get(i).getTitle().substring(1).toLowerCase();
+                articleTitle = feed.getEntries().get(i).getTitle();
                 articleLink = feed.getEntries().get(i).getLink();
 
                 articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
@@ -85,13 +83,6 @@ public class ParsingMosPravda {
 //                    }
 //                }
 
-                if (feed.getEntries().get(i).getDescription().getValue().indexOf("src=\"") > 0) {
-                    articleImage = feed.getEntries().get(i).getDescription().getValue().substring(
-                            feed.getEntries().get(i).getDescription().getValue().indexOf("src=\"") +5);
-                    articleImage = articleImage.substring(0, articleImage.indexOf("\" "));
-                }
-
-
                 articleDatePublication = ZonedDateTime.ofInstant(
                         Instant.parse(feed.getEntries().get(i).getPublishedDate().toInstant().toString()),
                         ZoneId.of("UTC"));
@@ -103,16 +94,21 @@ public class ParsingMosPravda {
                 List<SyndCategory> categories = feed.getEntries().get(i).getCategories();
                 if(categories!=null) {
                     for(SyndCategory category : categories) {
-                        if (category.getName().charAt(0) == '#') {
-                            rubricAliasName = category.getName().substring(1, 2).toUpperCase() +
-                                    category.getName().substring(2).toLowerCase();
-                        } else {
-                            rubricAliasName = category.getName().substring(0 ,1).toUpperCase() +
-                                    category.getName().substring(1).toLowerCase();
-                        }
+                        rubricAliasName = category.getName().substring(0 ,1).toUpperCase() + category.getName().substring(1);
                         if (rubricAliasName.length() >= 45) rubricAliasName = rubricAliasName.substring(0 ,44);
                         articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                     }
+                }
+
+                // Получение дополнительной информаций по статье
+                Document docArticleDescription = Jsoup.connect(articleLink)
+                        .userAgent("Safari")
+                        .get();
+
+                if (!docArticleDescription.getElementsByTag("article").first()
+                        .select("img").isEmpty()) {
+                    articleImage = docArticleDescription.getElementsByTag("article").first()
+                            .select("img").first().attr("data-src");
                 }
 
                 NewsResource newsResource = new NewsResource();

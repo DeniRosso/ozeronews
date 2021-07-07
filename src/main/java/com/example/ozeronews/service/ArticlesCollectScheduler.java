@@ -15,6 +15,7 @@ public class ArticlesCollectScheduler {
 //    https://michael-smirnov.ru/ - RSS каналы
 //    https://team29.org/ - Команда 29
 //    http://www.profinance.ru/rss/ - Pro Finance
+//    http://www.kinokadr.ru/export/rss.xml - kinokadr
 
     int articleCount;
 
@@ -104,6 +105,9 @@ public class ArticlesCollectScheduler {
     private ParsingPikabu parsingPikabu;
     private ParsingOpenMedia parsingOpenMedia;
     private ParsingMosPravda parsingMosPravda;
+    private ParsingMBK parsingMBK;
+    private ParsingRetailerRu parsingRetailerRu;
+    private ParsingNalogRu parsingNalogRu;
 
     public ArticlesCollectScheduler(NewsResourceRepository newsResourceRepository,
                                     ParsingRIA parsingRIA,
@@ -184,7 +188,10 @@ public class ArticlesCollectScheduler {
                                     ParsingMyShowsMe parsingMyShowsMe,
                                     ParsingPikabu parsingPikabu,
                                     ParsingOpenMedia parsingOpenMedia,
-                                    ParsingMosPravda parsingMosPravda) {
+                                    ParsingMosPravda parsingMosPravda,
+                                    ParsingMBK parsingMBK,
+                                    ParsingRetailerRu parsingRetailerRu,
+                                    ParsingNalogRu parsingNalogRu) {
 
         this.newsResourceRepository = newsResourceRepository;
         this.parsingRIA = parsingRIA;
@@ -266,6 +273,9 @@ public class ArticlesCollectScheduler {
         this.parsingPikabu = parsingPikabu;
         this.parsingOpenMedia = parsingOpenMedia;
         this.parsingMosPravda = parsingMosPravda;
+        this.parsingMBK = parsingMBK;
+        this.parsingRetailerRu = parsingRetailerRu;
+        this.parsingNalogRu = parsingNalogRu;
     }
 
     @Scheduled(initialDelay = 10000, fixedRateString = "${article.collection.schedule}")
@@ -354,6 +364,9 @@ public class ArticlesCollectScheduler {
 //        parsingPikabu.getArticles();
 //        parsingOpenMedia.getArticles();
 //        parsingMosPravda.getArticles();
+//        parsingMBK.getArticles();
+//        parsingRetailerRu.getArticles();
+        parsingNalogRu.getArticles();
 
 
         System.out.println(LocalDateTime.now() + ": Start collecting articles");
@@ -745,6 +758,21 @@ public class ArticlesCollectScheduler {
                     case "mospravda":
                         System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
                         articleCount = parsingMosPravda.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "mbk":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingMBK.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "retailer":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingRetailerRu.getArticles();
+                        System.out.println(articleCount + " articles completed");
+                        break;
+                    case "nalogru":
+                        System.out.print(LocalDateTime.now() + ": " + String.format("%1$15s", newsResource.getResourceKey()) + " collection ");
+                        articleCount = parsingNalogRu.getArticles();
                         System.out.println(articleCount + " articles completed");
                         break;
                 }

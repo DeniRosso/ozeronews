@@ -39,9 +39,12 @@ public class ParsingJPGazeta {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "jpgazeta";
-        String newsResourceLink = "https://jpgazeta.ru/";
-        String newsLink = "https://jpgazeta.ru/feed/";
+        String resourceKey = "jpgazeta";
+        String resourceFullName = "Журналистская Правда";
+        String resourceShortName = "Журналистская Правда";
+        String resourceLink = "https://jpgazeta.ru/";
+        String resourceNewsLink = "https://jpgazeta.ru/feed/";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -51,7 +54,7 @@ public class ParsingJPGazeta {
         ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -68,7 +71,7 @@ public class ParsingJPGazeta {
                 articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri()
+                articleNumber = resourceKey + "_" + feed.getEntries().get(i).getUri()
                         .substring(feed.getEntries().get(i).getUri().lastIndexOf("p=") + 2);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
@@ -100,6 +103,12 @@ public class ParsingJPGazeta {
                     }
                 }
 
+//                <img width="1000" height="667"
+//                  src="https://jpgazeta.ru/wp-content/uploads/2021/08/fbqg3zbhuq2zbuevn1epresoydplmdnf01ww5uwh.jpeg"
+//                  data-src="https://jpgazeta.ru/wp-content/uploads/2021/08/fbqg3zbhuq2zbuevn1epresoydplmdnf01ww5uwh.jpeg"
+//                  class="img-fluid wp-post-image lazy error" alt="" loading="lazy"
+//                  data-srcset="https://jpgazeta.ru/wp-content/uploads/2021/08/fbqg3zbhuq2zbuevn1epresoydplmdnf01ww5uwh.jpeg 1000w, https://jpgazeta.ru/wp-content/uploads/2021/08/fbqg3zbhuq2zbuevn1epresoydplmdnf01ww5uwh-420x280.jpeg 420w, https://jpgazeta.ru/wp-content/uploads/2021/08/fbqg3zbhuq2zbuevn1epresoydplmdnf01ww5uwh-768x512.jpeg 768w, https://jpgazeta.ru/wp-content/uploads/2021/08/fbqg3zbhuq2zbuevn1epresoydplmdnf01ww5uwh-800x534.jpeg 800w" data-sizes="(max-width: 1000px) 100vw, 1000px" sizes="(max-width: 1000px) 100vw, 1000px" srcset="https://jpgazeta.ru/wp-content/uploads/2021/08/fbqg3zbhuq2zbuevn1epresoydplmdnf01ww5uwh.jpeg 1000w, https://jpgazeta.ru/wp-content/uploads/2021/08/fbqg3zbhuq2zbuevn1epresoydplmdnf01ww5uwh-420x280.jpeg 420w, https://jpgazeta.ru/wp-content/uploads/2021/08/fbqg3zbhuq2zbuevn1epresoydplmdnf01ww5uwh-768x512.jpeg 768w, https://jpgazeta.ru/wp-content/uploads/2021/08/fbqg3zbhuq2zbuevn1epresoydplmdnf01ww5uwh-800x534.jpeg 800w" data-was-processed="true">
+
                 // Получение дополнительной информаций по статье
                 Document docArticleDescription = Jsoup.connect(articleLink)
                         .userAgent("Safari")
@@ -107,17 +116,19 @@ public class ParsingJPGazeta {
 
                 if (!docArticleDescription.getElementsByTag("main").first()
                         .getElementsByTag("article").first()
-                        .select("img[class=img-fluid wp-post-image]").first()
-                        .attr("src").isEmpty()) {
+                        .select("img").select(".img-fluid").first()
+                        .attr("data-src").isEmpty()) {
                     articleImage = docArticleDescription.getElementsByTag("main").first()
                             .getElementsByTag("article").first()
-                            .select("img[class=img-fluid wp-post-image]").first().attr("src");
+                            .select("img").select(".img-fluid").first().attr("data-src");
                 }
 
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 

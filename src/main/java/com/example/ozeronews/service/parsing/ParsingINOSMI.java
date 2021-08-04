@@ -33,9 +33,12 @@ public class ParsingINOSMI {
     public int getArticles() {
         Document doc;
         int articleCount = 0;
-        String newsResourceKey = "inosmi";
-        String newsResourceLink = "https://inosmi.ru";
-        String newsLink = "https://inosmi.ru/today";
+        String resourceKey = "inosmi";
+        String resourceFullName = "ИноСМИ";
+        String resourceShortName = "ИноСМИ";
+        String resourceLink = "https://inosmi.ru";
+        String resourceNewsLink = "https://inosmi.ru/today";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -46,7 +49,7 @@ public class ParsingINOSMI {
 
         try {
             // Полечение web страницы
-            doc = Jsoup.connect(newsLink)
+            doc = Jsoup.connect(resourceNewsLink)
                     .userAgent("Safari") //userAgent("Chrome/4.0.249.0 Safari/532.5")
                     .referrer("http://www.google.com")
                     .get();
@@ -59,9 +62,9 @@ public class ParsingINOSMI {
             // Получение элементов по каждой статье
             for (int i = 0; i < articleCollectionCount; i++) {
                 articleTitle = articles.get(i).select("h1[class=rubric-list__article-title rubric-list__article-title_small]").text();
-                articleLink = newsResourceLink + articles.get(i).select("h1[class=rubric-list__article-title rubric-list__article-title_small]").
+                articleLink = resourceLink + articles.get(i).select("h1[class=rubric-list__article-title rubric-list__article-title_small]").
                         select("a").attr("href");
-                articleNumber = newsResourceKey + "_" + articleLink.substring(articleLink.length()-14).substring(0, 9);
+                articleNumber = resourceKey + "_" + articleLink.substring(articleLink.length()-14).substring(0, 9);
                 articleImage = articles.get(i).select("img").attr("src");
                 articleDatePublication = ZonedDateTime.parse((articles.get(i).
                         select("time[class=rubric-list__article-date]").attr("datetime")))
@@ -92,9 +95,11 @@ public class ParsingINOSMI {
                 articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
 
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 

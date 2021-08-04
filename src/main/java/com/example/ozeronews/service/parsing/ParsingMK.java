@@ -41,19 +41,22 @@ public class ParsingMK {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "mk";
-        String newsResourceLink = "https://www.mk.ru/";
-        String newsLink = "https://www.mk.ru/rss/news/index.xml";
-        String articleTitle = null;
+        String resourceKey = "mk";
+        String resourceFullName = "Московский Комсомолец";
+        String resourceShortName = "МК";
+        String resourceLink = "https://www.mk.ru/";
+        String resourceNewsLink = "https://www.mk.ru/rss/news/index.xml";
+
+        String articleTitle;
         String articleLink;
-        String articleNumber = null;
-        String articleImage = null;
+        String articleNumber;
+        String articleImage;
         String rubricAliasName;
-        ZonedDateTime articleDatePublication = null;
-        ZonedDateTime dateStamp = null;
+        ZonedDateTime articleDatePublication;
+        ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -69,7 +72,7 @@ public class ParsingMK {
 
                 articleTitle = feed.getEntries().get(i).getTitle();
                 articleLink = feed.getEntries().get(i).getLink();
-//                articleNumber = newsResourceKey + "_" + articleLink.substring(
+//                articleNumber = resourceKey + "_" + articleLink.substring(
 //                        articleLink.lastIndexOf("/") + 1, articleLink.indexOf("-"));
 
                 List<SyndEnclosure> enclosures = feed.getEntries().get(i).getEnclosures();
@@ -111,15 +114,17 @@ public class ParsingMK {
                 Elements articlesDescriptions = docArticleDescription.getElementsByTag("main");
                 for (Element articleDescription : articlesDescriptions) {
                     articleNumber = articleDescription.select("script[class=js-mk-item-settings]").toString();
-                    articleNumber = newsResourceKey + "_" + articleNumber.substring(
+                    articleNumber = resourceKey + "_" + articleNumber.substring(
                             articleNumber.indexOf("\"id\":") + 5, articleNumber.lastIndexOf("}"));
                 }
                 if (articleRepository.checkByArticleNumber(articleNumber)) continue;
 
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 

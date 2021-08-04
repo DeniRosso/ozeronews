@@ -39,9 +39,12 @@ public class ParsingLife {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "life";
-        String newsResourceLink = "https://life.ru";
-        String newsLink = "https://life.ru/rss";
+        String resourceKey = "life";
+        String resourceFullName = "Life";
+        String resourceShortName = "Life";
+        String resourceLink = "https://life.ru";
+        String resourceNewsLink = "https://life.ru/rss";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -51,7 +54,7 @@ public class ParsingLife {
         ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -67,7 +70,7 @@ public class ParsingLife {
 
                 articleTitle = feed.getEntries().get(i).getTitle();
                 articleLink = feed.getEntries().get(i).getLink();
-                articleNumber = newsResourceKey + "_" + articleLink.substring(18);
+                articleNumber = resourceKey + "_" + articleLink.substring(18);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
@@ -124,9 +127,11 @@ public class ParsingLife {
                     }
                 }
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 
@@ -144,7 +149,7 @@ public class ParsingLife {
                 articleCount++;
 
                 System.out.println("*************************");
-//                System.out.println("article " + newsResourceKey + " = " + article);
+//                System.out.println("article " + resourceKey + " = " + article);
                 System.out.println("articleTitle = " + articleTitle);
                 System.out.println("articleLink = " + articleLink);
                 System.out.println("articleNumber = " + articleNumber);

@@ -37,9 +37,12 @@ public class ParsingCNews {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "cnews";
-        String newsResourceLink = "https://www.cnews.ru/";
-        String newsLink = "https://www.cnews.ru/inc/rss/news.xml";
+        String resourceKey = "cnews";
+        String resourceFullName = "CNews";
+        String resourceShortName = "CNews";
+        String resourceLink = "https://www.cnews.ru/";
+        String resourceNewsLink = "https://www.cnews.ru/inc/rss/news.xml";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -49,7 +52,7 @@ public class ParsingCNews {
         ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -66,7 +69,7 @@ public class ParsingCNews {
                 articleTitle = feed.getEntries().get(i).getTitle().trim();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
+                articleNumber = resourceKey + "_" + feed.getEntries().get(i).getUri().substring(
                         feed.getEntries().get(i).getUri().lastIndexOf("/") + 1);
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
@@ -100,9 +103,11 @@ public class ParsingCNews {
                 }
 
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 

@@ -98,12 +98,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .requiresSecure();
 //                .and()
 
-            // For Heroku
-//            .requiresChannel()
-//                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-//                .requiresSecure()
-//                .and()
         http
+            // For Heroku
+            .requiresChannel()
+                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+                .requiresSecure()
+                .and()
+
 //            .requiresChannel()
 //                .antMatchers("/**")
 //                .requiresSecure()

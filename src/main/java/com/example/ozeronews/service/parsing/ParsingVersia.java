@@ -37,9 +37,12 @@ public class ParsingVersia {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "versia";
-        String newsResourceLink = "https://versia.ru/";
-        String newsLink = "https://versia.ru/rss/index.xml";
+        String resourceKey = "versia";
+        String resourceFullName = "Версия";
+        String resourceShortName = "Версия";
+        String resourceLink = "https://versia.ru/";
+        String resourceNewsLink = "https://versia.ru/rss/index.xml";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -49,7 +52,7 @@ public class ParsingVersia {
         ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -66,7 +69,7 @@ public class ParsingVersia {
                 articleTitle = feed.getEntries().get(i).getTitle();
                 articleLink = feed.getEntries().get(i).getUri();
 
-                articleNumber = newsResourceKey + "_" + articleLink.substring(articleLink.lastIndexOf("/") + 1);
+                articleNumber = resourceKey + "_" + articleLink.substring(articleLink.lastIndexOf("/") + 1);
                 articleNumber = articleNumber.length() > 45 ? articleNumber.substring(0, 45) : articleNumber;
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
@@ -98,9 +101,11 @@ public class ParsingVersia {
                 }
 
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 
@@ -118,7 +123,7 @@ public class ParsingVersia {
                 articleCount++;
 
                 System.out.println("*************************");
-//                System.out.println("article " + newsResourceKey + " = " + article);
+//                System.out.println("article " + resourceKey + " = " + article);
                 System.out.println("articleTitle = " + articleTitle);
                 System.out.println("articleLink = " + articleLink);
                 System.out.println("articleNumber = " + articleNumber);

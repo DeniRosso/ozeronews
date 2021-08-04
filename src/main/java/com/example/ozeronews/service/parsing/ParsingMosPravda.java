@@ -6,13 +6,10 @@ import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.ArticleRepository;
 import com.example.ozeronews.service.ArticleSaveService;
 import com.rometools.rome.feed.synd.SyndCategory;
-import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -39,9 +36,12 @@ public class ParsingMosPravda {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "mospravda";
-        String newsResourceLink = "http://mospravda.ru/";
-        String newsLink = "http://mospravda.ru/feed/";
+        String resourceKey = "mospravda";
+        String resourceFullName = "Московская Правда";
+        String resourceShortName = "Московская Правда";
+        String resourceLink = "http://mospravda.ru/";
+        String resourceNewsLink = "http://mospravda.ru/feed/";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -51,7 +51,7 @@ public class ParsingMosPravda {
         ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -69,7 +69,7 @@ public class ParsingMosPravda {
                         feed.getEntries().get(i).getTitle().substring(1).toLowerCase();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
+                articleNumber = resourceKey + "_" + feed.getEntries().get(i).getUri().substring(
                         feed.getEntries().get(i).getUri().indexOf("p=") + 2);
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
@@ -116,9 +116,11 @@ public class ParsingMosPravda {
                 }
 
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 

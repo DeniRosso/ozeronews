@@ -28,9 +28,12 @@ public class ParsingMyShowsMe {
 
     public int getArticle() {
         int articleCount = 0;
-        String newsResourceKey = "kmru";
-        String newsResourceLink = "https://www.km.ru/";
-        String newsLink = "https://www.km.ru/xml/rss/main";
+        String resourceKey = "myshowsme";
+        String resourceFullName = "My Shows Me";
+        String resourceShortName = "My Shows Me";
+        String resourceLink = "https://www.myshows.me/";
+        String resourceNewsLink = "https://www.myshows.me/";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -40,11 +43,11 @@ public class ParsingMyShowsMe {
         ZonedDateTime dateStamp;
 
 
-//        newsLink = "http://jsonplaceholder.typicode.com/posts?_limit=10";
-        newsLink = "https://api.myshows.me/shows/top/all/";
-        newsLink = "https://api.myshows.me/shows/top/all/";
+//        resourceNewsLink = "http://jsonplaceholder.typicode.com/posts?_limit=10";
+        resourceNewsLink = "https://api.myshows.me/shows/top/all/";
+        resourceNewsLink = "https://api.myshows.me/shows/top/all/";
 
-        final String stringPosts = restTemplate.getForObject(newsLink, String.class);
+        final String stringPosts = restTemplate.getForObject(resourceNewsLink, String.class);
         System.out.println(stringPosts);
 
 
@@ -64,9 +67,9 @@ public class ParsingMyShowsMe {
 
 
         NewsResource newsResource = new NewsResource();
-//        newsResource.setResourceKey(newsResourceKey);
-//        newsResource.setResourceLink(newsResourceLink);
-//        newsResource.setNewsLink(newsLink);
+//        newsResource.setResourceKey(resourceKey);
+//        newsResource.setResourceLink(resourceLink);
+//        newsResource.setNewsLink(resourceNewsLink);
 //        newsResource.setActive(true);
 //        newsResource.setDateStamp(dateStamp);
 
@@ -84,7 +87,7 @@ public class ParsingMyShowsMe {
         articleCount++;
 
 //        System.out.println("*************************");
-////                System.out.println("article " + newsResourceKey + " = " + article);
+////                System.out.println("article " + resourceKey + " = " + article);
 //        System.out.println("articleTitle = " + articleTitle);
 //        System.out.println("articleLink = " + articleLink);
 //        System.out.println("articleNumber = " + articleNumber);

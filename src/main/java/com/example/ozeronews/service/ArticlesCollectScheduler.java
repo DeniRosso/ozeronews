@@ -366,7 +366,7 @@ public class ArticlesCollectScheduler {
 //        parsingMosPravda.getArticles();
 //        parsingMBK.getArticles();
 //        parsingRetailerRu.getArticles();
-        parsingNalogRu.getArticles();
+//        parsingNalogRu.getArticles();
 
 
         System.out.println(LocalDateTime.now() + ": Start collecting articles");

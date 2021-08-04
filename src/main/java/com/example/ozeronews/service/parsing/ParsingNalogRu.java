@@ -6,13 +6,10 @@ import com.example.ozeronews.models.NewsResource;
 import com.example.ozeronews.repo.ArticleRepository;
 import com.example.ozeronews.service.ArticleSaveService;
 import com.rometools.rome.feed.synd.SyndCategory;
-import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -39,9 +36,12 @@ public class ParsingNalogRu {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "nalogru";
-        String newsResourceLink = "https://www.nalog.gov.ru/";
-        String newsLink = "https://www.nalog.gov.ru/rn77/rss/";
+        String resourceKey = "nalogru";
+        String resourceFullName = "ФНС России";
+        String resourceShortName = "ФНС России";
+        String resourceLink = "https://www.nalog.gov.ru/";
+        String resourceNewsLink = "https://www.nalog.gov.ru/rn77/rss/";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -51,7 +51,7 @@ public class ParsingNalogRu {
         ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -68,7 +68,7 @@ public class ParsingNalogRu {
                 articleTitle = feed.getEntries().get(i).getTitle();
                 articleLink = feed.getEntries().get(i).getLink();
 
-                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri().substring(
+                articleNumber = resourceKey + "_" + feed.getEntries().get(i).getUri().substring(
                         0, feed.getEntries().get(i).getUri().lastIndexOf("/"));
                 articleNumber = articleNumber.substring(articleNumber.lastIndexOf("/") + 1);
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
@@ -108,9 +108,11 @@ public class ParsingNalogRu {
                 }
 
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 
@@ -128,7 +130,7 @@ public class ParsingNalogRu {
                 articleCount ++;
 
                 System.out.println("*************************");
-//                System.out.println("article " + newsResourceKey + " = " + article);
+//                System.out.println("article " + resourceKey + " = " + article);
                 System.out.println("articleTitle = " + articleTitle);
                 System.out.println("articleLink = " + articleLink);
                 System.out.println("articleNumber = " + articleNumber);

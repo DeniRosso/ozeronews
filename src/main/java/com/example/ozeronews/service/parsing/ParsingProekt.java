@@ -32,9 +32,12 @@ public class ParsingProekt {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "proekt";
-        String newsResourceLink = "https://www.proekt.media/";
-        String newsLink = "https://www.proekt.media/";
+        String resourceKey = "proekt";
+        String resourceFullName = "Проект Медиа";
+        String resourceShortName = "Проект Медиа";
+        String resourceLink = "https://www.proekt.media/";
+        String resourceNewsLink = "https://www.proekt.media/";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -69,7 +72,7 @@ public class ParsingProekt {
 
         try {
             // Полечение web страницы
-            Document doc = Jsoup.connect(newsLink)
+            Document doc = Jsoup.connect(resourceNewsLink)
                 .userAgent("Mozilla/5.0")
                 .referrer("https://www.google.com")
                 .get();
@@ -90,7 +93,7 @@ public class ParsingProekt {
 
                 articleTitle = articles.get(i).select("span[class=tile__title]").first().text();
                 articleLink = articles.get(i).select("a[class=absolute-link]").first().attr("href");
-                articleNumber = newsResourceKey + "_" + articleLink.substring("https://www.proekt.media/".length());
+                articleNumber = resourceKey + "_" + articleLink.substring("https://www.proekt.media/".length());
                 articleNumber = (articleNumber.length() >= 45 ? articleNumber.substring(0, 45) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
@@ -116,9 +119,11 @@ public class ParsingProekt {
                     articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                 }
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 
@@ -136,7 +141,7 @@ public class ParsingProekt {
                 articleCount++;
 
                 System.out.println("*************************");
-//                System.out.println("article " + newsResourceKey + " = " + article);
+//                System.out.println("article " + resourceKey + " = " + article);
                 System.out.println("articleTitle = " + articleTitle);
                 System.out.println("articleLink = " + articleLink);
                 System.out.println("articleNumber = " + articleNumber);

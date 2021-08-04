@@ -35,9 +35,12 @@ public class ParsingTsargrad {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "tsargrad";
-        String newsResourceLink = "https://tsargrad.tv";
-        String newsLink = "https://tsargrad.tv/news";
+        String resourceKey = "tsargrad";
+        String resourceFullName = "Царьград";
+        String resourceShortName = "Царьград";
+        String resourceLink = "https://tsargrad.tv";
+        String resourceNewsLink = "https://tsargrad.tv/news";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -48,7 +51,7 @@ public class ParsingTsargrad {
 
         try {
         // Полечение web страницы
-            Document doc = Jsoup.connect(newsLink)
+            Document doc = Jsoup.connect(resourceNewsLink)
                     .userAgent("Safari") //userAgent("Chrome/4.0.249.0 Safari/532.5")
                     .referrer("http://www.google.com")
                     .get();
@@ -68,8 +71,8 @@ public class ParsingTsargrad {
                 dateStamp = null;
 
                 articleTitle = articles.get(i).select("a").first().text();
-                articleLink = newsResourceLink + articles.get(i).select("a").first().attr("href");
-                articleNumber = newsResourceKey + "_" + articleLink.substring(articleLink.length()-6);
+                articleLink = resourceLink + articles.get(i).select("a").first().attr("href");
+                articleNumber = resourceKey + "_" + articleLink.substring(articleLink.length()-6);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
@@ -99,9 +102,11 @@ public class ParsingTsargrad {
                     articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                 }
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 

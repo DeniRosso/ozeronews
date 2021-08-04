@@ -36,9 +36,12 @@ public class ParsingXTrue {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "xtrue";
-        String newsResourceLink = "https://x-true.info";
-        String newsLink = "https://x-true.info/rss.xml";
+        String resourceKey = "xtrue";
+        String resourceFullName = "X-True";
+        String resourceShortName = "X-True";
+        String resourceLink = "https://x-true.info";
+        String resourceNewsLink = "https://x-true.info/rss.xml";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -48,7 +51,7 @@ public class ParsingXTrue {
         ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -97,9 +100,11 @@ public class ParsingXTrue {
                     }
                 }
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 

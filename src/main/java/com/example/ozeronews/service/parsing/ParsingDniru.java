@@ -37,9 +37,12 @@ public class ParsingDniru {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "dniru";
-        String newsResourceLink = "https://dni.ru";
-        String newsLink = "https://dni.ru/rss.xml";
+        String resourceKey = "dniru";
+        String resourceFullName = "Дни.Ру";
+        String resourceShortName = "Дни.Ру";
+        String resourceLink = "https://dni.ru";
+        String resourceNewsLink = "https://dni.ru/rss.xml";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -49,7 +52,7 @@ public class ParsingDniru {
         ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -65,7 +68,7 @@ public class ParsingDniru {
 
                 articleTitle = feed.getEntries().get(i).getTitle();
                 articleLink = feed.getEntries().get(i).getLink();
-                articleNumber = newsResourceKey + "_" + feed.getEntries().get(i).getUri();
+                articleNumber = resourceKey + "_" + feed.getEntries().get(i).getUri();
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
 
@@ -100,9 +103,11 @@ public class ParsingDniru {
                 }
 
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 

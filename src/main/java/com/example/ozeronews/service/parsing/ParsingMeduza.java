@@ -39,9 +39,12 @@ public class ParsingMeduza {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "meduza";
-        String newsResourceLink = "https://meduza.io";
-        String newsLink = "https://meduza.io/rss2/all";
+        String resourceKey = "meduza";
+        String resourceFullName = "Медуза";
+        String resourceShortName = "Медуза";
+        String resourceLink = "https://meduza.io";
+        String resourceNewsLink = "https://meduza.io/rss2/all";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
@@ -51,7 +54,7 @@ public class ParsingMeduza {
         ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -72,7 +75,7 @@ public class ParsingMeduza {
 
                 articleNumber = articleLink.substring(23).replace("/", "");
 //                articleNumber = articleNumber.replace("/", "");
-                articleNumber = newsResourceKey + "_" +
+                articleNumber = resourceKey + "_" +
                         (articleNumber.length() >= 38 ? articleNumber.substring(0, 38) : articleNumber);
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
@@ -109,9 +112,11 @@ public class ParsingMeduza {
                     articleRubricList.add(k++, new ArticleRubric().addRubricName(rubricAliasName, true, dateStamp));
                 }
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 

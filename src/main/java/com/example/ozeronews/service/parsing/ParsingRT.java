@@ -39,19 +39,22 @@ public class ParsingRT {
 
     public int getArticles() {
         int articleCount = 0;
-        String newsResourceKey = "rt";
-        String newsResourceLink = "https://russian.rt.com/";
-        String newsLink = "https://russian.rt.com/rss";
+        String resourceKey = "rt";
+        String resourceFullName = "Russia Today";
+        String resourceShortName = "RT";
+        String resourceLink = "https://russian.rt.com/";
+        String resourceNewsLink = "https://russian.rt.com/rss";
+
         String articleTitle;
         String articleLink;
         String articleNumber;
-        String articleImage = null;
+        String articleImage;
         String rubricAliasName;
         ZonedDateTime articleDatePublication;
         ZonedDateTime dateStamp;
 
         try {
-            URL feedSource = new URL(newsLink);
+            URL feedSource = new URL(resourceNewsLink);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedSource));
 
@@ -67,13 +70,13 @@ public class ParsingRT {
 
                 articleTitle = feed.getEntries().get(i).getTitle();
                 articleLink = feed.getEntries().get(i).getLink();
-//                articleNumber = newsResourceKey + "_" + articleLink.substring(
+//                articleNumber = resourceKey + "_" + articleLink.substring(
 //                        articleLink.lastIndexOf("/") + 1, articleLink.indexOf("-"));
 
                 Pattern pat = Pattern.compile("\\d+");
                 Matcher matcher = pat.matcher(articleLink.substring(articleLink.lastIndexOf("/") + 1));
                 while (matcher.find()) {
-                    articleNumber = newsResourceKey + "_" + matcher.group();
+                    articleNumber = resourceKey + "_" + matcher.group();
                 };
 
                 if (articleRepository.checkByArticleNumber(articleNumber)) break;
@@ -110,9 +113,11 @@ public class ParsingRT {
                     }
                 }
                 NewsResource newsResource = new NewsResource();
-                newsResource.setResourceKey(newsResourceKey);
-                newsResource.setResourceLink(newsResourceLink);
-                newsResource.setNewsLink(newsLink);
+                newsResource.setResourceKey(resourceKey);
+                newsResource.setFullName(resourceFullName);
+                newsResource.setShortName(resourceShortName);
+                newsResource.setResourceLink(resourceLink);
+                newsResource.setNewsLink(resourceNewsLink);
                 newsResource.setActive(true);
                 newsResource.setDateStamp(dateStamp);
 
@@ -130,7 +135,7 @@ public class ParsingRT {
                 articleCount++;
 
 //                System.out.println("*************************");
-////                System.out.println("article " + newsResourceKey + " = " + article);
+////                System.out.println("article " + resourceKey + " = " + article);
 //                System.out.println("articleTitle = " + articleTitle);
 //                System.out.println("articleLink = " + articleLink);
 //                System.out.println("articleNumber = " + articleNumber);
